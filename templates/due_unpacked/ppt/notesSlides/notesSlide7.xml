@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<p:notes xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="1" name=""/>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="2" name="Slide Image Placeholder 1"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1" noRot="1" noChangeAspect="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldImg" idx="2"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="3" name="Notes Placeholder 2"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="body" sz="quarter" idx="3"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+        <p:txBody>
+          <a:bodyPr/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>KÉP + SZÖVEG DIA – </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szerkesztési</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>útmutató</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>─────────────────────────────────────────</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>slide_title</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>      : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>cím</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> (max 1–2 </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>sor</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>, navy </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>sávban</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>)</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>col_left_body</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>    : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>bal</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>oldali</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>felsorolás</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>col_right_image</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>  : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>kép</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> placeholder – </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>cseréld</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> le: </a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>                   </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>slide.shapes</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>['</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>col_right_image</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>'] </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>törlése</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>után</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>                   </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>slide.shapes.add_picture</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>(...) </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>ugyanazon</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>koordinátákkal</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>figure_caption</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>   : '1. </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>ábra</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>: [</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szöveg</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>]' – runs[0]=</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szám+prefix</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>, runs[1]=</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szöveg</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>col_separator</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>    : CONNECTOR </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>vonal</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> – NE </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>módosítsd</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>Cowork</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>koordináták</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>:</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>  </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>kép</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>bal</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>széle</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> : ML + CW*0.53 + GAP  ≈ 20.2 cm</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>  </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>kép</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>teteje</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>    : TITLE_H + 6mm = 36 mm</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>  </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>kép</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szélesség</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> : ~14.8 cm</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>  </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>kép</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>magassága</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t> : ~11.3 cm</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="4" name="Slide Number Placeholder 3"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldNum" sz="quarter" idx="5"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+</p:notes>

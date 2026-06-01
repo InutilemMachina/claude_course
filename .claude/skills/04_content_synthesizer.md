@@ -1,0 +1,199 @@
+---
+name: 04_content_synthesizer
+title: 04_CONTENT_SYNTHESIZER — Mindmap-vezérelt tartalom-szintézis
+type: skill
+tags: [meta, skill]
+status: active
+version: 1.0
+updated: 2026-06-01
+description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
+---
+
+# 04_CONTENT_SYNTHESIZER
+
+## 1. Cél
+
+A 03_mindmap_builder által generált és 😎 által jóváhagyott mindmap alapján Claude
+koherens, vizuálisan gazdag wip-jegyzetet ír (`4_wip_outputs/N_Jegyzet.md`).
+
+**Input:** `3_mindmap/mindmap.md` (status: approved) + `2_clean_inputs/**/*.md`
+**Output:** `4_wip_outputs/N_Jegyzet.md`
+
+## 2. Bemenetek
+
+| Fájl | Honnan | Tartalom |
+|:-----|:-------|:---------|
+| `3_mindmap/mindmap.md` | 03_mindmap_builder | Jóváhagyott hierarchikus mindmap |
+| `2_clean_inputs/{forrás}.md` | 02_source_extractor | Forrásszövegek (referencia olvasáshoz) |
+| `1_raw_inputs/citations_seed.json` | 01_source_collector | Forrás-metaadatok (IEEE citáláshoz) |
+| `2_clean_inputs/figure_catalog.json` | 02_source_extractor | Elérhető ábrák listája |
+
+**Előfeltétel:** `3_mindmap/mindmap.md` tartalmazza `status: approved`-t.
+
+## 3. Eljárás
+
+### 3.1. A mindmap mint tartalomjegyzék
+
+Az L1 ágak = `##` fejlécek. Az L2 csomópontok = `###` alfejlécek. Tartsd ezt a hierarchiát.
+
+```
+ROOT → #  (Dokumentum cím)
+L1   → ## (Fejezet)
+L2   → ### (Alfejezet)
+L3   → #### (opcionális, csak ha nagyon indokolt)
+```
+
+### 3.2. Szekció-sablonok
+
+**Minden `##` fejezethez:**
+
+```markdown
+## N. Fejezet neve
+
+[Bevezető mondat: mi ez, miért fontos — 1-2 mondat.]
+
+### N.1 Alfejezet neve
+
+[Szöveges kifejtés, forrás-hivatkozásokkal. [S1], [S2] stb.]
+
+$$\text{Kulcsképlet ha releváns}$$
+
+ahol [jelölések magyarázata].
+
+```mermaid
+flowchart LR / TD / sequenceDiagram
+    [Diagram a szakasz fő összefüggéseiről]
+```
+
+> 📦 **Összegző — N. Fejezet neve**
+>
+> **Kulcsgondolat:** [1 mondat]
+>
+> **Emlékezz erre:**
+> - [3–5 bullet, kulcsképletekkel]
+```
+
+### 3.3. Vizuális kötelezettségek
+
+- **Minden `##` fejezet tartalmaz legalább 1 Mermaid diagramot** (fejezet végén, összegző előtt)
+- **Diagram típus döntési fa:**
+  - Folyamat/mechanizmus → `flowchart TD`
+  - Hierarchia/összefüggések → `flowchart LR`
+  - Összehasonlítás → Markdown table (nem Mermaid)
+  - Időbeli lefolyás → `sequenceDiagram`
+- Ha `figure_catalog.json` tartalmaz releváns ábrát: `<!-- FIGURE: {fig_id} -- {leírás} -->` placeholder beillesztése
+- Ha nincs ábra: a placeholder elegendő — a 05_visual_enricher fogja kezelni
+
+### 3.4. Hivatkozások
+
+- Minden kulcsmegállapítás után: `[S1]`, `[S2]` stb. (a `citations_seed.json` sorrendje szerint)
+- Közvetlen idézetnél: `„szöveg"` [S1, p.XX]
+- Képlet eredeténél: `(Eq.X.Y)` vagy `(p.XX)` ha a forrás tartalmazza
+
+### 3.5. Hivatkozásjegyzék (kötelező)
+
+A fájl végén:
+
+```markdown
+## Hivatkozásjegyzék
+
+[1] Szerző, C.D. *Cím.* Kiadó, Év.
+[2] Szerző, E.F. „Cikkcím." *Folyóirat* vol(sz), oldal, Év.
+[3] Felhasználó. „Weblapnév." URL (elérve: YYYY-MM-DD).
+```
+
+A `citations_seed.json` tartalmából automatikusan renderelhető `08_ieee_renderer.py`-val.
+
+### 3.6. Teljes dokumentum struktúra
+
+```markdown
+---
+title: {tantárgy} — {N}. hét: {témacím}
+type: wip_notes
+tags: [prod/test, notes]
+subject: {tantárgy}
+week: N
+source_mindmap: ../3_mindmap/mindmap.md
+created: YYYY-MM-DD
+---
+
+# {Témacím}
+
+**Szint:** BSc/MSc | **Tantárgy:** {tantárgy} | **Hét:** N
+
+---
+
+## Tartalomjegyzék
+
+[automatikusan generálódik a 06_heading_numberer.py után]
+
+---
+
+## 1. Fejezet neve
+...
+
+## 2. Fejezet neve
+...
+
+---
+
+## Hivatkozásjegyzék
+
+[IEEE lista]
+```
+
+### 3.7. MSc-tartalom kezelése
+
+Ha a mindmapben `[MSc]` jelölésű csomópont van:
+- A szövegben: `<!-- MSc -->` kommentblokk nyitja, `<!-- /MSc -->` zárja
+- A 10_bsc_export skill ezeket kiszűri a BSc-verzióból
+
+### 3.8. Mentés és checkpoint
+
+```
+4_wip_outputs/N_Jegyzet.md
+```
+
+A 04 kimenet draft — a 05_visual_enricher fogja gazdagítani (ábra-beillesztés, összegzők).
+Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnézni.
+
+## 4. Kimenetek
+
+| Fájl | Tartalom |
+|:-----|:---------|
+| `4_wip_outputs/N_Jegyzet.md` | YAML + TJ-hely + fejezetek + diagramok + hivatkozásjegyzék |
+
+## 5. Ellenőrzés
+
+- [ ] Minden L1 mindmap-ág `##` fejezetként szerepel?
+- [ ] Minden `##` fejezetnél van Mermaid diagram?
+- [ ] Összegző 📦 doboz minden fejezet végén?
+- [ ] `[S1]`, `[S2]` hivatkozások a szövegben?
+- [ ] `## Hivatkozásjegyzék` a fájl végén?
+- [ ] `[MSc]` csomópontok `<!-- MSc -->...<!-- /MSc -->` blokkban?
+- [ ] YAML frontmatter `source_mindmap` mezővel?
+
+## 6. Hibakezelés
+
+| Tünet | Ok | Megoldás |
+|:------|:---|:---------|
+| Fejezetek nem fedik a mindmapet | Figyelmen kívül hagyott L1 ág | Mindmap újraolvasás; fejezet hozzáadása |
+| Mermaid szintaxishiba | Speciális karakter | Érvénytelen karakterek cseréje |
+| Üres hivatkozásjegyzék | citations_seed.json nem olvasva | Kézzel kitölteni, majd 08_ieee_renderer.py |
+| [MSc] blokk nem záródik | Hiányzó `<!-- /MSc -->` | Keresés és pótlás |
+| Összegző doboz hiányzik | Kimaradt a sablonból | Pótlás 05_visual_enricher-ben is lehetséges |
+
+## 7. Hivatkozások
+
+- [pipeline.md](../pipeline.md) — §2 Lépések és IO
+- [03_mindmap_builder.md](03_mindmap_builder.md) — upstream skill
+- [05_visual_enricher.md](05_visual_enricher.md) — downstream skill
+- [Instructions.md](../../Instructions.md) — §7 Vizuális gazdagítás, §8 Hivatkozási szabály
+
+## 8. Visszajelzések
+
+## 9. Változásjegyzék
+
+| Dátum | Verzió | Leírás |
+|-------|--------|--------|
+| 2026-06-01 | 1.0 | Létrehozva (NLM 04+05 kiváltása, Claude-natív) |

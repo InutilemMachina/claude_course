@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?><p:notes xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="1" name=""/>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="2" name="Slide Image Placeholder 1"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1" noRot="1" noChangeAspect="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldImg" idx="2"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="3" name="Notes Placeholder 2"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="body" sz="quarter" idx="3"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+        <p:txBody>
+          <a:bodyPr/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">CÍM DIA – </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szerkesztési</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>útmutató</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>─────────────────────────────────────────</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>slide_main_title</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">  : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>főcím</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> (max. 2–3 </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>sor</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">, Garamond 34pt </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>fehér</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>)</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>slide_subtitle</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">    : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>tantárgy</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> / </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>intézet</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> (</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr lang="hu-HU" dirty="0" err="1"/>
+              <a:t>Aptos</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> 15pt, </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>dőlt</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">, </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szürke</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>)</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>footer_author</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">     : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>előadó</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> neve</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>footer_date</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">       : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>dátum</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> (ÉÉÉÉ.HH.NN. </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>formátum</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>)</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>watermark_logo</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">    : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>vízjel</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>logó</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> – NE </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>töröld</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>; opacity XML-ben van</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>logo_small</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">        : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>kis</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>logó</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>jobb</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>felső</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>sarokba</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>Cowork</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>utasítás</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>példa</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>:</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">  '</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>Cseréld</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> le a </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>slide_main_title</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szövegét</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>erre</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>: ...'</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">  'Az </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>footer_author</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>mezőbe</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>írd</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> be: ...'</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="4" name="Slide Number Placeholder 3"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldNum" sz="quarter" idx="5"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+</p:notes>

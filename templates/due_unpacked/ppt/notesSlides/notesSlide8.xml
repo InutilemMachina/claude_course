@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><p:notes xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="1" name=""/>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="2" name="Slide Image Placeholder 1"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1" noRot="1" noChangeAspect="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldImg" idx="2"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="3" name="Notes Placeholder 2"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="body" sz="quarter" idx="3"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+        <p:txBody>
+          <a:bodyPr/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r>
+              <a:t>ÁBRA DIA – szerkesztési útmutató</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>─────────────────────────────────────────</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>slide_title      : dia és ábra témája</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>figure_image     : kép placeholder – koordináták:</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">                   l=ML=12mm, t=CT≈36mm, w=CW≈309mm, h≈133mm</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">                   Cseréld: töröld a placeholder-t, add add_picture()</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>figure_caption   : ábra felirat</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">                   runs[0].text = '1. ábra: '</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">                   runs[1].text = 'a felirat szövege'</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>figure_separator : CONNECTOR vonal – NE módosítsd</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>Ábra sorszámozás: az egész prezentációban folyamatos (nem dianként újra)</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="4" name="Slide Number Placeholder 3"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldNum" sz="quarter" idx="5"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+</p:notes>

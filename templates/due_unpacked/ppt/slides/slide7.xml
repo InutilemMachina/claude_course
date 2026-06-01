@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="utf-8"?>
+<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="1" name=""/>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="3" name="slide_title"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="432000" y="108000"/>
+            <a:ext cx="10248119" cy="900000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" anchor="ctr">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="l"/>
+            <a:r>
+              <a:rPr sz="2200" b="1" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="FFFFFF"/>
+                </a:solidFill>
+                <a:latin typeface="Garamond"/>
+              </a:rPr>
+              <a:t>Kép</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="2200" b="1" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="FFFFFF"/>
+                </a:solidFill>
+                <a:latin typeface="Garamond"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="2200" b="1" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="FFFFFF"/>
+                </a:solidFill>
+                <a:latin typeface="Garamond"/>
+              </a:rPr>
+              <a:t>és</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="2200" b="1" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="FFFFFF"/>
+                </a:solidFill>
+                <a:latin typeface="Garamond"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="2200" b="1" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="FFFFFF"/>
+                </a:solidFill>
+                <a:latin typeface="Garamond"/>
+              </a:rPr>
+              <a:t>szöveg</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="2200" b="1" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="FFFFFF"/>
+                </a:solidFill>
+                <a:latin typeface="Garamond"/>
+              </a:rPr>
+              <a:t> – Lorem ipsum dolor sit </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="2200" b="1" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="FFFFFF"/>
+                </a:solidFill>
+                <a:latin typeface="Garamond"/>
+              </a:rPr>
+              <a:t>amet</a:t>
+            </a:r>
+            <a:endParaRPr sz="2200" b="1" dirty="0">
+              <a:solidFill>
+                <a:srgbClr val="FFFFFF"/>
+              </a:solidFill>
+              <a:latin typeface="Garamond"/>
+            </a:endParaRPr>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="6" name="footer_date"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="432000" y="6462000"/>
+            <a:ext cx="2160000" cy="324000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" anchor="t">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="l"/>
+            <a:r>
+              <a:rPr sz="850" b="0" i="0">
+                <a:solidFill>
+                  <a:srgbClr val="7A8A9E"/>
+                </a:solidFill>
+                <a:latin typeface="Calibri"/>
+              </a:rPr>
+              <a:t>2026.05.20.</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="7" name="footer_author"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="0" y="6462000"/>
+            <a:ext cx="12192119" cy="324000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" anchor="t">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="ctr"/>
+            <a:r>
+              <a:rPr sz="850" b="0" i="0">
+                <a:solidFill>
+                  <a:srgbClr val="7A8A9E"/>
+                </a:solidFill>
+                <a:latin typeface="Calibri"/>
+              </a:rPr>
+              <a:t>Dr. Hári László</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="8" name="footer_page"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="10680119" y="6462000"/>
+            <a:ext cx="1080000" cy="324000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" anchor="t">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="r"/>
+            <a:r>
+              <a:rPr sz="850" b="0" i="0">
+                <a:solidFill>
+                  <a:srgbClr val="7A8A9E"/>
+                </a:solidFill>
+                <a:latin typeface="Calibri"/>
+              </a:rPr>
+              <a:t>4</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:cxnSp>
+        <p:nvCxnSpPr>
+          <p:cNvPr id="9" name="col_separator"/>
+          <p:cNvCxnSpPr>
+            <a:cxnSpLocks/>
+          </p:cNvCxnSpPr>
+          <p:nvPr/>
+        </p:nvCxnSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="6615903" y="1296000"/>
+            <a:ext cx="0" cy="4986000"/>
+          </a:xfrm>
+          <a:prstGeom prst="line">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:ln w="12700">
+            <a:solidFill>
+              <a:srgbClr val="D0D8E4"/>
+            </a:solidFill>
+          </a:ln>
+          <a:effectLst/>
+        </p:spPr>
+        <p:style>
+          <a:lnRef idx="2">
+            <a:schemeClr val="accent1"/>
+          </a:lnRef>
+          <a:fillRef idx="0">
+            <a:schemeClr val="accent1"/>
+          </a:fillRef>
+          <a:effectRef idx="1">
+            <a:schemeClr val="accent1"/>
+          </a:effectRef>
+          <a:fontRef idx="minor">
+            <a:schemeClr val="tx1"/>
+          </a:fontRef>
+        </p:style>
+      </p:cxnSp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="10" name="col_left_body"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="432000" y="1296000"/>
+            <a:ext cx="6003903" cy="2254463"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="l">
+              <a:spcBef>
+                <a:spcPts val="400"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="100"/>
+              </a:spcAft>
+            </a:pPr>
+            <a:r>
+              <a:rPr sz="1600" b="1" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="D4622A"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>▸  </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>Első</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>pont</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>: Lorem ipsum dolor sit </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>amet</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>, </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>consectetur</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>adipiscing</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>elit</a:t>
+            </a:r>
+            <a:endParaRPr sz="1600" dirty="0">
+              <a:solidFill>
+                <a:srgbClr val="1A1A2E"/>
+              </a:solidFill>
+              <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+            </a:endParaRPr>
+          </a:p>
+          <a:p>
+            <a:pPr algn="l">
+              <a:spcBef>
+                <a:spcPts val="400"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="100"/>
+              </a:spcAft>
+            </a:pPr>
+            <a:r>
+              <a:rPr sz="1600" b="1" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="D4622A"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>▸  </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>Második</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>pont</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>: Sed do </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>eiusmod</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>tempor</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>incididunt</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>ut</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> labore et dolore magna</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:pPr algn="l">
+              <a:spcBef>
+                <a:spcPts val="400"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="100"/>
+              </a:spcAft>
+            </a:pPr>
+            <a:r>
+              <a:rPr sz="1600" b="1" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="D4622A"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>▸  </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>Harmadik</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>pont</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>: Ut </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>enim</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> ad minim </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>veniam</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>, quis </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>nostrud</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> exercitation </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>ullamco</a:t>
+            </a:r>
+            <a:endParaRPr sz="1600" dirty="0">
+              <a:solidFill>
+                <a:srgbClr val="1A1A2E"/>
+              </a:solidFill>
+              <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+            </a:endParaRPr>
+          </a:p>
+          <a:p>
+            <a:pPr algn="l">
+              <a:spcBef>
+                <a:spcPts val="400"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="100"/>
+              </a:spcAft>
+            </a:pPr>
+            <a:r>
+              <a:rPr sz="1600" b="1" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="D4622A"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>▸  </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>Negyedik</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>pont</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>: Duis </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>aute</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>irure</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> dolor in </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>reprehenderit</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> in </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>voluptate</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" dirty="0" err="1">
+                <a:solidFill>
+                  <a:srgbClr val="1A1A2E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>velit</a:t>
+            </a:r>
+            <a:endParaRPr sz="1600" dirty="0">
+              <a:solidFill>
+                <a:srgbClr val="1A1A2E"/>
+              </a:solidFill>
+              <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+            </a:endParaRPr>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="11" name="col_right_image"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="6795903" y="1296000"/>
+            <a:ext cx="4964216" cy="3739500"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:solidFill>
+            <a:srgbClr val="E8EDF3"/>
+          </a:solidFill>
+          <a:ln w="9525">
+            <a:solidFill>
+              <a:srgbClr val="D0D8E4"/>
+            </a:solidFill>
+          </a:ln>
+          <a:effectLst/>
+        </p:spPr>
+        <p:style>
+          <a:lnRef idx="1">
+            <a:schemeClr val="accent1"/>
+          </a:lnRef>
+          <a:fillRef idx="3">
+            <a:schemeClr val="accent1"/>
+          </a:fillRef>
+          <a:effectRef idx="2">
+            <a:schemeClr val="accent1"/>
+          </a:effectRef>
+          <a:fontRef idx="minor">
+            <a:schemeClr val="lt1"/>
+          </a:fontRef>
+        </p:style>
+        <p:txBody>
+          <a:bodyPr rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="ctr"/>
+            <a:r>
+              <a:rPr sz="1600" i="1">
+                <a:solidFill>
+                  <a:srgbClr val="7A8A9E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>[Kép / ábra helye]</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="12" name="figure_caption"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="6795903" y="5107500"/>
+            <a:ext cx="4964216" cy="338554"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="l"/>
+            <a:r>
+              <a:rPr sz="1600" b="1" i="1">
+                <a:solidFill>
+                  <a:srgbClr val="D4622A"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>1. ábra: </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" b="0" i="1">
+                <a:solidFill>
+                  <a:srgbClr val="4A5A6E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>Az ábra rövid leírása lorem ipsum</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+</p:sld>

@@ -1,0 +1,803 @@
+<?xml version="1.0" encoding="UTF-8"?><p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="1" name=""/>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="3" name="slide_title"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="432000" y="108000"/>
+            <a:ext cx="10248119" cy="900000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" anchor="ctr">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="l"/>
+            <a:r>
+              <a:rPr sz="2200" b="1">
+                <a:solidFill>
+                  <a:srgbClr val="FFFFFF"/>
+                </a:solidFill>
+                <a:latin typeface="Garamond"/>
+              </a:rPr>
+              <a:t>Táblázat – Lorem ipsum adatok</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="6" name="footer_date"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="432000" y="6462000"/>
+            <a:ext cx="2160000" cy="324000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" anchor="t">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="l"/>
+            <a:r>
+              <a:rPr sz="850" b="0" i="0">
+                <a:solidFill>
+                  <a:srgbClr val="7A8A9E"/>
+                </a:solidFill>
+                <a:latin typeface="Calibri"/>
+              </a:rPr>
+              <a:t>2026.05.20.</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="7" name="footer_author"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="0" y="6462000"/>
+            <a:ext cx="12192119" cy="324000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" anchor="t">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="ctr"/>
+            <a:r>
+              <a:rPr sz="850" b="0" i="0">
+                <a:solidFill>
+                  <a:srgbClr val="7A8A9E"/>
+                </a:solidFill>
+                <a:latin typeface="Calibri"/>
+              </a:rPr>
+              <a:t>Dr. Hári László</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="8" name="footer_page"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="10680119" y="6462000"/>
+            <a:ext cx="1080000" cy="324000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" anchor="t">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="r"/>
+            <a:r>
+              <a:rPr sz="850" b="0" i="0">
+                <a:solidFill>
+                  <a:srgbClr val="7A8A9E"/>
+                </a:solidFill>
+                <a:latin typeface="Calibri"/>
+              </a:rPr>
+              <a:t>6</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="9" name="table_title"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="432000" y="1296000"/>
+            <a:ext cx="11328119" cy="338554"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square">
+            <a:spAutoFit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="l"/>
+            <a:r>
+              <a:rPr sz="1600" b="1" i="1">
+                <a:solidFill>
+                  <a:srgbClr val="D4622A"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t xml:space="preserve">1. táblázat: </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr sz="1600" b="0" i="1">
+                <a:solidFill>
+                  <a:srgbClr val="4A5A6E"/>
+                </a:solidFill>
+                <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+              </a:rPr>
+              <a:t>Összefoglaló adatok – lorem ipsum measurement results</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:cxnSp>
+        <p:nvCxnSpPr>
+          <p:cNvPr id="10" name="table_title_separator"/>
+          <p:cNvCxnSpPr/>
+          <p:nvPr/>
+        </p:nvCxnSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="432000" y="1656000"/>
+            <a:ext cx="11328119" cy="0"/>
+          </a:xfrm>
+          <a:prstGeom prst="line">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:ln w="6350">
+            <a:solidFill>
+              <a:srgbClr val="D0D8E4"/>
+            </a:solidFill>
+          </a:ln>
+        </p:spPr>
+        <p:style>
+          <a:lnRef idx="2">
+            <a:schemeClr val="accent1"/>
+          </a:lnRef>
+          <a:fillRef idx="0">
+            <a:schemeClr val="accent1"/>
+          </a:fillRef>
+          <a:effectRef idx="1">
+            <a:schemeClr val="accent1"/>
+          </a:effectRef>
+          <a:fontRef idx="minor">
+            <a:schemeClr val="tx1"/>
+          </a:fontRef>
+        </p:style>
+      </p:cxnSp>
+      <p:graphicFrame>
+        <p:nvGraphicFramePr>
+          <p:cNvPr id="11" name="Table 10"/>
+          <p:cNvGraphicFramePr>
+            <a:graphicFrameLocks noGrp="1"/>
+          </p:cNvGraphicFramePr>
+          <p:nvPr>
+            <p:extLst>
+              <p:ext uri="{D42A27DB-BD31-4B8C-83A1-F6EECF244321}">
+                <p14:modId xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="272224365"/>
+              </p:ext>
+            </p:extLst>
+          </p:nvPr>
+        </p:nvGraphicFramePr>
+        <p:xfrm>
+          <a:off x="432000" y="1728000"/>
+          <a:ext cx="11328119" cy="4554000"/>
+        </p:xfrm>
+        <a:graphic>
+          <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/table">
+            <a:tbl>
+              <a:tblPr firstRow="1" bandRow="1">
+                <a:tableStyleId>{5C22544A-7EE6-4342-B048-85BDC9FD1C3A}</a:tableStyleId>
+              </a:tblPr>
+              <a:tblGrid>
+                <a:gridCol w="2832029">
+                  <a:extLst>
+                    <a:ext uri="{9D8B030D-6E8A-4147-A177-3AD203B41FA5}">
+                      <a16:colId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" val="20000"/>
+                    </a:ext>
+                  </a:extLst>
+                </a:gridCol>
+                <a:gridCol w="2832029">
+                  <a:extLst>
+                    <a:ext uri="{9D8B030D-6E8A-4147-A177-3AD203B41FA5}">
+                      <a16:colId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" val="20001"/>
+                    </a:ext>
+                  </a:extLst>
+                </a:gridCol>
+                <a:gridCol w="2832029">
+                  <a:extLst>
+                    <a:ext uri="{9D8B030D-6E8A-4147-A177-3AD203B41FA5}">
+                      <a16:colId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" val="20002"/>
+                    </a:ext>
+                  </a:extLst>
+                </a:gridCol>
+                <a:gridCol w="2832032">
+                  <a:extLst>
+                    <a:ext uri="{9D8B030D-6E8A-4147-A177-3AD203B41FA5}">
+                      <a16:colId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" val="20003"/>
+                    </a:ext>
+                  </a:extLst>
+                </a:gridCol>
+              </a:tblGrid>
+              <a:tr h="910800">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="1" dirty="0" err="1">
+                          <a:solidFill>
+                            <a:srgbClr val="FFFFFF"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>Paraméter</a:t>
+                      </a:r>
+                      <a:endParaRPr sz="1600" b="1" dirty="0">
+                        <a:solidFill>
+                          <a:srgbClr val="FFFFFF"/>
+                        </a:solidFill>
+                        <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                      </a:endParaRPr>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="0D1B3E"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="1">
+                          <a:solidFill>
+                            <a:srgbClr val="FFFFFF"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>Mértékegység</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="0D1B3E"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="1">
+                          <a:solidFill>
+                            <a:srgbClr val="FFFFFF"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>Mért érték</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="0D1B3E"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="1">
+                          <a:solidFill>
+                            <a:srgbClr val="FFFFFF"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>Referencia</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="0D1B3E"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:extLst>
+                  <a:ext uri="{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}">
+                    <a16:rowId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" val="10000"/>
+                  </a:ext>
+                </a:extLst>
+              </a:tr>
+              <a:tr h="910800">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="l"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>Lorem ipsum A</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="EFF3F8"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>mm</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="EFF3F8"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>12,4</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="EFF3F8"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>10–15</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="EFF3F8"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:extLst>
+                  <a:ext uri="{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}">
+                    <a16:rowId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" val="10001"/>
+                  </a:ext>
+                </a:extLst>
+              </a:tr>
+              <a:tr h="910800">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="l"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>Lorem ipsum B</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="FFFFFF"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>Hz</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="FFFFFF"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>120,0</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="FFFFFF"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>100–140</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="FFFFFF"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:extLst>
+                  <a:ext uri="{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}">
+                    <a16:rowId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" val="10002"/>
+                  </a:ext>
+                </a:extLst>
+              </a:tr>
+              <a:tr h="910800">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="l"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>Lorem ipsum C</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="EFF3F8"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>kPa</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="EFF3F8"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>0,82</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="EFF3F8"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>0,70–0,90</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="EFF3F8"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:extLst>
+                  <a:ext uri="{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}">
+                    <a16:rowId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" val="10003"/>
+                  </a:ext>
+                </a:extLst>
+              </a:tr>
+              <a:tr h="910800">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="l"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>Lorem ipsum D</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="FFFFFF"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>°C</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="FFFFFF"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>38,5</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="FFFFFF"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr algn="ctr"/>
+                      <a:r>
+                        <a:rPr sz="1600" b="0" dirty="0">
+                          <a:solidFill>
+                            <a:srgbClr val="1A1A2E"/>
+                          </a:solidFill>
+                          <a:latin typeface="Aptos" panose="020B0004020202020204" pitchFamily="34" charset="0"/>
+                        </a:rPr>
+                        <a:t>35–42</a:t>
+                      </a:r>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr>
+                    <a:solidFill>
+                      <a:srgbClr val="FFFFFF"/>
+                    </a:solidFill>
+                  </a:tcPr>
+                </a:tc>
+                <a:extLst>
+                  <a:ext uri="{0D108BD9-81ED-4DB2-BD59-A6C34878D82A}">
+                    <a16:rowId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" val="10004"/>
+                  </a:ext>
+                </a:extLst>
+              </a:tr>
+            </a:tbl>
+          </a:graphicData>
+        </a:graphic>
+      </p:graphicFrame>
+      
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+</p:sld>

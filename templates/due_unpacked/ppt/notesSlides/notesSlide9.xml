@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><p:notes xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="1" name=""/>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="2" name="Slide Image Placeholder 1"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1" noRot="1" noChangeAspect="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldImg" idx="2"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="3" name="Notes Placeholder 2"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="body" sz="quarter" idx="3"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+        <p:txBody>
+          <a:bodyPr/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r>
+              <a:t>TÁBLÁZAT DIA – szerkesztési útmutató</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>─────────────────────────────────────────</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>slide_title           : dia témája (navy sávban)</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>table_title           : '1. táblázat: [felirat]'</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">                        runs[0].text = '1. táblázat: '</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">                        runs[1].text = 'a felirat szövege'</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>table_title_separator : CONNECTOR vonal – NE módosítsd</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>data_table (shape)    : python-pptx Table objektum</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">                        cella elérése: table.cell(sor, oszlop).text = ...</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">                        fejléc: sor=0, adatok: sor=1..(ROWS-1)</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t>Sorok/oszlopok módosítása:</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">  Sorokat a python-pptx nem tud dinamikusan hozzáadni –</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">  a táblát törölve és újra létrehozva kell generálni.</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:t xml:space="preserve">  Cowork szkript: 'Hozz létre új táblázat diát N sorral és M oszloppal.'</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="4" name="Slide Number Placeholder 3"/>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldNum" sz="quarter" idx="5"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+</p:notes>

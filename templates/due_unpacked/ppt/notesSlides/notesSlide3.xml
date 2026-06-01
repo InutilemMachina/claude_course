@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?><p:notes xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="1" name="">
+          <a:extLst>
+            <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+              <a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{43255E8B-BF41-D958-3757-F8B20B055F48}"/>
+            </a:ext>
+          </a:extLst>
+        </p:cNvPr>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="2" name="Slide Image Placeholder 1">
+            <a:extLst>
+              <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                <a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{E3EEF653-FACD-A2E4-B91D-3442D87695F2}"/>
+              </a:ext>
+            </a:extLst>
+          </p:cNvPr>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1" noRot="1" noChangeAspect="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldImg" idx="2"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="3" name="Notes Placeholder 2">
+            <a:extLst>
+              <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                <a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{93B5B391-86B6-1719-59C0-222EBF0830B3}"/>
+              </a:ext>
+            </a:extLst>
+          </p:cNvPr>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="body" sz="quarter" idx="3"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+        <p:txBody>
+          <a:bodyPr/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">SZAKASZFEJLÉC DIA – </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szerkesztési</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>útmutató</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>─────────────────────────────────────────</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>section_number</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">      : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>fejezet</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>sorszáma</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> (pl. '03') – Garamond 72pt</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>section_title</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">       : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>fejezet</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> neve (max 2 </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>sor</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">, Garamond 24pt </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>fehér</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>)</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>section_description</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>jobb</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>oldali</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>rövid</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>leírás</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> (Calibri 16pt)</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>bottom_stripe</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">       : </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>narancs</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>alap</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>sáv</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> – NE </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>módosítsd</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>section_bg_left</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">     : navy </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>bal</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>sáv</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> – NE </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>módosítsd</a:t>
+            </a:r>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:endParaRPr dirty="0"/>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>Cowork</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>utasítás</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>:</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">  'A </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>section_number</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>értékét</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>cseréld</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>: 03'</a:t>
+            </a:r>
+          </a:p>
+          <a:p>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve">  'A </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>section_title</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>szövege</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t xml:space="preserve"> </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0" err="1"/>
+              <a:t>legyen</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr dirty="0"/>
+              <a:t>: ...'</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="4" name="Slide Number Placeholder 3">
+            <a:extLst>
+              <a:ext uri="{FF2B5EF4-FFF2-40B4-BE49-F238E27FC236}">
+                <a16:creationId xmlns:a16="http://schemas.microsoft.com/office/drawing/2014/main" id="{30B45925-CAB8-3895-75E8-B4D48EC0F22F}"/>
+              </a:ext>
+            </a:extLst>
+          </p:cNvPr>
+          <p:cNvSpPr>
+            <a:spLocks noGrp="1"/>
+          </p:cNvSpPr>
+          <p:nvPr>
+            <p:ph type="sldNum" sz="quarter" idx="5"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr/>
+      </p:sp>
+    </p:spTree>
+    <p:extLst>
+      <p:ext uri="{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}">
+        <p14:creationId xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="2711760759"/>
+      </p:ext>
+    </p:extLst>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+</p:notes>

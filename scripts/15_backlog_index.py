@@ -43,7 +43,7 @@ def extract_open_points_section(text: str) -> list[str]:
             in_section = True
             continue
         if in_section:
-            if s.startswith('#'):
+            if s.startswith('## ') or s.startswith('# '):
                 break  # next section
             if s.startswith('- '):
                 items.append(s[2:].strip())

@@ -22,7 +22,7 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 | Vizsgakérdések (Moodle MCQ) | `08_question_bank` |
 | Jupyter notebook | 🔲 jövőbeni `11_notebook_maker` |
 
-**Kulcselv:** A megértés diktálja a struktúrát — nem a fejezetek, hanem a fogalmi összefüggések.
+**Kulcselv:** → [Instructions.md §2](../Instructions.md)
 
 ## 2. Lépések és IO
 
@@ -100,30 +100,9 @@ flowchart TD
 | Valódi ábra | ⚙️ ha MinerU kinyerte | `figure_catalog.json` alapján |
 | MARP vizuális | ✅ minden dián | Mermaid VAGY ábra |
 
-## 5. Mappastruktúra (tantárgy-szintű)
+## 5. Mappastruktúra
 
-```
-{tantargy}/
-└── {N_het}/
-    ├── 1_raw_inputs/       😎  nyers PDF-ek, HTML-ek, PPTX-ok
-    │   └── citations_seed.json
-    ├── 2_clean_inputs/     🐍  MinerU + extraktor kimenetek
-    │   ├── {forrás}/
-    │   │   ├── images/
-    │   │   └── {forrás}.md
-    │   └── figure_catalog.json
-    ├── 3_mindmap/          🤖  mindmap (Claude generálta, user revideálta)
-    │   └── mindmap.md          (flowchart LR, [MSc] prefixek)
-    ├── 4_wip_outputs/      🤖  work-in-progress outputok
-    │   ├── N_Jegyzet.md        (Mermaid diagramok + összegzők + IEEE refs)
-    │   ├── N_Kerdesbank.md
-    │   ├── N_Prezentacio.md
-    │   └── N_Review.md
-    └── 5_clean_outputs/    ✅  camera-ready végtermékek
-        ├── N_Prezentacio.pptx
-        ├── N_Jegyzet.docx
-        └── N_Jegyzet_bsc.docx
-```
+→ Kanonikus mappastruktúra: [Instructions.md §6](../Instructions.md).
 
 ## 6. Citáció-rendszer
 
@@ -152,9 +131,7 @@ Az agent-prompt minden skill esetén a skill `§3 Eljárás` szekciója alapján
 
 ## 8. Nyitott pontok
 
-- 🔲 TODO: `00_init_course.py` portolása és tesztelése
-- 🔲 TODO: `08_ieee_renderer.py` UUID→filename patch elkészítése
-- 🔲 TODO: `11_notebook_maker` skill (Jupyter szemléltetés) — jövőbeni lépés
+→ Backlog kezelése: [project_status.md](project_status.md).
 
 ## Változásjegyzék
 

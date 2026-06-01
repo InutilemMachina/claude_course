@@ -9,45 +9,41 @@ updated: 2026-06-01
 
 ## Aktuális fázis
 
-**Inicializálás** — repo felépítés, meta-fájlok, sarokkő skill-ek kész.
-Következő: skill-ek iteratív fejlesztése + lépésteszt.
+**Lépésteszt-kész** — minden skill (00–10) és script megvan.
+Következő: `atg` és `dft` teszteseteken végigjárni a teljes pipeline-t lépésről lépésre.
 
 ## Elkészült (✅)
 
 - ✅ Repo struktúra (`claude_course/`)
 - ✅ `CLAUDE.md`, `Instructions.md`, `pipeline.md`
 - ✅ `skill_template.md`
-- ✅ `03_mindmap_builder.md` (sarokkő skill)
-- ✅ `04_content_synthesizer.md` (sarokkő skill)
+- ✅ Skills 00–10: mind elkészült (03 + 04 sarokkövek)
 - ✅ Scripts: 14 fájl portolva/átnevezve
-
-## Folyamatban (⚙️)
-
-- ⚙️ Skill-ek: 00, 01, 02, 05, 06, 07, 08, 09, 10 — stub szinten szükségesek
+- ✅ Scripts refactor: deduplikáció, `subn`, modul-szintű regex-ek, `resolve_week` centralizálva
+- ✅ `00_init_course.py`: `WEEK_SUBDIRS` javítva (`3_raw_outputs` → `3_mindmap`)
+- ✅ Meta-fájlok deduplikálva (Instructions §13, pipeline §5, §8 → referenciák)
 
 ## Backlog (🔲)
 
-- 🔲 B-01: `01_source_collector.md` skill megírása
-- 🔲 B-02: `02_source_extractor.md` skill megírása
-- 🔲 B-03: `05_visual_enricher.md` skill megírása
-- 🔲 B-04: `06_typesetter.md` skill megírása (06_typesetter.py már portolva)
-- 🔲 B-05: `07_quality_reviewer.md` skill megírása
-- 🔲 B-06: `08_question_bank.md` skill megírása
-- 🔲 B-07: `09_presentation_maker.md` skill megírása
-- 🔲 B-08: `10_bsc_export.md` skill megírása
-- 🔲 B-09: `08_ieee_renderer.py` UUID→filename patch (citations rendszer)
-- 🔲 B-10: `00_init_course.py` tesztelése az új mappastruktúrával (`3_mindmap/` mappa)
-- 🔲 B-11: Lépésteszt TC1 (surge/stall/choke) — 03+04 skill-ekkel
-- 🔲 B-12: Lépésteszt TC2 (Randall könyv) — 03+04 skill-ekkel
-- 🔲 B-13: `11_notebook_maker` skill (Jupyter szemléltetés) — jövőbeni lépés
+- 🔲 B-01: `atg` pipeline lépésteszt (01 → 10, megállva minden checkpointnál)
+- 🔲 B-02: `dft` pipeline lépésteszt (1 könyvfejezet feldolgozása)
+- 🔲 B-03: `08_ieee_renderer.py` UUID→filename patch — citációs rendszer tesztelése
+- 🔲 B-04: `00_init_course.py` tesztelése az új `3_mindmap/` mappastruktúrával
+- 🔲 B-05: `15_backlog_index.py` — `startswith('#')` bug javítás (section-break túl széles)
+- 🔲 B-06: `11_notebook_maker` skill (Jupyter szemléltetés) — jövőbeni lépés
+- 🔲 B-07: YouTube/médialink szekció az `08_question_bank`-ban — jövőbeni lépés
+- 🔲 B-08: `02_mineru_pipeline.py` vs `02_source_extractor.py` — melyik az aktuális? Tisztázandó.
 
 ## Nyitott kérdések (❔)
 
 - ❔ Q-01: DUE template DOCX portolása — `templates/` mappába szükséges-e?
-- ❔ Q-02: `figure_catalog.json` formátuma változott-e? (claude_play 09_figure_mapper.py kompatibilitás)
+- ❔ Q-02: `templates/assets2/` mappa — felesleges maradvány? Törölhető?
+- ❔ Q-03: `06_heading_numberer.py` — nincs pipeline-lépés hozzárendelve; a 06 skill-be beépítendő?
 
 ## Változásjegyzék
 
 | Dátum | Esemény |
 |-------|---------|
 | 2026-06-01 | Repo inicializálva; CLAUDE.md, Instructions.md, pipeline.md, 03+04 skill kész |
+| 2026-06-01 | Scripts refactor: subn, modul regex, resolve_week centralizálva, 3_mindmap fix |
+| 2026-06-01 | Meta-fájlok deduplikálva; project_status frissítve (B-01–B-08 lezárva) |

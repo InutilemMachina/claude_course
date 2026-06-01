@@ -170,5 +170,4 @@ Mérce: `python scripts/15_backlog_index.py` output — **nem nőhet**.
 
 ## 13. Nyitott pontok
 
-- 🔲 TODO: `11_notebook_maker` skill (Jupyter notebook szemléltetés) — jövőbeni lépés
-- 🔲 TODO: YouTube/médialink szekció az `08_question_bank`-ban
+→ Backlog kezelése: [project_status.md](.claude/project_status.md).

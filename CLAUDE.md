@@ -23,13 +23,9 @@ Más fájlt csak akkor olvass be, ha a feladat ezt közvetlenül igényli.
 - `project_status.md`: ha állapotot kell frissíteni.
 - `scripts/*.py`: ha végrehajtó logikára van szükség.
 
-## 3. Rövid elv
+## 3. Elvek
 
-- Egy fájl = egy cél.
-- Az `Instructions.md` tartalmazza a stabil szabályokat.
-- A `pipeline.md` tartalmazza a végrehajtási gráfot.
-- A skill-ek csak lokális működési protokollok.
-- A script-ek a végrehajtást végzik.
+→ Lásd [Instructions.md](Instructions.md).
 
 ## 4. Fájlkatalógus
 

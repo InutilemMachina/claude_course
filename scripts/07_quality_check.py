@@ -45,23 +45,23 @@ def find_jegyzet(week_dir: Path) -> Path | None:
 def compute_metrics(text: str) -> dict:
     lines = text.splitlines()
 
-    h2 = [l for l in lines if l.startswith('## ')
-          and 'Tartalomjegyz' not in l and 'Hivatkoz' not in l]
-    h3 = [l for l in lines if l.startswith('### ')]
-
-    # Per-chapter ### counts
+    h2 = []
+    h3 = []
     ch_sizes = {}
     cur = None
     for l in lines:
         if l.startswith('## ') and 'Tartalomjegyz' not in l and 'Hivatkoz' not in l:
+            h2.append(l)
             cur = re.sub(r'^##\s+', '', l).strip()
             ch_sizes[cur] = 0
-        elif l.startswith('### ') and cur:
-            ch_sizes[cur] += 1
+        elif l.startswith('### '):
+            h3.append(l)
+            if cur:
+                ch_sizes[cur] += 1
     max_chapter = max(ch_sizes.items(), key=lambda x: x[1]) if ch_sizes else (None, 0)
 
     sups = text.count('<sup>')
-    inline_src = len([l for l in lines if re.match(r'\s*Felhaszn', l, re.IGNORECASE)])
+    inline_src = sum(1 for l in lines if re.match(r'\s*Felhaszn', l, re.IGNORECASE))
     dup_sup = len(re.findall(r'<sup>\[(\d+)\]</sup>,\s*<sup>\[\1\]</sup>', text))
     broken_marker = text.count('<!, Q:')
     toc_blocks = len(re.findall(r'^##\s+Tartalomjegyz', text, re.M))
@@ -126,7 +126,7 @@ def main():
 
     week_dir = args.week_dir.resolve()
     jegyzet = find_jegyzet(week_dir)
-    if not jegyzet or not jegyzet.exists():
+    if not jegyzet:
         sys.exit(f"HIBA: nem található *_Jegyzet.md itt: {week_dir / '4_wip_outputs'}")
 
     text = jegyzet.read_bytes().decode("utf-8-sig")

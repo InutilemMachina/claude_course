@@ -30,7 +30,7 @@ except ImportError:
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = PROJECT_ROOT / "templates" / "course_development_template.md"
 
-WEEK_SUBDIRS = ["1_raw_inputs", "2_clean_inputs", "3_raw_outputs",
+WEEK_SUBDIRS = ["1_raw_inputs", "2_clean_inputs", "3_mindmap",
                 "4_wip_outputs", "5_clean_outputs"]
 
 

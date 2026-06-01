@@ -43,7 +43,7 @@ def extract_open_points_section(text: str) -> list[str]:
             in_section = True
             continue
         if in_section:
-            if s.startswith('## ') or s.startswith('# '):
+            if s.startswith('#'):
                 break  # next section
             if s.startswith('- '):
                 items.append(s[2:].strip())
@@ -92,19 +92,14 @@ def main():
     results: list[tuple[str, list[str]]] = []
     total = 0
 
-    for f in meta_files:
+    for f, extractor in (
+        [(f, extract_open_points_section) for f in meta_files] +
+        [(f, extract_open_feedback) for f in skill_files]
+    ):
         if not f.exists():
             continue
         text = f.read_bytes().decode("utf-8-sig")
-        items = extract_open_points_section(text)
-        if items:
-            rel = f.relative_to(PROJECT_ROOT).as_posix()
-            results.append((rel, items))
-            total += len(items)
-
-    for f in skill_files:
-        text = f.read_bytes().decode("utf-8-sig")
-        items = extract_open_feedback(text)
+        items = extractor(text)
         if items:
             rel = f.relative_to(PROJECT_ROOT).as_posix()
             results.append((rel, items))

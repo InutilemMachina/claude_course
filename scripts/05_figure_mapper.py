@@ -59,8 +59,9 @@ def is_preserved_block(block: str) -> bool:
     ):
         return True
     # Exclude ToC-like blocks: blocks dominated by markdown link-list items "- [..."
-    link_lines = sum(1 for l in block.splitlines() if re.match(r'\s*-\s+\[', l))
-    total_lines = len([l for l in block.splitlines() if l.strip()])
+    split = block.splitlines()
+    link_lines = sum(1 for l in split if re.match(r'\s*-\s+\[', l))
+    total_lines = sum(1 for l in split if l.strip())
     if total_lines > 0 and link_lines / total_lines > 0.5:
         return True
     return False

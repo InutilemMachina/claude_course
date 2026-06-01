@@ -22,6 +22,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+try:
+    from _citations_util import resolve_week
+except ImportError:
+    from scripts._citations_util import resolve_week  # type: ignore
+
 
 def resolve_pandoc(project_root: Path) -> str | None:
     """Find pandoc: PATH > .claude/config.json > winget install glob."""
@@ -45,16 +50,6 @@ def resolve_pandoc(project_root: Path) -> str | None:
         for exe in base.glob("JohnMacFarlane.Pandoc*/pandoc*/pandoc.exe"):
             return str(exe)
     return None
-
-
-def resolve_week(week_dir: Path, week_arg) -> int:
-    if week_arg:
-        return int(week_arg)
-    seed = week_dir / "1_raw_inputs" / "citations_seed.json"
-    if seed.exists():
-        data = json.loads(seed.read_bytes().decode("utf-8-sig"))
-        return data.get("_meta", {}).get("week", 1)
-    return 1
 
 
 def find_template(project_root: Path) -> Path | None:

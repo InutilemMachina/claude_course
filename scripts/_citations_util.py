@@ -1,11 +1,22 @@
 """
 _citations_util.py -- Shared citation utilities
 
-Shared by 04_nlm_dfs_queries.py and 07_citations_renumber.py.
+Shared by multiple pipeline scripts.
 """
 
 import json
 from pathlib import Path
+
+
+def resolve_week(week_dir: Path, week_arg) -> int:
+    """Read week number from CLI arg or citations_seed.json _meta.week."""
+    if week_arg:
+        return int(week_arg)
+    seed = week_dir / '1_raw_inputs' / 'citations_seed.json'
+    if seed.exists():
+        data = json.loads(seed.read_bytes().decode('utf-8-sig'))
+        return data.get('_meta', {}).get('week', 1)
+    return 1
 
 
 def load_seed(seed_path: Path) -> dict:

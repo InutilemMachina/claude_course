@@ -19,10 +19,24 @@ Usage:
 """
 
 import argparse
-import json
 import re
 import sys
 from pathlib import Path
+
+try:
+    from _citations_util import resolve_week
+except ImportError:
+    from scripts._citations_util import resolve_week  # type: ignore
+
+_RE_MSC_BLOCK = re.compile(
+    r'[ \t]*<!--\s*MSc\s*-->.*?<!--\s*/MSc\s*-->[ \t]*\n?',
+    re.DOTALL | re.IGNORECASE,
+)
+_RE_MSC_Q = re.compile(
+    r'\*\*K\[\d+\]\*\*\s+SZINT:[45].*?(?=\*\*K\[\d+\]\*\*|\Z)',
+    re.DOTALL,
+)
+_RE_BLANK = re.compile(r'\n{3,}')
 
 
 # ---------------------------------------------------------------------------
@@ -31,12 +45,7 @@ from pathlib import Path
 
 def remove_msc_blocks(text: str) -> str:
     """Remove <!-- MSc --> ... <!-- /MSc --> block pairs (multiline)."""
-    return re.sub(
-        r'[ \t]*<!--\s*MSc\s*-->.*?<!--\s*/MSc\s*-->[ \t]*\n?',
-        '',
-        text,
-        flags=re.DOTALL | re.IGNORECASE,
-    )
+    return _RE_MSC_BLOCK.sub('', text)
 
 
 def remove_mermaid_msc_nodes(text: str) -> str:
@@ -65,13 +74,7 @@ def remove_msc_questions(text: str) -> str:
     A question block starts with **K[N]** SZINT:4 or SZINT:5 and ends
     before the next **K or end of file.
     """
-    # Match from **K[N]** SZINT:[4-5] to the next **K or EOF
-    return re.sub(
-        r'\*\*K\[\d+\]\*\*\s+SZINT:[45].*?(?=\*\*K\[\d+\]\*\*|\Z)',
-        '',
-        text,
-        flags=re.DOTALL,
-    )
+    return _RE_MSC_Q.sub('', text)
 
 
 def bsc_filter(text: str) -> str:
@@ -79,8 +82,7 @@ def bsc_filter(text: str) -> str:
     text = remove_mermaid_msc_nodes(text)
     text = remove_msc_questions(text)
     # Collapse 3+ consecutive blank lines to 2
-    text = re.sub(r'\n{3,}', '\n\n', text)
-    return text
+    return _RE_BLANK.sub('\n\n', text)
 
 
 # ---------------------------------------------------------------------------
@@ -94,16 +96,6 @@ FILE_STEMS = {
     'questions':    'Kerdesek',
     'presentation': 'Prezentacio',
 }
-
-
-def resolve_week(week_dir: Path, week_arg) -> int:
-    if week_arg:
-        return int(week_arg)
-    seed = week_dir / '1_raw_inputs' / 'citations_seed.json'
-    if seed.exists():
-        data = json.loads(seed.read_bytes().decode('utf-8-sig'))
-        return data.get('_meta', {}).get('week', 1)
-    return 1
 
 
 # ---------------------------------------------------------------------------

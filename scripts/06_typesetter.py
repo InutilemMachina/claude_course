@@ -8,6 +8,7 @@ Usage:
     python 11_typesetter.py <path_to_N_Jegyzet.md>
 """
 
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -16,6 +17,19 @@ try:
     _fix_stdout()
 except ImportError:
     pass
+
+_TOC_LINK_RE = re.compile(r'^\s*-\s+\[.*\]\(#.*\)\s*$')
+
+_TERM_MAP = [
+    (re.compile(r'\bemissziós tényező\b'),   'emisszivitás'),
+    (re.compile(r'\bemittancia\b'),           'emisszivitás'),
+    (re.compile(r'\bsugárzási tényező\b'),    'emisszivitás'),
+    (re.compile(r'\blégköri ablak\b'),        'atmoszferikus ablak'),
+    (re.compile(r'\blégköri ablakok\b'),      'atmoszferikus ablakok'),
+    (re.compile(r'\bszürke test\b'),          'szürketest'),
+    (re.compile(r'\bhőkamera\b'),             'IR kamera'),
+    (re.compile(r'\bhőkamerák\b'),            'IR kamerák'),
+]
 
 
 # ---- File I/O ----
@@ -38,24 +52,21 @@ def rule_a_sup_paragraph_break(text: str) -> tuple[str, int]:
     a capital (Hungarian) letter.
     """
     pattern = re.compile(r"(</sup>\.)([ \t]*)([A-ZÁÉÍÓÖŐÚÜŰ])")
-    count = len(pattern.findall(text))
-    text = pattern.sub(r"\1\n\n\3", text)
+    text, count = pattern.subn(r"\1\n\n\3", text)
     return text, count
 
 
 def rule_c_image_spacing(text: str) -> tuple[str, int]:
     """Rule C: Ensure a blank line before every ![ image reference."""
     pattern = re.compile(r"([^\n])\n(!\[)")
-    count = len(pattern.findall(text))
-    text = pattern.sub(r"\1\n\n\2", text)
+    text, count = pattern.subn(r"\1\n\n\2", text)
     return text, count
 
 
 def rule_d_blockquote_spacing(text: str) -> tuple[str, int]:
     """Rule D: Ensure a blank line before every > blockquote line."""
     pattern = re.compile(r"([^\n>])\n(> )")
-    count = len(pattern.findall(text))
-    text = pattern.sub(r"\1\n\n\2", text)
+    text, count = pattern.subn(r"\1\n\n\2", text)
     return text, count
 
 
@@ -64,16 +75,14 @@ def rule_b_bullet_whitespace(text: str) -> tuple[str, int]:
     Fixes NLM output artifact: '* ' or '-  ' with multiple spaces.
     """
     pattern = re.compile(r"^(\s*[*-])\s{2,}", re.MULTILINE)
-    count = len(pattern.findall(text))
-    text = pattern.sub(r"\1 ", text)
+    text, count = pattern.subn(r"\1 ", text)
     return text, count
 
 
 def rule_e_hr_dedup(text: str) -> tuple[str, int]:
     """Rule E: Collapse consecutive --- separators into one."""
     pattern = re.compile(r"---\n+---")
-    count = len(pattern.findall(text))
-    text = pattern.sub("---", text)
+    text, count = pattern.subn("---", text)
     return text, count
 
 
@@ -196,7 +205,6 @@ def rule_c3_pdf_inline_noise(text: str) -> tuple[str, int]:
     """
     # Pattern: whitespace + (filename.ext) -- no spaces inside, common doc extensions
     pattern = re.compile(r'\s*\([A-Za-z0-9_\-\.]+\.(?:pdf|html|docx|pptx|txt)\)', re.IGNORECASE)
-    toc_link_re = re.compile(r'^\s*-\s+\[.*\]\(#.*\)\s*$')
     count = 0
     lines = text.split('\n')
     result = []
@@ -205,7 +213,7 @@ def rule_c3_pdf_inline_noise(text: str) -> tuple[str, int]:
         if line.strip().startswith('```'):
             in_fence = not in_fence
         if (in_fence or line.strip().startswith('#') or line.strip().startswith('<!--')
-                or toc_link_re.match(line)):
+                or _TOC_LINK_RE.match(line)):
             result.append(line)
         else:
             new_line, n = pattern.subn('', line)
@@ -230,36 +238,22 @@ def rule_j_terminology(text: str) -> tuple[str, int]:
     Rule J: Normalize Hungarian IR thermography terminology inconsistencies.
     Applied only to body text (not code blocks, YAML, headings).
     """
-    # Term pairs: (pattern, canonical_replacement)
-    TERM_MAP = [
-        (r'\bemissziós tényező\b',         'emisszivitás'),
-        (r'\bemittancia\b',                 'emisszivitás'),
-        (r'\bsugárzási tényező\b',          'emisszivitás'),
-        (r'\blégköri ablak\b',              'atmoszferikus ablak'),
-        (r'\blégköri ablakok\b',            'atmoszferikus ablakok'),
-        (r'\bszürke test\b',               'szürketest'),
-        (r'\bhőkamera\b',                  'IR kamera'),
-        (r'\bhőkamerák\b',                 'IR kamerák'),
-    ]
     count = 0
     lines = text.split('\n')
     result = []
     in_fence = False
-    # ToC link-line pattern: "- [text](#anchor)" -- terminology swap here would
-    # break the anchor (e.g. #a-hőkamerák → #a-IR kamerák, space + case mismatch).
-    toc_link_re = re.compile(r'^\s*-\s+\[.*\]\(#.*\)\s*$')
     for line in lines:
         if line.strip().startswith('```'):
             in_fence = not in_fence
         # Skip code fences, headings, YAML, HTML comments, and ToC link lines
         if (in_fence or line.strip().startswith('#')
                 or line.strip().startswith('<!--')
-                or toc_link_re.match(line)):
+                or _TOC_LINK_RE.match(line)):
             result.append(line)
             continue
         new_line = line
-        for pattern, replacement in TERM_MAP:
-            new_line, n = re.subn(pattern, replacement, new_line)
+        for pattern, replacement in _TERM_MAP:
+            new_line, n = pattern.subn(replacement, new_line)
             count += n
         result.append(new_line)
     return '\n'.join(result), count
@@ -280,7 +274,6 @@ def rule_k_numeric_interval(text: str) -> tuple[str, int]:
     # Kéttagú tizedes: "1, 5 µm" -> "1,5 µm"
     pat2 = re.compile(r'\b(\d+),\s+(\d+)\s+(' + UNITS + r')\b')
 
-    toc_link_re = re.compile(r'^\s*-\s+\[.*\]\(#.*\)\s*$')
     count = 0
     lines = text.split('\n')
     result = []
@@ -289,18 +282,17 @@ def rule_k_numeric_interval(text: str) -> tuple[str, int]:
         if line.strip().startswith('```'):
             in_fence = not in_fence
         if (in_fence or line.strip().startswith('#') or line.strip().startswith('<!--')
-                or toc_link_re.match(line)):
+                or _TOC_LINK_RE.match(line)):
             result.append(line)
             continue
         new_line, n = pat3.subn(lambda m: (
             f"{m.group(1)},{m.group(2)}–{m.group(3)} {m.group(4)}"
         ), line)
         count += n
-        line = new_line
-        new_line = pat2.sub(lambda m: f"{m.group(1)},{m.group(2)} {m.group(3)}", line)
-        if new_line != line:
+        new_line2 = pat2.sub(lambda m: f"{m.group(1)},{m.group(2)} {m.group(3)}", new_line)
+        if new_line2 != new_line:
             count += 1
-        result.append(new_line)
+        result.append(new_line2)
     return '\n'.join(result), count
 
 
@@ -365,7 +357,7 @@ def _resolve_md_path(args) -> Path:
             print(f"ERROR: nincs *_Jegyzet.md a {wip_dir}-ban")
             sys.exit(1)
         return notes[-1]
-    if hasattr(args, 'md_path') and args.md_path:
+    if args.md_path:
         p = Path(args.md_path)
         if not p.exists():
             print(f"ERROR: File not found: {p}")
@@ -376,8 +368,7 @@ def _resolve_md_path(args) -> Path:
 
 
 def main():
-    import argparse as _ap
-    parser = _ap.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description="Markdown linter for NLM pipeline output (Phase 2)",
         add_help=True
     )

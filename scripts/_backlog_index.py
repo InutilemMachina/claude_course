@@ -1,5 +1,5 @@
 """
-15_backlog_index.py -- Nyitott pontok aggregátor (read-only nézet).
+_backlog_index.py -- Nyitott pontok aggregátor (read-only nézet).
 
 Az Instructions §11.1 elvét automatizálja: "lokálisan írni, centralizáltan
 olvasni". Végigmegy a meta-fájlok `## Nyitott pontok` szekcióin és a skillek
@@ -11,8 +11,8 @@ A ✅ KÉSZ és 💬 NOTE tételeket kihagyja (nem nyitott teendők).
 Read-only: nem módosít semmit, csak riportot ír (stdout vagy --md).
 
 Usage:
-    python scripts/15_backlog_index.py
-    python scripts/15_backlog_index.py --md > backlog_snapshot.md
+    python scripts/_backlog_index.py
+    python scripts/_backlog_index.py --md > backlog_snapshot.md
 """
 
 import argparse

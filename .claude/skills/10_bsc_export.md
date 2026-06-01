@@ -33,7 +33,7 @@ majd mindkettőt pandoc segítségével camera-ready DOCX-re konvertálja.
 ### 3.1. BSc szűrés
 
 ```powershell
-python scripts/10_bsc_filter.py --week N --subject "Jelatvitel"
+python scripts/10-1_bsc_filter.py --week N --subject "Jelatvitel"
 ```
 
 - `<!-- MSc -->` … `<!-- /MSc -->` blokkok teljes eltávolítása
@@ -43,7 +43,7 @@ python scripts/10_bsc_filter.py --week N --subject "Jelatvitel"
 ### 3.2. Pandoc DOCX export — teljes verzió
 
 ```powershell
-python scripts/10_pandoc_export.py --input "4_wip_outputs/N_Jegyzet.md" `
+python scripts/10-2_pandoc_export.py --input "4_wip_outputs/N_Jegyzet.md" `
     --output "5_clean_outputs/N_Jegyzet.docx" `
     --template "templates/due_jegyzet_template.docx" `
     --week N --subject "Jelatvitel"
@@ -52,7 +52,7 @@ python scripts/10_pandoc_export.py --input "4_wip_outputs/N_Jegyzet.md" `
 ### 3.3. Pandoc DOCX export — BSc verzió
 
 ```powershell
-python scripts/10_pandoc_export.py --input "4_wip_outputs/N_Jegyzet_bsc_filtered.md" `
+python scripts/10-2_pandoc_export.py --input "4_wip_outputs/N_Jegyzet_bsc_filtered.md" `
     --output "5_clean_outputs/N_Jegyzet_bsc.docx" `
     --template "templates/due_jegyzet_template.docx" `
     --week N --subject "Jelatvitel"
@@ -93,7 +93,7 @@ Remove-Item "4_wip_outputs/N_Jegyzet_bsc_filtered.md"
 | `pandoc: command not found` | Pandoc nincs telepítve | `winget install JohnMacFarlane.Pandoc` |
 | LaTeX képletek nem renderelnek | pandoc nem talál math renderer | `--mathml` vagy `--webtex` flag |
 | Sablon stílusok hiányoznak | Template path hibás | Abszolút útvonal megadása |
-| BSc-ben maradó MSc tartalom | Regex nem match-el a blokk határon | `10_bsc_filter.py` regex-et debug-olni |
+| BSc-ben maradó MSc tartalom | Regex nem match-el a blokk határon | `10-1_bsc_filter.py` regex-et debug-olni |
 | Képek hiányoznak a DOCX-ben | Relatív útvonal a Markdown-ban | `--resource-path` flag pandocnak |
 
 ## 7. Hivatkozások

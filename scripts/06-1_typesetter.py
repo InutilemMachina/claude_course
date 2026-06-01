@@ -1,11 +1,10 @@
 """
-11_typesetter.py -- Markdown linter for NLM pipeline output.
+06-1_typesetter.py -- Markdown linter a pipeline WIP kimenetre.
 
-Phase 1 (bullet-to-prose) removed: NLM --response-length longer already produces prose.
-Phase 2: Whitespace/formatting linting (rules A, C, D, E, F, H).
+Phase 2: Whitespace/formatting linting (rules A-K).
 
 Usage:
-    python 11_typesetter.py <path_to_N_Jegyzet.md>
+    python scripts/06-1_typesetter.py --week-dir <path/to/N_het>
 """
 
 import argparse

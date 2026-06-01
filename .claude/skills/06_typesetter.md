@@ -32,7 +32,7 @@ terminológia-egységesítés, tábla szeparátor javítás, majd automatikus fe
 ### 3.1. Tipográfiai normalizáló
 
 ```powershell
-python scripts/06_typesetter.py --week N --subject "Jelatvitel"
+python scripts/06-1_typesetter.py --week N --subject "Jelatvitel"
 ```
 
 **Alkalmazott szabályok:**
@@ -49,7 +49,7 @@ python scripts/06_typesetter.py --week N --subject "Jelatvitel"
 ### 3.2. Fejezet-számozó
 
 ```powershell
-python scripts/06_heading_numberer.py --week N --subject "Jelatvitel"
+python scripts/06-2_heading_numberer.py --week N --subject "Jelatvitel"
 ```
 
 - `#` → számozatlan (cím marad)

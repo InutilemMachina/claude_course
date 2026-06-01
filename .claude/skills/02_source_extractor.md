@@ -35,7 +35,7 @@ hogy a 03_mindmap_builder és 04_content_synthesizer egységes formátumban dolg
 ### 3.1. PDF extraktor — MinerU
 
 ```powershell
-python scripts/02_mineru_pipeline.py --week N --subject "Jelatvitel"
+python scripts/02-1_mineru_pipeline.py --week N --subject "Jelatvitel"
 ```
 
 - Minden PDF-et külön almappában dolgoz fel: `2_clean_inputs/{forrás_neve}/`
@@ -45,7 +45,7 @@ python scripts/02_mineru_pipeline.py --week N --subject "Jelatvitel"
 ### 3.2. Web/HTML extraktor
 
 ```powershell
-python scripts/02_source_extractor.py --mode url --week N --subject "Jelatvitel"
+python scripts/02-2_source_extractor.py --mode url --week N --subject "Jelatvitel"
 ```
 
 - `.url` fájlokból letölti és Markdown-ra konvertálja a tartalmat
@@ -54,7 +54,7 @@ python scripts/02_source_extractor.py --mode url --week N --subject "Jelatvitel"
 ### 3.3. PPTX extraktor
 
 ```powershell
-python scripts/02_source_extractor.py --mode pptx --week N --subject "Jelatvitel"
+python scripts/02-2_source_extractor.py --mode pptx --week N --subject "Jelatvitel"
 ```
 
 - Diákból szöveg + ábra kinyerés

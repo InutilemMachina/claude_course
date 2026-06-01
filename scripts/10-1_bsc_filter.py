@@ -1,5 +1,5 @@
 """
-14_bsc_filter.py -- Remove MSc blocks and write BSc-only output files
+10-1_bsc_filter.py -- Remove MSc blocks and write BSc-only output files
 
 Reads 4_wip_outputs/N_*.md files, strips:
   - <!-- MSc --> ... <!-- /MSc --> HTML comment blocks

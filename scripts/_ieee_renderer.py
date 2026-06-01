@@ -1,5 +1,5 @@
 """
-07-2_ieee_renderer.py -- IEEE-stílusú hivatkozásjegyzék renderelése
+_ieee_renderer.py -- IEEE-stílusú hivatkozásjegyzék renderelése
 
 Bemenet:
   - 3_raw_outputs/citations.json

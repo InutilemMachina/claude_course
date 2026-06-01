@@ -102,7 +102,7 @@ A fájl végén:
 [3] Felhasználó. „Weblapnév." URL (elérve: YYYY-MM-DD).
 ```
 
-A `citations_seed.json` tartalmából automatikusan renderelhető `08_ieee_renderer.py`-val.
+A `citations_seed.json` tartalmából automatikusan renderelhető `_ieee_renderer.py`-val.
 
 ### 3.6. Teljes dokumentum struktúra
 
@@ -125,7 +125,7 @@ created: YYYY-MM-DD
 
 ## Tartalomjegyzék
 
-[automatikusan generálódik a 06_heading_numberer.py után]
+[automatikusan generálódik a 06-2_heading_numberer.py után]
 
 ---
 
@@ -179,7 +179,7 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 |:------|:---|:---------|
 | Fejezetek nem fedik a mindmapet | Figyelmen kívül hagyott L1 ág | Mindmap újraolvasás; fejezet hozzáadása |
 | Mermaid szintaxishiba | Speciális karakter | Érvénytelen karakterek cseréje |
-| Üres hivatkozásjegyzék | citations_seed.json nem olvasva | Kézzel kitölteni, majd 08_ieee_renderer.py |
+| Üres hivatkozásjegyzék | citations_seed.json nem olvasva | Kézzel kitölteni, majd _ieee_renderer.py |
 | [MSc] blokk nem záródik | Hiányzó `<!-- /MSc -->` | Keresés és pótlás |
 | Összegző doboz hiányzik | Kimaradt a sablonból | Pótlás 05_visual_enricher-ben is lehetséges |
 

@@ -72,6 +72,18 @@ Ezeket az emoji státuszokat mindig a szöveggel is ki kell egészíteni, pl.: `
 - Szóköz tilos. Alulvonás használható.
 - Pipeline lépések sorszámozása stabil maradjon.
 
+**Script számozási séma** (`scripts/` mappa):
+
+| Típus | Séma | Példa |
+|-------|------|-------|
+| Egy script egy lépéshez | `NN_name.py` | `05_figure_mapper.py` |
+| Több script egy lépéshez | `NN-M_name.py` | `02-1_mineru_pipeline.py` |
+| Megosztott segédkönyvtár | `_name.py` | `_citations_util.py` |
+
+- `NN`: pipeline lépés sorszáma (00–10), párhuzamos a skill-számokkal
+- `M`: lépésen belüli sorrend (1, 2, ...)
+- `_` prefix: nem lépés-specifikus utility — nincs hozzá külön skill
+
 ### 5.2. YAML fejléc — `tags` séma
 
 | Scope-tag | Jelentés | Hol |
@@ -140,7 +152,7 @@ Diagram-típus döntési fa:
 ### 10.1. Hard-cap szabály — ne nőjön a komplexitás
 
 **Minden commit net-flat vagy csökkenjen.** Új hozzáadáshoz ekvivalens komplexitás-csökkentés tartozik.
-Mérce: `python scripts/15_backlog_index.py` output — **nem nőhet**.
+Mérce: `python scripts/_backlog_index.py` output — **nem nőhet**.
 
 - Új TODO a `§8 Visszajelzések`-be → zárj le egy régit ugyanott.
 - Új script → vagy törölj egyet, vagy mergelj kettőt.

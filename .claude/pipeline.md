@@ -34,11 +34,11 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`05_visual_enricher`](skills/05_visual_enricher.md) — figure_catalog + összegzők | 🤖 | `4_wip_outputs/N_Jegyzet.md` (gazdagítva) |
-| `4_wip_outputs/N_Jegyzet.md` | 🐍 | `06_typesetter.py` | 🐍 | `4_wip_outputs/N_Jegyzet.md` (lint) |
+| `4_wip_outputs/N_Jegyzet.md` | 🐍 | `06-1_typesetter.py` | 🐍 | `4_wip_outputs/N_Jegyzet.md` (lint) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍+🤖 | [`07_quality_reviewer`](skills/07_quality_reviewer.md) — `07_quality_check.py` | 🐍+🤖 🚦😎 | `4_wip_outputs/N_Review.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`08_question_bank`](skills/08_question_bank.md) — mindmap-alapú MCQ | 🤖 | `4_wip_outputs/N_Kerdesbank.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`09_presentation_maker`](skills/09_presentation_maker.md) — MARP → PPTX | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` + `5_clean_outputs/N_Prezentacio.pptx` |
-| `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`10_bsc_export`](skills/10_bsc_export.md) — `10_bsc_filter.py` + pandoc | 🐍 | `5_clean_outputs/N_Jegyzet[_bsc].docx` |
+| `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`10_bsc_export`](skills/10_bsc_export.md) — `10-1_bsc_filter.py` + pandoc | 🐍 | `5_clean_outputs/N_Jegyzet[_bsc].docx` |
 
 ## 2.1 Vizualizáció
 
@@ -67,7 +67,7 @@ flowchart TD
     end
 
     subgraph QUALITY["⑤ Minőség"]
-        Q1["06 typesetter\n🐍\n06_typesetter.py"]
+        Q1["06 typesetter\n🐍\n06-1_typesetter.py"]
         Q2["07 quality_reviewer\n🐍 + 🤖\nmetrikák + Explore review\n→ N_Review.md"]
         Q3{"😎 Checkpoint\npublikálhatóság ≥ 3/5"}
         Q1 --> Q2 --> Q3
@@ -76,7 +76,7 @@ flowchart TD
     subgraph OUTPUT["⑥ Kimenetek — párhuzamosan"]
         O1["08 question_bank\n🤖\nMoodle MCQ\nA–D alternatívák"]
         O2["09 presentation_maker\n🤖 + 🐍\nMARP → PPTX\n1 vizuális/dia"]
-        O3["10 bsc_export\n🐍\n10_bsc_filter\n→ 5_clean_outputs/\n.docx camera-ready"]
+        O3["10 bsc_export\n🐍\n10-1_bsc_filter\n→ 5_clean_outputs/\n.docx camera-ready"]
     end
 
     INIT --> EXT --> UNDERSTAND --> CREATE --> QUALITY
@@ -117,7 +117,7 @@ flowchart TD
 
 - Szövegben: `[S1]`, `[S2]` stb.
 - Minden wip és clean outputban kötelező: `## Hivatkozásjegyzék` (IEEE formátum)
-- Generálás: `08_ieee_renderer.py` (fájlnév-alapú lookup)
+- Generálás: `_ieee_renderer.py` (fájlnév-alapú lookup)
 
 ## 7. Agent architektúra
 

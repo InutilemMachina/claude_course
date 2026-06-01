@@ -1,5 +1,5 @@
 """
-14_util_pandoc_export.py -- Camera-ready DOCX export Pandoc-kal.
+10-2_pandoc_export.py -- Camera-ready DOCX export Pandoc-kal.
 
 A 4_wip_outputs/N_Jegyzet.md (vagy 5_clean_outputs/N_Jegyzet_bsc.md) Markdown
 fájlt Word DOCX-be konvertálja a templates/due_jegyzet_template.docx

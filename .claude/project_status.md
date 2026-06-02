@@ -48,6 +48,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 
 - ❔ Q-01: DUE template DOCX portolása — `templates/` mappába szükséges-e?
 - ❔ Q-02: A `subject_status.md` (sablon: `subject_status_template.md`) mikor és ki által töltődik ki — különösen a §5 kérdésbank-beállítás a `08_question_bank` skill véglegesítése után? (😎 induláskor vagy 🤖 a 08 konfigjából?)
+- ❔ Q-03 (B-07-hez): A `.claude/skills/` lépés-dokumentumok maradjanak protokoll-doksik, vagy váljanak valódi, hívható Claude-skillekké (`SKILL.md` + `name`/`description`)? — Mindent a maga idejében; a B-07/B-08 keretében döntjük el.
 
 ## Változásjegyzék
 

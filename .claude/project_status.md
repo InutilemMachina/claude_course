@@ -10,8 +10,12 @@ updated: 2026-06-01
 ## Aktuális fázis
 
 **End-to-end átfésülés folyamatban** — a belépési ponttól lépésről lépésre, `atg` + `dft` teszttárgyakon.
-Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` állomás.
-Következő: `01_source_collector` állomás.
+Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_collector` (citáció-rendszerrel).
+
+**Következő session innen folytatódik** (sorrendben):
+1. `skill_template.md` best-practice felülvizsgálata (felépítés + hol éljen) → B-07.
+2. A **00, 01, 02 skillek aprólékos, end-to-end tesztelése** `atg` + `dft` teszttárgyon → B-08.
+3. Állomás-túra folytatása onnan: `02_source_extractor` (MinerU, `3_raw_outputs` rejtély).
 
 ## Elkészült (✅)
 
@@ -37,10 +41,13 @@ Következő: `01_source_collector` állomás.
 - ✅ B-04: `00_init_course.py` tesztelve (`3_mindmap/` + subject_status generálás) — **kész**
 - 🔲 B-05: `11_notebook_maker` skill (Jupyter szemléltetés) — jövőbeni lépés
 - 🔲 B-06: YouTube/médialink szekció az `08_question_bank`-ban — jövőbeni lépés
+- 🔲 B-07: `skill_template.md` best-practice felülvizsgálata — felépítés + hol éljen (`.claude/` vs `templates/`)
+- 🔲 B-08: 00, 01, 02 skillek aprólékos, end-to-end tesztelése `atg` + `dft`-n (draft→teszt→eval→fix, [Instructions §12](../Instructions.md)); a többi skill ezt követi
 
 ## Nyitott kérdések (❔)
 
 - ❔ Q-01: DUE template DOCX portolása — `templates/` mappába szükséges-e?
+- ❔ Q-02: A `subject_status.md` (sablon: `subject_status_template.md`) mikor és ki által töltődik ki — különösen a §5 kérdésbank-beállítás a `08_question_bank` skill véglegesítése után? (😎 induláskor vagy 🤖 a 08 konfigjából?)
 
 ## Változásjegyzék
 

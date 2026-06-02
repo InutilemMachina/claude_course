@@ -33,7 +33,7 @@ Következő: `01_source_collector` állomás.
 
 - 🔲 B-01: `atg` pipeline lépésteszt (01 → 10, megállva minden checkpointnál)
 - 🔲 B-02: `dft` pipeline lépésteszt (1 könyvfejezet feldolgozása)
-- 🔲 B-03: `_ieee_renderer.py` UUID→filename patch — citációs rendszer tesztelése
+- ✅ B-03: Citáció-rendszer egységesítve — egyetlen `citations.json` (`type`-alapú IEEE), `[1]` jelölés, NLM-kód törölve, `_ieee_renderer` tesztelve — **kész**
 - ✅ B-04: `00_init_course.py` tesztelve (`3_mindmap/` + subject_status generálás) — **kész**
 - 🔲 B-05: `11_notebook_maker` skill (Jupyter szemléltetés) — jövőbeni lépés
 - 🔲 B-06: YouTube/médialink szekció az `08_question_bank`-ban — jövőbeni lépés
@@ -52,3 +52,4 @@ Következő: `01_source_collector` állomás.
 | 2026-06-01 | Script számozási séma: NN-M_name séma bevezetve, fájlok átnevezve |
 | 2026-06-02 | E2E átfésülés indul: meta-réteg rendberakva (soft-cap, vertikális diagram, dedup) |
 | 2026-06-02 | `00_init`: `context` → `subject_status.md`, NLM-mentes sablon, auto-kitöltött frontmatter + igazított státusz-tábla |
+| 2026-06-02 | Citáció-rendszer: egyetlen `citations.json` (`type`-alapú), `[1]` jelölés, halott NLM-kód törölve `_citations_util`-ból, `_ieee_renderer` út+mező javítva és tesztelve |

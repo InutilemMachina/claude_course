@@ -25,7 +25,7 @@ koherens, vizuálisan gazdag wip-jegyzetet ír (`4_wip_outputs/N_Jegyzet.md`).
 |:-----|:-------|:---------|
 | `3_mindmap/mindmap.md` | 03_mindmap_builder | Jóváhagyott hierarchikus mindmap |
 | `2_clean_inputs/{forrás}.md` | 02_source_extractor | Forrásszövegek (referencia olvasáshoz) |
-| `1_raw_inputs/citations_seed.json` | 01_source_collector | Forrás-metaadatok (IEEE citáláshoz) |
+| `1_raw_inputs/citations.json` | 01_source_collector | Forrás-metaadatok (IEEE citáláshoz) |
 | `2_clean_inputs/figure_catalog.json` | 02_source_extractor | Elérhető ábrák listája |
 
 **Előfeltétel:** `3_mindmap/mindmap.md` tartalmazza `status: approved`-t.
@@ -54,7 +54,7 @@ L3   → #### (opcionális, csak ha nagyon indokolt)
 
 ### N.1 Alfejezet neve
 
-[Szöveges kifejtés, forrás-hivatkozásokkal. [S1], [S2] stb.]
+[Szöveges kifejtés, forrás-hivatkozásokkal. [1], [2] stb.]
 
 $$\text{Kulcsképlet ha releváns}$$
 
@@ -86,8 +86,8 @@ flowchart LR / TD / sequenceDiagram
 
 ### 3.4. Hivatkozások
 
-- Minden kulcsmegállapítás után: `[S1]`, `[S2]` stb. (a `citations_seed.json` sorrendje szerint)
-- Közvetlen idézetnél: `„szöveg"` [S1, p.XX]
+- Minden kulcsmegállapítás után: `[1]`, `[2]` stb. (a `citations.json` kulcsai szerint)
+- Közvetlen idézetnél: `„szöveg"` [1, p.XX]
 - Képlet eredeténél: `(Eq.X.Y)` vagy `(p.XX)` ha a forrás tartalmazza
 
 ### 3.5. Hivatkozásjegyzék (kötelező)
@@ -102,7 +102,7 @@ A fájl végén:
 [3] Felhasználó. „Weblapnév." URL (elérve: YYYY-MM-DD).
 ```
 
-A `citations_seed.json` tartalmából automatikusan renderelhető `_ieee_renderer.py`-val.
+A `citations.json` tartalmából automatikusan renderelhető `_ieee_renderer.py`-val.
 
 ### 3.6. Teljes dokumentum struktúra
 
@@ -168,7 +168,7 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 - [ ] Minden L1 mindmap-ág `##` fejezetként szerepel?
 - [ ] Minden `##` fejezetnél van Mermaid diagram?
 - [ ] Összegző 📦 doboz minden fejezet végén?
-- [ ] `[S1]`, `[S2]` hivatkozások a szövegben?
+- [ ] `[1]`, `[2]` hivatkozások a szövegben?
 - [ ] `## Hivatkozásjegyzék` a fájl végén?
 - [ ] `[MSc]` csomópontok `<!-- MSc -->...<!-- /MSc -->` blokkban?
 - [ ] YAML frontmatter `source_mindmap` mezővel?
@@ -179,7 +179,7 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 |:------|:---|:---------|
 | Fejezetek nem fedik a mindmapet | Figyelmen kívül hagyott L1 ág | Mindmap újraolvasás; fejezet hozzáadása |
 | Mermaid szintaxishiba | Speciális karakter | Érvénytelen karakterek cseréje |
-| Üres hivatkozásjegyzék | citations_seed.json nem olvasva | Kézzel kitölteni, majd _ieee_renderer.py |
+| Üres hivatkozásjegyzék | citations.json nem olvasva | Kézzel kitölteni, majd _ieee_renderer.py |
 | [MSc] blokk nem záródik | Hiányzó `<!-- /MSc -->` | Keresés és pótlás |
 | Összegző doboz hiányzik | Kimaradt a sablonból | Pótlás 05_visual_enricher-ben is lehetséges |
 

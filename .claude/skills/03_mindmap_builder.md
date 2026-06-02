@@ -26,7 +26,7 @@ A mindmap az összes downstream output (04–10) vezérfonala.
 |:-----|:-------|:---------|
 | `2_clean_inputs/{forrás}/{forrás}.md` | 02_source_extractor | Tisztított szöveg, képhivatkozásokkal |
 | `2_clean_inputs/figure_catalog.json` | 02_source_extractor | Kinyert ábrák metaadatai |
-| `1_raw_inputs/citations_seed.json` | 01_source_collector | Forrás-metaadatok (szerző, év, oldalak) |
+| `1_raw_inputs/citations.json` | 01_source_collector | Forrás-metaadatok (szerző, év, oldalak) |
 
 **Előfeltétel:** `02_source_extractor` sikeresen lefutott; `2_clean_inputs/` nem üres.
 

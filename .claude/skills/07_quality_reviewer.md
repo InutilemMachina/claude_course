@@ -40,7 +40,7 @@ Ellenőrzési szempontok:
 - Fejezet-fedettség: minden mindmap L1 ág jelen van-e?
 - Minimum terjedelem: `##` fejezetek legalább 3 bekezdéssel?
 - LaTeX hiány: egyetlen képlet sem jelenik meg egy képletintenzív témában?
-- Hivatkozások: `citations_seed.json` bejegyzések `[@id]` formában megjelennek-e?
+- Hivatkozások: a `citations.json` bejegyzések `[1]`, `[2]` formában megjelennek-e?
 - Összegző dobozok: minden `##` fejezet rendelkezik-e `> 📦` blokkal?
 
 ### 3.2. Claude Explore review

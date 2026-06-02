@@ -2,7 +2,7 @@
 _ieee_renderer.py -- IEEE-stílusú hivatkozásjegyzék renderelése
 
 Bemenet:
-  - 3_raw_outputs/citations.json
+  - 1_raw_inputs/citations.json
   - 4_wip_outputs/N_Jegyzet.md
 
 Kimenet:
@@ -14,11 +14,12 @@ Forrástípus-specifikus formátum:
   chapter         : [N] Author, "Title," in *Book*, Publisher, Year.
   webpage         : [N] Author, "Title," *Venue*. [Online]. Available: URL.
 
-Inline <sup>[N]</sup> érintetlen marad (már IEEE-konform, a 07_citations_renumber.py állítja elő).
+Az inline [N] hivatkozásokat a tartalom-szintézis (04) állítja elő; ez a script
+csak a ## Hivatkozásjegyzék listát rendereli a citations.json alapján.
 
 Futtatás:
-    python scripts/07-2_ieee_renderer.py --week-dir test_outputs/mini2/1_het
-    python scripts/07-2_ieee_renderer.py --week-dir test_outputs/mini2/1_het --dry-run
+    python scripts/_ieee_renderer.py --week-dir test_outputs/atg/1_het
+    python scripts/_ieee_renderer.py --week-dir test_outputs/atg/1_het --dry-run
 """
 
 import argparse
@@ -73,7 +74,7 @@ def format_ieee(num: int, entry: dict) -> str:
 
     Returns plain text (Markdown *italics* supported for venue/title).
     """
-    authors = str(entry.get("authors") or UNKNOWN_AUTHOR).strip()
+    authors = str(entry.get("author") or UNKNOWN_AUTHOR).strip()
     title   = str(entry.get("title")   or UNKNOWN_TITLE).strip()
     year    = _clean_year(entry.get("year"))
     venue   = _clean_venue(entry.get("venue") or entry.get("source") or "")
@@ -209,7 +210,7 @@ def main():
     args = parser.parse_args()
 
     week_dir = args.week_dir.resolve()
-    citations_path = week_dir / "3_raw_outputs" / "citations.json"
+    citations_path = week_dir / "1_raw_inputs" / "citations.json"
     wip_dir = week_dir / "4_wip_outputs"
 
     if not citations_path.exists():
@@ -237,7 +238,7 @@ def main():
         new_text = text.rstrip("\n") + "\n\n" + new_section
 
     entry_count = sum(1 for k in citations if not k.startswith("_"))
-    print(f"[07-2_ieee_renderer] {jegyzet_path.name}")
+    print(f"[_ieee_renderer] {jegyzet_path.name}")
     print(f"  Forrásszám: {entry_count}")
     print(f"  Szekció: {'cserélve' if replaced else 'hozzáfűzve'}")
 

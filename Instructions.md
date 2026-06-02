@@ -139,8 +139,15 @@ Diagram-típus döntési fa:
 ## 8. Hivatkozási szabály
 
 - IEEE forrásjegyzék (`## Hivatkozásjegyzék`) kötelező MINDEN wip és clean outputban.
-- Formátum: `[1] Szerző. *Cím.* Kiadó, Év.` vagy `[1] Szerző. "Cím." URL (elérve: dátum).`
-- Hivatkozás a szövegben: `[S1]`, `[S2]` stb.
+- Szövegbeli hivatkozás és lista is `[1]`, `[2]` … (IEEE-szabvány).
+- Forrás: `1_raw_inputs/citations.json`; a listát a `_ieee_renderer.py` rendereli `type` szerint:
+
+| `type` | IEEE-formátum |
+|--------|---------------|
+| `paper` / `slides` | `[N] Szerző, "Cím," *Forrás*, Év.` |
+| `book` | `[N] Szerző, *Cím*, Kiadó, Év.` |
+| `chapter` | `[N] Szerző, "Cím," in *Könyv*, Év.` |
+| `webpage` | `[N] Szerző, "Cím," *Forrás*. [Online]. Available: URL.` |
 
 ## 9. Szerkesztési szabályok
 

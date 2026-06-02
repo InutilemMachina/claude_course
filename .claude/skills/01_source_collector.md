@@ -1,12 +1,12 @@
 ---
 name: 01_source_collector
-title: 01_SOURCE_COLLECTOR — Forrásgyűjtés és citations_seed
+title: 01_SOURCE_COLLECTOR — Forrásgyűjtés és citations.json
 type: skill
 tags: [meta, skill]
 status: active
-version: 1.0
-updated: 2026-06-01
-description: URL-ek és PDF-ek összegyűjtése 1_raw_inputs/-ba, majd citations_seed.json inicializálása.
+version: 1.1
+updated: 2026-06-02
+description: URL-ek és PDF-ek összegyűjtése 1_raw_inputs/-ba, majd a citations.json bibliográfia létrehozása.
 ---
 
 # 01_SOURCE_COLLECTOR
@@ -14,10 +14,10 @@ description: URL-ek és PDF-ek összegyűjtése 1_raw_inputs/-ba, majd citations
 ## 1. Cél
 
 A felhasználó által megadott URL-eket és PDF fájlokat `1_raw_inputs/`-ba rendezi,
-és létrehozza a `citations_seed.json` bibliográfiai alapot a downstream lépések számára.
+és létrehozza a `citations.json` bibliográfiát a downstream lépések számára.
 
 **Input:** URL lista + PDF fájlok (felhasználótól)
-**Output:** `1_raw_inputs/` fájlok + `citations_seed.json`
+**Output:** `1_raw_inputs/` fájlok + `citations.json`
 
 ## 2. Bemenetek
 
@@ -51,39 +51,38 @@ Minden URL-t egy `.url` szövegfájlba mentsd:
 
 Tartalma egyetlen sor: a teljes URL.
 
-### 3.3. citations_seed.json létrehozása
+### 3.3. citations.json létrehozása
 
-```powershell
-# Manuálisan vagy segédscripttel
-python scripts/01_citations_seed_init.py --week N --subject "Jelatvitel"
-```
-
-`citations_seed.json` formátum:
+A `citations.json`-t 🤖 Claude (vagy 😎 kézzel) tölti ki a `1_raw_inputs/` forrásai
+alapján — nincs hozzá külön script. Kulcs = a hivatkozás száma (`"1"`, `"2"`, …),
+ami megegyezik a szövegbeli `[1]`, `[2]` jelöléssel.
 
 ```json
-[
-  {
-    "id": "Proakis2001",
-    "author": "Proakis, J. G.",
-    "title": "Digital Signal Processing",
-    "year": 2001,
-    "filename": "Proakis_2001_DSP.pdf",
-    "url": null,
+{
+  "_meta": {"subject": "atg", "week": 1},
+  "1": {
+    "type": "book",
+    "author": "Gravdahl, J. T.",
+    "title": "Compressor Surge and Rotating Stall",
+    "year": 1999,
+    "venue": "Springer",
+    "filename": "gravdahl1999-Book.pdf",
     "pages": "1-45"
   },
-  {
-    "id": "Wiki_DFT",
+  "2": {
+    "type": "webpage",
     "author": null,
-    "title": "Discrete Fourier Transform",
+    "title": "Compressor stall",
     "year": 2024,
-    "filename": null,
-    "url": "https://en.wikipedia.org/wiki/Discrete_Fourier_transform",
-    "pages": null
+    "url": "https://en.wikipedia.org/wiki/Compressor_stall"
   }
-]
+}
 ```
 
-**Kötelező mezők:** `id`, `title`. Többi mező `null` megengedett, de töltsd ki ahol tudod.
+- **`type`:** `paper` · `book` · `chapter` · `slides` · `webpage` (az IEEE formátumot vezérli).
+- **Kötelező:** `type`, `title`. A többi `null`/elhagyható, de töltsd ki ahol tudod.
+- **`filename`** a `1_raw_inputs/` fájlra mutat; webpage-nél `url`.
+- A `## Hivatkozásjegyzék` listát ebből rendereli a [`_ieee_renderer.py`](../../scripts/_ieee_renderer.py).
 
 ### 3.4. Keressek még anyagot?
 
@@ -96,12 +95,12 @@ mielőtt a 02-es lépés indul.
 |:-----|:---------|
 | `1_raw_inputs/*.pdf` | Nyers PDF forrásanyagok |
 | `1_raw_inputs/*.url` | URL hivatkozások |
-| `1_raw_inputs/citations_seed.json` | Bibliográfiai metaadatok |
+| `1_raw_inputs/citations.json` | Bibliográfiai metaadatok (IEEE-hez) |
 
 ## 5. Ellenőrzés
 
 - [ ] Minden PDF megnyitható (nem sérült)
-- [ ] `citations_seed.json` valid JSON, `id` mezők egyediek
+- [ ] `citations.json` valid JSON, a kulcsok egyediek (`"1"`, `"2"`, …)
 - [ ] Minden `filename` értéke létező fájlra mutat `1_raw_inputs/`-ban
 - [ ] URL-ek elérhetők (gyors manuális ellenőrzés)
 
@@ -109,9 +108,9 @@ mielőtt a 02-es lépés indul.
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
-| `JSONDecodeError` a citations_seed-nél | Trailing comma vagy szintaxishiba | JSON linterre futtatni |
+| `JSONDecodeError` a citations.json-nél | Trailing comma vagy szintaxishiba | JSON linterre futtatni |
 | PDF nem nyílik meg MinerU-ban | Jelszóvédett PDF | Jelszó eltávolítása vagy kizárás |
-| Duplikált `id` mezők | Kézzel szerkesztett JSON | `id` értékek egyediségét ellenőrizni |
+| Duplikált kulcsok | Kézzel szerkesztett JSON | A `"1"`, `"2"`, … kulcsok egyediségét ellenőrizni |
 | Hiányzó `author` mező | Ismeretlen szerző | `null` — elfogadható |
 
 ## 7. Hivatkozások
@@ -128,3 +127,4 @@ mielőtt a 02-es lépés indul.
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva |
+| 2026-06-02 | 1.1 | Egységes `citations.json` (a `citations_seed` + a nem létező init-script megszűnt); `type`-alapú IEEE séma; `[1]` jelölés |

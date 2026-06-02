@@ -29,7 +29,7 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 | Input | Felelős | Lépés | Automatizáltság | Output |
 |:------|:--------|:------|:----------------|:-------|
 | Célcsoport, hetek, tantárgy | 😎 | [`00_init`](skills/00_init.md) — `00_init_course.py` | 🐍 | `subject_status.md` + mappák |
-| URL-ek, PDF-ek, PPTX-ek | 😎+🤖 | [`01_source_collector`](skills/01_source_collector.md) | 🤖+😎 | `1_raw_inputs/` + `citations_seed.json` |
+| URL-ek, PDF-ek, PPTX-ek | 😎+🤖 | [`01_source_collector`](skills/01_source_collector.md) | 🤖+😎 | `1_raw_inputs/` + `citations.json` |
 | `1_raw_inputs/` | 🐍 | [`02_source_extractor`](skills/02_source_extractor.md) — MinerU + HTML/PPTX | 🐍 | `2_clean_inputs/` + `figure_catalog.json` |
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
@@ -107,16 +107,17 @@ A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus hely
 ## 6. Citáció-rendszer
 
 ```json
-// citations.json — fájlnév-alapú, IEEE-kompatibilis
+// 1_raw_inputs/citations.json — fájlnév-alapú, IEEE-kompatibilis
 {
   "_meta": {"subject": "...", "week": 1},
-  "1": {"author": "...", "title": "...", "year": "...", "filename": "...", "pages": "..."},
-  "2": {"author": "...", "title": "...", "url": "...", "accessed": "2026-06-01"}
+  "1": {"type": "book", "author": "...", "title": "...", "year": "...", "venue": "...", "filename": "...", "pages": "..."},
+  "2": {"type": "webpage", "author": "...", "title": "...", "year": "...", "url": "..."}
 }
 ```
 
-- Hivatkozási formátum (IEEE), `[S1]` jelölés és a `## Hivatkozásjegyzék` kötelezettség: [Instructions.md §8](../Instructions.md).
-- Generálás: `_ieee_renderer.py` (fájlnév-alapú lookup).
+- A kulcs (`"1"`, `"2"`) megegyezik a szövegbeli `[1]`, `[2]` jelöléssel.
+- Hivatkozási formátum (IEEE, `type`-alapú) és a `## Hivatkozásjegyzék` kötelezettség: [Instructions.md §8](../Instructions.md).
+- Generálás: `_ieee_renderer.py` (a `1_raw_inputs/citations.json`-ból).
 
 ## 7. Agent architektúra
 

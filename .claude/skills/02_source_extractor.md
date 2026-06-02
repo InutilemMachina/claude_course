@@ -26,7 +26,7 @@ hogy a 03_mindmap_builder és 04_content_synthesizer egységes formátumban dolg
 | `1_raw_inputs/*.pdf` | 01_source_collector | Nyers PDF forrásanyagok |
 | `1_raw_inputs/*.url` | 01_source_collector | URL hivatkozások |
 | `1_raw_inputs/*.pptx` | 01_source_collector | PowerPoint előadások |
-| `1_raw_inputs/citations_seed.json` | 01_source_collector | Bibliográfiai metaadatok |
+| `1_raw_inputs/citations.json` | 01_source_collector | Bibliográfiai metaadatok |
 
 **Előfeltétel:** MinerU telepítve és futtatható; `1_raw_inputs/` nem üres.
 

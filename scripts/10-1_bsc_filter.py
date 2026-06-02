@@ -12,7 +12,7 @@ Usage:
     python scripts/14_bsc_filter.py --week-dir <path/to/N_het> [options]
 
     --week-dir   Path to weekly folder. Required.
-    --week       Week number (default: read from citations_seed.json _meta.week).
+    --week       Week number (default: read from citations.json _meta.week).
     --files      File types to process: note glossary mindmap questions presentation
                  (default: all that exist)
     --dry-run    Print filtered output to stdout, do not write files.

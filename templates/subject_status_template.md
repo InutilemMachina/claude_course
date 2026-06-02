@@ -11,7 +11,12 @@ description: Tantárgy-szintű terv és pipeline-státusz. Frontmatter gépi (00
 
 # {{SUBJECT}} — tantárgy-státusz
 
-Szerepek: 🐍 script · 😎 ember · 🤖 Claude. A projekt-szintű `project_status.md` tantárgy-szintű megfelelője.
+Szerepek: 
+- 🐍 script 
+- 😎 ember
+- 🤖 Claude.
+
+A projekt-szintű `project_status.md` tantárgy-szintű megfelelője.
 
 ## 1. Alapadatok 😎
 
@@ -21,7 +26,8 @@ Szerepek: 🐍 script · 😎 ember · 🤖 Claude. A projekt-szintű `project_s
 
 ## 2. Heti pipeline-státusz 🤖 😎
 
-🤖 a státusz-cellákat frissíti futás közben · 😎 a témákat tölti.
+- 🤖 a státusz-cellákat frissíti futás közben
+- 😎 a témákat tölti.
 
 {{STATUS_TABLE}}
 

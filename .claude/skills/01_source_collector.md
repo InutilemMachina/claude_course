@@ -25,7 +25,7 @@ A felhasználó által megadott URL-eket és PDF fájlokat `1_raw_inputs/`-ba re
 |:-----|:-------|:---------|
 | URL lista | Felhasználó | Weboldalak, SlideShare, YouTube-transkript |
 | PDF fájlok | Felhasználó | Tankönyvek, előadásanyagok, cikkek |
-| `context.json` | 00_init | Tantárgy metaadatok |
+| `subject_status.md` | 00_init | Tantárgy terv + heti státusz |
 
 **Előfeltétel:** `00_init` sikeresen lefutott, `1_raw_inputs/` mappa létezik.
 

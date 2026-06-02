@@ -41,7 +41,7 @@ python scripts/06-1_typesetter.py --week N --subject "Jelatvitel"
 |:--------|:------|:--------|
 | Dash cleanup | `--`, `—` (rossz kontextus) | `–` (en-dash) vagy `—` (em-dash) egységesen |
 | LaTeX párosítás | páratlan `$` jelek | párosítás ellenőrzése, hibás sorok flagelése |
-| Terminológia | `digitális jel feldolgozás` | `digitális jelfeldolgozás` (context.json terminológia) |
+| Terminológia | `digitális jel feldolgozás` | `digitális jelfeldolgozás` (subject_status.md §5 terminológia) |
 | Tábla szeparátor | `|---|` `|:--|` vegyes | `|:---|` egységes bal-igazítás |
 | Whitespace | trailing space, dupla üres sor | törlés |
 | Idézőjel | `"szó"` | `„szó"` (magyar) |
@@ -84,7 +84,7 @@ Claude vizuálisan átnézi a diff-et (git diff):
 | LaTeX képlet megváltoztatva | Terminológia regex túl általános | Regex szűkítése; `<!-- NOFIX -->` komment |
 | Fejezetek kétszer számozva | `heading_numberer` kétszer futott | Idempotens: újrafuttatás felülírja |
 | Tábla szeparátor felülírta a jobb-igazítást | Script nem kezeli `--:` mintát | Script javítása: `--:` és `:--:` megtartása |
-| Terminológia hibás egységesítés | Kontextus-érzéketlen regex | `context.json` terminológia listát pontosítani |
+| Terminológia hibás egységesítés | Kontextus-érzéketlen regex | `subject_status.md §5` terminológia listát pontosítani |
 
 ## 7. Hivatkozások
 

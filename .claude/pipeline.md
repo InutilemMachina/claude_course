@@ -13,7 +13,7 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 
 | Oktató | Claude-pipeline |
 |--------|-----------------|
-| Célcsoport, tanterv | `00_init` — context.json |
+| Célcsoport, tanterv | `00_init` — subject_status.md |
 | Anyaggyűjtés | `01_source_collector` |
 | Olvas → megért → szintetizál | `02_source_extractor` + `03_mindmap_builder` |
 | **Elmetérkép** | **03 kimenet: mindmap** (😎 revideálja) |
@@ -28,7 +28,7 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 
 | Input | Felelős | Lépés | Automatizáltság | Output |
 |:------|:--------|:------|:----------------|:-------|
-| Célcsoport, hetek, tantárgy | 😎 | [`00_init`](skills/00_init.md) — `00_init_course.py` | 🐍 | `context.json` + mappák |
+| Célcsoport, hetek, tantárgy | 😎 | [`00_init`](skills/00_init.md) — `00_init_course.py` | 🐍 | `subject_status.md` + mappák |
 | URL-ek, PDF-ek, PPTX-ek | 😎+🤖 | [`01_source_collector`](skills/01_source_collector.md) | 🤖+😎 | `1_raw_inputs/` + `citations_seed.json` |
 | `1_raw_inputs/` | 🐍 | [`02_source_extractor`](skills/02_source_extractor.md) — MinerU + HTML/PPTX | 🐍 | `2_clean_inputs/` + `figure_catalog.json` |
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
@@ -46,7 +46,7 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 flowchart TD
     subgraph INIT["① Előkészítés"]
         direction TB
-        I0["00 init<br>🐍<br>context.json + mappák"]
+        I0["00 init<br>🐍<br>subject_status.md + mappák"]
         I1["01 source_collector<br>😎 + 🤖<br>→ 1_raw_inputs/"]
         I0 --> I1
     end

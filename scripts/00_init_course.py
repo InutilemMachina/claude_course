@@ -18,6 +18,7 @@ Usage:
 """
 
 import argparse
+import os
 import sys
 import unicodedata
 from datetime import date
@@ -72,15 +73,19 @@ def render_status_table(weeks: int) -> str:
     return "\n".join(lines)
 
 
-def instantiate_template(text: str, subject: str, weeks: int, tag: str, today: str) -> str:
+def instantiate_template(text: str, subject: str, weeks: int, tag: str,
+                         today: str, root_rel: str) -> str:
     """A sablon placeholdereit kitölti. A MINTA-HATÁR jelölőtől a sablon-
-    dokumentációt (mintatáblázat) levágja — az nem kerül az instancekba."""
+    dokumentációt (mintatáblázat) levágja — az nem kerül az instancekba.
+    `root_rel`: a tantárgy mappájából a projektgyökérbe mutató relatív út
+    (a §5 fájl-linkek emiatt test/prod mélységtől függetlenül helyesek)."""
     text = text.split("<!-- MINTA-HATÁR")[0].rstrip() + "\n"
     return (text
             .replace("{{SUBJECT}}", subject)
             .replace("{{TAGS}}", tag)
             .replace("{{WEEKS}}", str(weeks))
             .replace("{{DATE}}", today)
+            .replace("{{ROOT_REL}}", root_rel)
             .replace("{{STATUS_TABLE}}", render_status_table(weeks)))
 
 
@@ -97,6 +102,7 @@ def main():
     status_md = course_dir / "subject_status.md"
     tag = "test" if Path(args.root).name == "test_outputs" else "prod"
     today = date.today().isoformat()
+    root_rel = Path(os.path.relpath(PROJECT_ROOT, course_dir)).as_posix()
 
     created = []
     skipped = []
@@ -111,7 +117,7 @@ def main():
             course_dir.mkdir(parents=True, exist_ok=True)
             content = instantiate_template(
                 TEMPLATE.read_text(encoding="utf-8"),
-                args.subject, args.weeks, tag, today,
+                args.subject, args.weeks, tag, today, root_rel,
             )
             status_md.write_text(content, encoding="utf-8")
         created.append(f"subject_status.md (← subject_status_template.md, kitöltve)")

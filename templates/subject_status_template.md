@@ -35,9 +35,9 @@ Szerepek: 🐍 script · 😎 ember · 🤖 Claude. A projekt-szintű `project_s
 ## 4. Stílusirányelvek 😎
 
 - **Nyelv:** magyar szöveg, kétnyelvű terminológia (pl. „termogram / thermogram")
-- **Terminológia-egységesítés** (a `06 typesetter` használja):
-- **Jegyzet sablon:** `templates/due_jegyzet_template.docx`
-- **Prezentáció sablon:** `templates/due_prenetation_template.pptx`
+- **Terminológia-egységesítés** (a [`06 typesetter`]({{ROOT_REL}}/.claude/skills/06_typesetter.md) használja):
+- **Jegyzet sablon:** [`due_jegyzet_template.docx`]({{ROOT_REL}}/templates/due_jegyzet_template.docx)
+- **Prezentáció sablon:** [`due_prenetation_template.pptx`]({{ROOT_REL}}/templates/due_prenetation_template.pptx)
 - **Kérdésbank:** feleletválasztós A/B/C/D, SZINT 2–5
 
 <!-- MINTA-HATÁR: a 00_init innentől NEM másol az instancekba — ez csak a sablon dokumentációja. -->

@@ -2,8 +2,8 @@
 title: Pipeline.md — claude_course
 type: meta
 status: active
-version: 1.0
-updated: 2026-06-01
+version: 1.1
+updated: 2026-06-02
 description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 ---
 
@@ -33,7 +33,7 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 | `1_raw_inputs/` | 🐍 | [`02_source_extractor`](skills/02_source_extractor.md) — MinerU + HTML/PPTX | 🐍 | `2_clean_inputs/` + `figure_catalog.json` |
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
-| `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`05_visual_enricher`](skills/05_visual_enricher.md) — figure_catalog + összegzők | 🤖 | `4_wip_outputs/N_Jegyzet.md` (gazdagítva) |
+| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`05_visual_enricher`](skills/05_visual_enricher.md) — `05_figure_mapper.py` + összegzők | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (gazdagítva) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍 | `06-1_typesetter.py` | 🐍 | `4_wip_outputs/N_Jegyzet.md` (lint) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍+🤖 | [`07_quality_reviewer`](skills/07_quality_reviewer.md) — `07_quality_check.py` | 🐍+🤖 🚦😎 | `4_wip_outputs/N_Review.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`08_question_bank`](skills/08_question_bank.md) — mindmap-alapú MCQ | 🤖 | `4_wip_outputs/N_Kerdesbank.md` |
@@ -45,43 +45,48 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 ```mermaid
 flowchart TD
     subgraph INIT["① Előkészítés"]
-        I0["00 init\n🐍\ncontext.json + mappák"]
-        I1["01 source_collector\n😎 + 🤖\n1_raw_inputs/"]
+        direction TB
+        I0["00 init<br>🐍<br>context.json + mappák"]
+        I1["01 source_collector<br>😎 + 🤖<br>→ 1_raw_inputs/"]
         I0 --> I1
     end
 
     subgraph EXT["② Forrás-feldolgozás"]
-        E1["02 source_extractor\n🐍\nMinerU + HTML/PPTX\n→ 2_clean_inputs/\n+ figure_catalog.json"]
+        E1["02 source_extractor<br>🐍<br>MinerU + HTML/PPTX<br>→ 2_clean_inputs/<br>+ figure_catalog.json"]
     end
 
     subgraph UNDERSTAND["③ Megértés — sarokkő"]
-        U1["03 mindmap_builder\n🤖\nforrások olvasása\n→ mindmap draft"]
-        U2{"😎 Checkpoint\nRevízió + MSc jelölés\n→ 3_mindmap/mindmap.md"}
+        direction TB
+        U1["03 mindmap_builder<br>🤖<br>források olvasása<br>→ mindmap draft"]
+        U2{"😎 Checkpoint<br>Revízió + MSc jelölés<br>→ 3_mindmap/mindmap.md"}
         U1 --> U2
     end
 
     subgraph CREATE["④ Tartalom-alkotás"]
-        C1["04 content_synthesizer\n🤖\nmindmap-vezérelt szintézis\n+ Mermaid diagramok\n+ IEEE hivatkozások\n→ 4_wip_outputs/N_Jegyzet.md"]
-        C2["05 visual_enricher\n🤖\nfigure_catalog beillesztés\n+ összegző dobozok\n→ 4_wip_outputs/N_Jegyzet.md"]
+        direction TB
+        C1["04 content_synthesizer<br>🤖<br>mindmap-vezérelt szintézis<br>+ Mermaid + IEEE hivatkozások<br>→ 4_wip_outputs/N_Jegyzet.md"]
+        C2["05 visual_enricher<br>🤖 + 🐍<br>05_figure_mapper + összegző dobozok<br>→ N_Jegyzet.md (gazdagítva)"]
         C1 --> C2
     end
 
     subgraph QUALITY["⑤ Minőség"]
-        Q1["06 typesetter\n🐍\n06-1_typesetter.py"]
-        Q2["07 quality_reviewer\n🐍 + 🤖\nmetrikák + Explore review\n→ N_Review.md"]
-        Q3{"😎 Checkpoint\npublikálhatóság ≥ 3/5"}
+        direction TB
+        Q1["06 typesetter<br>🐍<br>06-1_typesetter.py"]
+        Q2["07 quality_reviewer<br>🐍 + 🤖<br>metrikák + Explore review<br>→ N_Review.md"]
+        Q3{"😎 Checkpoint<br>publikálhatóság ≥ 3/5"}
         Q1 --> Q2 --> Q3
     end
 
     subgraph OUTPUT["⑥ Kimenetek — párhuzamosan"]
-        O1["08 question_bank\n🤖\nMoodle MCQ\nA–D alternatívák"]
-        O2["09 presentation_maker\n🤖 + 🐍\nMARP → PPTX\n1 vizuális/dia"]
-        O3["10 bsc_export\n🐍\n10-1_bsc_filter\n→ 5_clean_outputs/\n.docx camera-ready"]
+        direction TB
+        O1["08 question_bank<br>🤖<br>Moodle MCQ (A–D)"]
+        O2["09 presentation_maker<br>🤖 + 🐍<br>MARP → PPTX"]
+        O3["10 bsc_export<br>🐍<br>10-1_bsc_filter<br>→ 5_clean_outputs/ .docx"]
     end
 
     INIT --> EXT --> UNDERSTAND --> CREATE --> QUALITY
-    Q3 -->|"🟢 OK"| O1 & O2 & O3
-    Q3 -->|"🔴 Javít"| C1
+    Q3 -->|"🟢 OK"| OUTPUT
+    Q3 -->|"🔴 Javít"| CREATE
 ```
 
 ## 3. Checkpointok
@@ -91,14 +96,9 @@ flowchart TD
 | 03 után 🚦 | Mindmap revideálva, [MSc] jelölés kész, struktúra jóváhagyva | 04 content_synthesizer |
 | 07 után 🚦 | Publikálhatóság ≥ 3/5, N_Review.md jóváhagyva | 08 + 09 + 10 párhuzamosan |
 
-## 4. Vizuális gazdagítás — kötelező
+## 4. Vizuális gazdagítás
 
-| Réteg | Kötelező | Eszköz |
-|-------|----------|--------|
-| Navigátor mindmap | ✅ minden outputban | Mermaid flowchart LR |
-| Szekciós diagram | ✅ ha ≥3 fogalom összefügg | Mermaid (típus a tartalomtól függ) |
-| Valódi ábra | ⚙️ ha MinerU kinyerte | `figure_catalog.json` alapján |
-| MARP vizuális | ✅ minden dián | Mermaid VAGY ábra |
+A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus helye: [Instructions.md §7](../Instructions.md). A pipeline-ban ezt a `04 content_synthesizer` és `05 visual_enricher` lépések valósítják meg, az `figure_catalog.json` alapján.
 
 ## 5. Mappastruktúra
 
@@ -115,9 +115,8 @@ flowchart TD
 }
 ```
 
-- Szövegben: `[S1]`, `[S2]` stb.
-- Minden wip és clean outputban kötelező: `## Hivatkozásjegyzék` (IEEE formátum)
-- Generálás: `_ieee_renderer.py` (fájlnév-alapú lookup)
+- Hivatkozási formátum (IEEE), `[S1]` jelölés és a `## Hivatkozásjegyzék` kötelezettség: [Instructions.md §8](../Instructions.md).
+- Generálás: `_ieee_renderer.py` (fájlnév-alapú lookup).
 
 ## 7. Agent architektúra
 
@@ -138,3 +137,4 @@ Az agent-prompt minden skill esetén a skill `§3 Eljárás` szekciója alapján
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (claude_play archív alapján, NLM-mentes) |
+| 2026-06-02 | 1.1 | Mermaid vertikalizálva + `<br>` sortörés-javítás; D1/D2 deduplikáció (vizuális → Instructions §7, IEEE → §8); 05 script a táblába |

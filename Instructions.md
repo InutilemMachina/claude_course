@@ -2,8 +2,8 @@
 title: Instructions
 type: project_constitution
 tags: [meta]
-version: 1.0
-updated: 2026-06-01
+version: 1.1
+updated: 2026-06-02
 description: Projekt-szintű elvek, jelölések és dokumentációs szabványok.
 ---
 
@@ -21,23 +21,23 @@ A pipeline az oktató tradicionális munkafolyamatát modellezi Claude segítsé
 - Minden információ csak egyetlen kanonikus helyen szerepel.
 - A dokumentáció legyen rövid, világos, szabványos.
 - A pipeline legyen lehetőleg automatizált, determinisztikus és minimalista.
-- Az agent-ek száma legyen a lehető legkisebb.
 - A részletek ne ismétlődjenek különböző fájlokban.
 - **A megértés diktálja a struktúrát** — nem a fejezetek, hanem a fogalmi összefüggések.
 
 ## 3. Dokumentációs hierarchia
 
-1. [CLAUDE.md](CLAUDE.md) — belépési pont és index
-2. [Instructions.md](Instructions.md) — stabil projekt-alkotmány
-3. [.claude/pipeline.md](.claude/pipeline.md) — futási gráf és lépések
-4. [.claude/project_status.md](.claude/project_status.md) — aktuális iterációs állapot + Backlog
-5. [.claude/skills/](.claude/skills/) — egy-egy lokális skill (§6: hibakezelés, §8: visszajelzések)
-6. [scripts/](scripts/) — végrehajtó automatizmusok
+A lista egyben **tekintély-sorrend**: ütközés esetén a feljebb álló dokumentum írja felül az alatta lévőt. A „mi mire való" funkcionális index: [CLAUDE.md §4](CLAUDE.md).
+
+1. [CLAUDE.md](CLAUDE.md)
+2. [Instructions.md](Instructions.md)
+3. [.claude/pipeline.md](.claude/pipeline.md)
+4. [.claude/project_status.md](.claude/project_status.md)
+5. [.claude/skills/](.claude/skills/)
+6. [scripts/](scripts/)
 
 ## 4. Jelöléstan
 
 ### 4.1. Emoji státuszok
-
 - 🔲: TODO
 - ✅: KÉSZ / OK
 - ⚙️: FÉLKÉSZ / WIP
@@ -53,6 +53,7 @@ A pipeline az oktató tradicionális munkafolyamatát modellezi Claude segítsé
 - 💡: IDEA
 
 Ezeket az emoji státuszokat mindig a szöveggel is ki kell egészíteni, pl.: `💡 IDEA: Az ötlet`
+Te használhatod őket, de a user szinte soha nem illeszti be azokat, pl.:  `IDEA: Az ötlet`
 
 ### 4.2. Szerepkörök
 
@@ -67,8 +68,8 @@ Ezeket az emoji státuszokat mindig a szöveggel is ki kell egészíteni, pl.: `
 
 ### 5.1. Fájlnév konvenció
 
-- Meta- és skillfájlok neve: angol.
-- Meta- és skillfájlok nyelve: magyar (esetleges angol kifejezésekkel).
+- Meta-, skill- és script-fájlok neve: angol.
+- Meta- és skillfájlok tartalma: magyar (esetleges angol kifejezésekkel).
 - Szóköz tilos. Alulvonás használható.
 - Pipeline lépések sorszámozása stabil maradjon.
 
@@ -149,25 +150,24 @@ Diagram-típus döntési fa:
 
 ## 10. Változtatási rend
 
-### 10.1. Hard-cap szabály — ne nőjön a komplexitás
+### 10.1. Soft-cap — a projekt ne bokrosodjon
 
-**Minden commit net-flat vagy csökkenjen.** Új hozzáadáshoz ekvivalens komplexitás-csökkentés tartozik.
-Mérce: `python scripts/_backlog_index.py` output — **nem nőhet**.
+Irányelv, nem szigorú szabály: **a kevesebb néha több.** Törekedj a meglévő fájlok *helyi* javítására ahelyett, hogy újabb és újabb fájlok jönnének létre.
 
-- Új TODO a `§8 Visszajelzések`-be → zárj le egy régit ugyanott.
-- Új script → vagy törölj egyet, vagy mergelj kettőt.
-- Új skill → indokold miért nem fér el meglévőben.
+- Először a meglévő fájlt javítsd; új fájl csak akkor, ha tényleg nem fér el sehol.
+- Új skill: indokold, miért nem fér el meglévőben.
+- Időnként nézd át, mi vonható össze vagy törölhető.
+
+Tájékoztató mérce: `python scripts/_backlog_index.py`.
 
 ## 11. Visszajelzések protokoll
 
-| Jelölés | Típus | Mikor |
-|---|---|---|
-| 🔲 TODO | Elvégzendő feladat | Ha a módosítás nem azonnali |
-| 💬 NOTE | Megfigyelés, tapasztalat | Ha a jövőbeni futtatáshoz releváns |
-| ❔ QUESTION | Nyitott kérdés | Ha döntés szükséges |
-| ⚠️ WARNING | Fontos korlát | Ha figyelmen kívül hagyva hibát okoz |
+A szimbólumok jelentése: §4.1. A bejegyzések helye:
 
-**Inline TODO/NOTE a szövegtörzsben TILOS** — minden bejegyzés a saját fájl dedikált szekciójába kerül.
+- **Skill-specifikus** megfigyelés/TODO/kérdés → az adott skill `§8 Visszajelzések`.
+- **Projekt-szintű** → [project_status.md](.claude/project_status.md) (Backlog / Nyitott kérdések).
+
+**Inline TODO/NOTE a szövegtörzsben TILOS** — minden bejegyzés a dedikált szekcióba kerül.
 
 ## 12. Skill-fejlesztési módszertan
 
@@ -183,3 +183,4 @@ Mérce: `python scripts/_backlog_index.py` output — **nem nőhet**.
 ## 13. Nyitott pontok
 
 → Backlog kezelése: [project_status.md](.claude/project_status.md).
+7. pont: "- Összefoglaló → 📦 doboz (blockquote + bullets)" még kitérünk rá, hogy hogyan sikerül.

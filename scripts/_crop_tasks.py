@@ -1,11 +1,21 @@
-﻿"""
+"""
 _crop_tasks.py — Crop-feladatlista generálás és checkbox→catalog szinkron.
 
 Standalone utility; a 02_image_extraction.py dynamikusan tölti be.
 
 Funkciók:
     generate_crop_tasks(week_dir)  — figure_catalog.json → _crop_tasks.md
-    sync_crop_tasks(week_dir)      — [x] jelölések → catalog needs_crop: false
+                                    (forrásonként markdown táblázat,
+                                     minden bejegyzés, [x]/[ ] + Caption oszlop)
+    sync_crop_tasks(week_dir)      — [x] és Caption cellákat catalog-ba menti,
+                                    majd regenerálja a _crop_tasks.md-t.
+
+Caption auto-detekció:
+    - Born-digital PDF: page text → `Figure N(.M)?: ...` minta.
+    - PPTX: slide text → ugyanaz a minta.
+    - Szkennelt PDF / üres: caption üres.
+    - Bizonytalan találat (több caption az oldalon, index-mismatch): a Caption
+      cella elején `?` jel — a megerősítéshez töröld a `?`-et.
 """
 
 import json
@@ -45,66 +55,207 @@ def _week_label(week_dir: Path) -> str:
     return week_dir.name
 
 
+# ── Caption auto-detekció ──────────────────────────────────────────────────────
+
+_CAPTION_RE = re.compile(
+    r"(?:Figure|Fig\.?)\s+(\d+(?:\.\d+)?)\s*[:\.\)]\s*([^.\n]{3,250}\.)",
+    re.IGNORECASE,
+)
+
+_IDX_RE = re.compile(r"(?:fig|img)(\d+)", re.IGNORECASE)
+
+
+def _pdf_captions(pdf_path: Path) -> dict:
+    """{page_number: [caption strings in document order]}"""
+    try:
+        import fitz  # PyMuPDF
+    except ImportError:
+        return {}
+    try:
+        doc = fitz.open(pdf_path)
+    except Exception:
+        return {}
+    cache: dict = {}
+    for i, page in enumerate(doc, start=1):
+        try:
+            text = page.get_text("text") or ""
+        except Exception:
+            text = ""
+        flat = re.sub(r"\s+", " ", text).strip()
+        matches = _CAPTION_RE.findall(flat)
+        cache[i] = [f"Figure {num}: {body.strip()}" for num, body in matches]
+    doc.close()
+    return cache
+
+
+def _pptx_captions(pptx_path: Path) -> dict:
+    """{slide_number: [caption strings]}"""
+    try:
+        from pptx import Presentation
+    except ImportError:
+        return {}
+    try:
+        prs = Presentation(pptx_path)
+    except Exception:
+        return {}
+    cache: dict = {}
+    for i, slide in enumerate(prs.slides, start=1):
+        chunks = []
+        for shape in slide.shapes:
+            if getattr(shape, "has_text_frame", False):
+                for p in shape.text_frame.paragraphs:
+                    chunks.append(p.text or "")
+        flat = re.sub(r"\s+", " ", " ".join(chunks)).strip()
+        matches = _CAPTION_RE.findall(flat)
+        cache[i] = [f"Figure {num}: {body.strip()}" for num, body in matches]
+    return cache
+
+
+def _build_caption_cache(week_dir: Path, sources: list) -> dict:
+    """source_file → {page: [captions]}"""
+    raw_dir = week_dir / "1_raw_inputs"
+    cache: dict = {}
+    for src in sources:
+        path = raw_dir / src
+        if not path.exists():
+            cache[src] = {}
+            continue
+        ext = path.suffix.lower()
+        if ext == ".pdf":
+            cache[src] = _pdf_captions(path)
+        elif ext == ".pptx":
+            cache[src] = _pptx_captions(path)
+        else:
+            cache[src] = {}
+    return cache
+
+
+def _caption_for(entry: dict, cap_cache: dict) -> tuple:
+    """
+    Visszatérés: (caption_text, uncertain).
+    1. Ha catalog.caption ki van töltve → azt használjuk (uncertain=False).
+    2. Egyébként a forrás-cache-ből keresünk az oldal + image_index alapján.
+    3. Bizonytalanság: több caption az oldalon, vagy index out-of-range.
+    """
+    cat_cap = entry.get("caption")
+    if cat_cap:
+        return str(cat_cap), False
+    src = entry.get("source_file", "")
+    page = entry.get("page")
+    page_caps = cap_cache.get(src, {}).get(page, [])
+    if not page_caps:
+        return "", False
+    fname = Path(entry.get("filename", "")).name
+    m = _IDX_RE.search(fname)
+    idx = int(m.group(1)) if m else 1
+    if 1 <= idx <= len(page_caps):
+        uncertain = len(page_caps) > 1  # 1 image / 1 caption → confident
+        return page_caps[idx - 1], uncertain
+    return page_caps[0], True
+
+
 # ── Publikus API ───────────────────────────────────────────────────────────────
+
+def _escape_cell(text: str) -> str:
+    """Markdown table cell escaping (pipe + newline)."""
+    return text.replace("\\", "\\\\").replace("|", "\\|").replace("\n", " ").strip()
+
 
 def generate_crop_tasks(week_dir: Path) -> None:
     """
-    Beolvassa a figure_catalog.json-t és kiírja a _crop_tasks.md-t.
-    Csak needs_crop: true bejegyzések kerülnek bele, forrás szerint
-    csoportosítva (ABC sorrendben).
+    figure_catalog.json → _crop_tasks.md.
+
+    Forrásonként egy markdown táblázat, MINDEN bejegyzéssel:
+        | ✓ | id | fájl | oldal | útvonal | Caption |
+    `[x]` ha `needs_crop: false`, `[ ]` ha `true`.
+    Caption cella üres ha nincs találat, `? ` prefixszel ha auto-detektált,
+    de bizonytalan (több caption az oldalon vagy index-mismatch).
     """
     week_dir = Path(week_dir).resolve()
     clean_in = week_dir / "2_clean_inputs"
     md_path  = clean_in / "_crop_tasks.md"
 
     catalog = _load_catalog(clean_in)
-    pending = [e for e in catalog if e.get("needs_crop")]
-
-    if not pending:
-        md_path.write_text("# Crop tasks\n\nNincs függő crop.\n",
+    if not catalog:
+        md_path.write_text("# Crop tasks\n\nÜres katalógus.\n",
                            encoding="utf-8")
-        print(f"  _crop_tasks.md: nincs függő crop → üres fájl írva")
+        print("  _crop_tasks.md: üres katalógus")
         return
 
-    # Források gyűjtése ABC sorrendben
-    sources_ordered = sorted({e["source_file"] for e in pending})
-    today = date.today().isoformat()
-    label = _week_label(week_dir)
+    sources_ordered = sorted({e["source_file"] for e in catalog})
+    cap_cache = _build_caption_cache(week_dir, sources_ordered)
+
+    pending = sum(1 for e in catalog if e.get("needs_crop"))
+    total   = len(catalog)
+    today   = date.today().isoformat()
+    label   = _week_label(week_dir)
 
     lines = []
     lines.append(f"# Crop tasks — {label}")
-    lines.append(f"_{len(pending)} vár | Frissítve: {today}_")
+    lines.append(f"_{pending} crop vár / {total} összesen | Frissítve: {today}_")
+    lines.append("")
+    lines.append("> **Munkamenet:** `[ ]` = még crop-olni kell; `[x]` = kész.")
+    lines.append("> A `Caption` oszlopba írd a felirat szövegét. `?` prefix = a script auto-detektálta, de bizonytalan — ellenőrizd és töröld a `?`-et a megerősítéshez.")
+    lines.append("> Üres Caption cella = nem találtunk feliratot, töltsd ki kézzel.")
     lines.append("")
     lines.append("---")
 
-    for src_file in sources_ordered:
-        entries = [e for e in pending if e["source_file"] == src_file]
-        cit_k = _cit_key(src_file, catalog)
+    for src in sources_ordered:
+        entries = [e for e in catalog if e["source_file"] == src]
+        cit_k   = _cit_key(src, catalog)
         lines.append("")
-        lines.append(f"## {src_file}  [cit:{cit_k}]")
+        lines.append(f"## {src}  [cit:{cit_k}]")
+        lines.append("")
+        lines.append("| ✓ | id | fájl | oldal | útvonal | Caption |")
+        lines.append("|:-:|:--|:--|:-:|:--|:--|")
         for e in entries:
-            fig_id    = e["id"]
-            filename  = Path(e["filename"]).name          # csak a fájlnév
-            rel_path  = e["filename"]                     # relatív a week_dir-hez
-            page      = e.get("page", "?")
+            fig_id   = e["id"]
+            filename = Path(e["filename"]).name
+            rel_path = e["filename"]
+            page     = e.get("page", "?")
+            checkbox = "[x]" if not e.get("needs_crop") else "[ ]"
+            cap_text, uncertain = _caption_for(e, cap_cache)
+            cap_cell = _escape_cell(cap_text)
+            if cap_cell and uncertain:
+                cap_cell = f"? {cap_cell}"
             lines.append(
-                f"- [ ] <!-- {fig_id} --> `{filename}`  · oldal {page}"
-                f"  · `{rel_path}`"
+                f"| {checkbox} | {fig_id} | `{filename}` | {page} "
+                f"| `{rel_path}` | {cap_cell} |"
             )
 
     lines.append("")   # záró newline
 
     md_path.write_text("\n".join(lines), encoding="utf-8")
-    print(f"  _crop_tasks.md: {len(pending)} bejegyzés írva → {md_path}")
+    print(f"  _crop_tasks.md: {total} bejegyzés ({pending} crop vár) → {md_path}")
+
+
+# Markdown-táblázat sor-parser a sync-hez
+_CHECKBOX_RE = re.compile(r"\[\s*([ xX])\s*\]")
+_FIGID_RE    = re.compile(r"^fig_\w+$")
+
+
+def _split_row(line: str) -> list:
+    """Markdown táblázat sort cellákra bont (escape-elt `\\|` megőrzve)."""
+    stripped = line.strip()
+    if not stripped.startswith("|"):
+        return []
+    # `\|` ideiglenes placeholderre cseréljük, hogy a split ne tönkretegye
+    PLACEHOLDER = "\x00PIPE\x00"
+    s = stripped.strip("|").replace("\\|", PLACEHOLDER)
+    return [c.replace(PLACEHOLDER, "|").strip() for c in s.split("|")]
 
 
 def sync_crop_tasks(week_dir: Path) -> int:
     """
-    Beolvassa a _crop_tasks.md-t, megkeresi a kész ([x]) sorokat,
-    frissíti a catalog-ban needs_crop: false-ra, majd regenerálja
-    a _crop_tasks.md-t (kész elemek eltűnnek).
+    _crop_tasks.md → figure_catalog.json:
+        - `[x]` checkbox → `needs_crop: false`.
+        - Caption cella (NEM `?`-prefixes) → `caption: <text>` a catalog-ban.
 
-    Visszatérés: frissített bejegyzések száma.
+    Bizonytalan (`?` prefix) caption-eket NEM mentjük — azok a következő
+    generálásnál újra auto-detektálódnak, amíg a user a `?`-et el nem távolítja.
+
+    Végül regenerálja a _crop_tasks.md-t (a kész [x]-ek bennmaradnak).
+    Visszatérés: módosított bejegyzések száma.
     """
     week_dir = Path(week_dir).resolve()
     clean_in = week_dir / "2_clean_inputs"
@@ -115,30 +266,45 @@ def sync_crop_tasks(week_dir: Path) -> int:
         return 0
 
     text = md_path.read_text(encoding="utf-8")
-
-    # Kész sorok: - [x] <!-- fig_NNN -->
-    done_ids = re.findall(r"-\s*\[x\]\s*<!--\s*(fig_\w+)\s*-->", text,
-                          flags=re.IGNORECASE)
-
-    if not done_ids:
-        print("  sync: nincs [x] jelölt sor — semmi teendő")
-        return 0
-
     catalog = _load_catalog(clean_in)
-    updated = 0
-    id_set = set(done_ids)
+    by_id = {e["id"]: e for e in catalog}
 
-    for entry in catalog:
-        if entry["id"] in id_set and entry.get("needs_crop"):
+    updated_crop = 0
+    updated_cap  = 0
+
+    for raw_line in text.splitlines():
+        cells = _split_row(raw_line)
+        if len(cells) < 6:
+            continue
+        cb_cell, fig_id, _fname, _page, _path, cap_cell = cells[:6]
+
+        cb_m = _CHECKBOX_RE.search(cb_cell)
+        if not cb_m:
+            continue
+        if not _FIGID_RE.match(fig_id):
+            continue   # header vagy separator sor
+
+        entry = by_id.get(fig_id)
+        if not entry:
+            continue
+
+        checked = cb_m.group(1).strip().lower() == "x"
+        if checked and entry.get("needs_crop"):
             entry["needs_crop"] = False
-            updated += 1
+            updated_crop += 1
 
-    if updated:
+        uncertain = cap_cell.startswith("?")
+        cap_text  = cap_cell.lstrip("?").strip()
+        if cap_text and not uncertain and entry.get("caption") != cap_text:
+            entry["caption"] = cap_text
+            updated_cap += 1
+
+    if updated_crop or updated_cap:
         _save_catalog(catalog, clean_in)
-        print(f"  sync: {updated} bejegyzés frissítve (needs_crop → false)")
-        generate_crop_tasks(week_dir)   # regenerálás, kész elemek nélkül
+        print(f"  sync: needs_crop +{updated_crop}, caption +{updated_cap} "
+              f"bejegyzés frissítve")
     else:
-        print("  sync: a jelölt fig_id-k nem találhatók a catalog-ban "
-              "(talán már szinkronizálva)")
+        print("  sync: nincs változás")
 
-    return updated
+    generate_crop_tasks(week_dir)   # regenerálás (most már minden bent marad)
+    return updated_crop + updated_cap

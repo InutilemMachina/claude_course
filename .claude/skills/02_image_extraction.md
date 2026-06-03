@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 🐍+🤖
 status: active
-version: 2.1
+version: 2.6
 updated: 2026-06-03
 description: PDF/PPTX forrásokból PNG képeket nyerünk ki 2_clean_inputs/-ba és felépítjük a figure_catalog.json-t; szkennelt könyvekhez Claude azonosítja az ábra-oldalakat, majd --source/--pages futtatással kinyerjük őket. Használd a 01_source_collector után, a 03_mindmap_builder előtt.
 ---
@@ -84,7 +84,8 @@ A script idempotens — meglévő katalógust betölti, új bejegyzéseket fűz 
 | Fájl | Tartalom |
 |:-----|:---------|
 | `2_clean_inputs/<stem>/images/<img>.png` | Kinyert PNG (born-digital vagy oldal-render) |
-| `2_clean_inputs/figure_catalog.json` | Ábra-katalóg (id, source, page, filename, needs_crop, citation_key) |
+| `2_clean_inputs/figure_catalog.json` | Ábra-katalóg (id, source, page, filename, needs_crop, caption, citation_key) |
+| `2_clean_inputs/_crop_tasks.md` | Crop-feladatlista — forrásonként markdown táblázat (`✓ \| id \| fájl \| oldal \| útvonal \| Caption`), **minden** képet listáz; `[x]` ha kész, `[ ]` ha vár. Caption cella üres ha nincs felirat, vagy `?` prefixszel ha auto-detektált, de bizonytalan. |
 
 **`figure_catalog.json` séma:**
 
@@ -156,3 +157,5 @@ A script idempotens — meglévő katalógust betölti, új bejegyzéseket fűz 
 | 2026-06-03 | 2.2 | PPTX extractor: `shape_type==13` → XML-alapú `blipFill` detektálás (minden shape-típus, GROUP rekurzív); `lxml`-függőség hozzáadva |
 | 2026-06-03 | 2.3 | `specific_pages` mód: born-digital oldalon nincs raszterkép → vektoros ábra detektálás, oldalrenderelés + `needs_crop: true` (chattopadhyay fadiagramok) |
 | 2026-06-03 | 2.4 | Auto-crop (`_auto_crop.py`): vektoros render után Pillow `getbbox()`, fehér margók levágása, `needs_crop: false` ha ≥8% eltávolítva; `_crop_tasks.md` generálás + `--sync-crop-tasks` flag (`_crop_tasks.py`) |
+| 2026-06-03 | 2.5 | `_crop_tasks.md`: minden katalógus-bejegyzés listázva (nem csak `needs_crop:true`); `[x]/[ ]` checkbox tükrözi `needs_crop`-ot. Caption-mező soronként, auto-detekció `Figure N(.M)?: …` mintával PDF/PPTX szövegből; bizonytalan találatnál `Caption?:` előtag (több caption az oldalon vagy index-mismatch). Sync visszaírja a `Caption:` (NEM `?`-es) szövegeket a `caption` mezőbe. |
+| 2026-06-03 | 2.6 | `_crop_tasks.md` formátum: forrásonként markdown táblázat (`✓ \| id \| fájl \| oldal \| útvonal \| Caption`), `·` elválasztó helyett `\|`. Bizonytalan caption jelölése: cella eleji `?` prefix (a megerősítéshez töröld). Sync a táblázat-sorokat parse-olja. |

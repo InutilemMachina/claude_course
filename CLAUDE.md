@@ -25,6 +25,11 @@ Minden session elején ezt a két fájlt olvasd be:
 1. [Instructions.md](Instructions.md)
 2. [.claude/pipeline.md](.claude/pipeline.md)
 
+**Tantárgyon dolgozva** (ha a feladat egy konkrét `test_outputs/<tárgy>/` vagy `<tárgy>/` alá esik):
+
+3. Olvasd be a tárgy `subject_status.md` §2 tábláját, hogy lásd a heti pipeline állapotát — ebből veszed fel a fonalat.
+4. Minden pipeline-lépés futtatásakor frissítsd a tábla megfelelő `(lépés, hét)` celláját: belépéskor `⚙️`, sikeres befejezéskor `✅`. Checkpoint-lépésnél (🚦) a `✅` csak 😎 jóváhagyás után írható. Ez a szabály minden skillre kötelező, felülírja a skillek saját §3 eljárását, ha az nem említi.
+
 ## 3. Olvasási szabály
 
 Más fájlt csak akkor olvass be, ha a feladat ezt közvetlenül igényli.

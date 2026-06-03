@@ -2,7 +2,7 @@
 title: Pipeline.md — claude_course
 type: meta
 status: active
-version: 1.2
+version: 1.3
 updated: 2026-06-03
 description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 ---
@@ -105,7 +105,7 @@ flowchart TD
 
 ## 4. Vizuális gazdagítás
 
-A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus helye: [Instructions.md §7](../Instructions.md). A pipeline-ban ezt a `04 content_synthesizer`, `05 figure_integrator` (ábrák, `figure_catalog.json` alapján) és `06 summarize_box_injector` (összegző dobozok) lépések valósítják meg.
+A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus helye: [Instructions.md §7](../Instructions.md). A pipeline-ban ezt a `04 content_synthesizer`, `05 figure_integrator` (ábrák, `figure_catalog.json` alapján) és `06 summarize_box_injector` lépések valósítják meg — utóbbi minden `##` alfejezet végére `💡 Összegzés`, minden `#` fejezet zárásánál `🗺️ Fejezet összegfoglalása` blokkot illeszt (formátum: [skills/06_summarize_box_injector.md](skills/06_summarize_box_injector.md) §3).
 
 ## 5. Mappastruktúra
 
@@ -148,3 +148,4 @@ Az agent-prompt minden skill esetén a skill `§3 Eljárás` szekciója alapján
 | 2026-06-01 | 1.0 | Létrehozva (claude_play archív alapján, NLM-mentes) |
 | 2026-06-02 | 1.1 | Mermaid vertikalizálva + `<br>` sortörés-javítás; D1/D2 deduplikáció (vizuális → Instructions §7, IEEE → §8); 05 script a táblába |
 | 2026-06-03 | 1.2 | 05 szétválasztva: 05_figure_integrator + 06_summarize_box_injector; 06–10 lépések +1 átszámozva (→ 07–11), scriptek párhuzamosan; 12_youtube_finder + 13_jupyter_catalogizer beillesztve a kimeneti fázisba |
+| 2026-06-03 | 1.3 | §4: 06 kimenete `📦 Összegző` (egyszintű) → kétszintű (`💡 Összegzés` per `##` + `🗺️ Fejezet összegfoglalása` per `#`) |

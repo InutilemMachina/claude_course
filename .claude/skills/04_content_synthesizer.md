@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.0
-updated: 2026-06-01
+version: 1.1
+updated: 2026-06-03
 description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
 ---
 
@@ -66,13 +66,16 @@ flowchart LR / TD / sequenceDiagram
     [Diagram a szakasz fő összefüggéseiről]
 ```
 
-> 📦 **Összegző — N. Fejezet neve**
+> 💡 **Összegzés — N. Alfejezet neve**
 >
 > **Kulcsgondolat:** [1 mondat]
 >
-> **Emlékezz erre:**
-> - [3–5 bullet, kulcsképletekkel]
+> **Kulcsfogalmak:** fogalom1, fogalom2, fogalom3
+>
+> **Képletek:** $Eq.X.Y$ — rövid megnevezés (ha van)
 ```
+
+A `💡 Összegzés` (minden `##` alfejezet végén) és a `🗺️ Fejezet összegfoglalása` (minden `#` fejezet zárásánál) blokkok formátumát és tartalmi szabályait a [06_summarize_box_injector](06_summarize_box_injector.md) §3 definiálja kanonikusan; a 04 itt csak helyet készít — a tényleges injekciót a 06 végzi.
 
 ### 3.3. Vizuális kötelezettségek
 
@@ -168,7 +171,8 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 
 - [ ] Minden L1 mindmap-ág `##` fejezetként szerepel?
 - [ ] Minden `##` fejezetnél van Mermaid diagram?
-- [ ] Összegző 📦 doboz minden fejezet végén?
+- [ ] `💡 Összegzés` blokk minden `##` alfejezet végén?
+- [ ] `🗺️ Fejezet összegfoglalása` blokk minden `#` fejezet zárásánál? (→ 06_summarize_box_injector)
 - [ ] `[1]`, `[2]` hivatkozások a szövegben?
 - [ ] `## Hivatkozásjegyzék` a fájl végén?
 - [ ] `[MSc]` csomópontok `<!-- MSc -->...<!-- /MSc -->` blokkban?
@@ -182,7 +186,7 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 | Mermaid szintaxishiba | Speciális karakter | Érvénytelen karakterek cseréje |
 | Üres hivatkozásjegyzék | citations.json nem olvasva | Kézzel kitölteni, majd _ieee_renderer.py |
 | [MSc] blokk nem záródik | Hiányzó `<!-- /MSc -->` | Keresés és pótlás |
-| Összegző doboz hiányzik | Kimaradt a sablonból | Pótlás 06_summarize_box_injector-ben is lehetséges |
+| `💡 Összegzés` / `🗺️ Fejezet összegfoglalása` hiányzik | Kimaradt a sablonból | Pótlás 06_summarize_box_injector-ben (kanonikus formátum: ott §3.1–3.2) |
 
 ## 7. Hivatkozások
 
@@ -198,3 +202,4 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (NLM 04+05 kiváltása, Claude-natív) |
+| 2026-06-03 | 1.1 | Sablon-sor: `📦 Összegző` → `💡 Összegzés` (`##` alfejezet végén); `🗺️ Fejezet összegfoglalása` placeholder a `#` fejezet zárásánál — kanonikus formátum a 06 skillben |

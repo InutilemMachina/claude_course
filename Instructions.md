@@ -2,8 +2,8 @@
 title: Instructions
 type: project_constitution
 tags: [meta]
-version: 1.1
-updated: 2026-06-02
+version: 1.2
+updated: 2026-06-03
 description: Projekt-szintű elvek, jelölések és dokumentációs szabványok.
 ---
 
@@ -135,7 +135,10 @@ Diagram-típus döntési fa:
 - Hierarchia/fa → `flowchart LR`
 - Időbeli lefolyás → `sequenceDiagram`
 - Összehasonlítás → Markdown table
-- Összefoglaló → 📦 doboz (blockquote + bullets)
+- Összegzés (`##` alfejezet végén) → `> 💡 **Összegzés — …**` blockquote (kulcsgondolat + kulcsfogalmak + képletek)
+- Fejezet-szintű összefoglalás (`#` fejezet zárásánál) → `> 🗺️ **Fejezet összegfoglalása — …**` blockquote (fő üzenet + mit tudsz most + kulcsképletek + kapcsolódás)
+
+A két blokk kanonikus formátuma: [.claude/skills/06_summarize_box_injector.md](.claude/skills/06_summarize_box_injector.md) §3.1–3.2.
 
 ## 8. Hivatkozási szabály
 
@@ -193,5 +196,5 @@ A szimbólumok jelentése: §4.1. A bejegyzések helye:
 ## 13. Nyitott pontok
 
 → Backlog kezelése: [project_status.md](.claude/project_status.md).
-7. pont: "- Összefoglaló → 📦 doboz (blockquote + bullets)" még kitérünk rá, hogy hogyan sikerül.
+
 [ ] Minden clean outputs-nak legyen majd egy fejléce és lábléce, de azt még meg kell tervezni

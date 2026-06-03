@@ -14,7 +14,7 @@ Mit ellenőriz:
   - Romlott <!, Q:N, > marker (Rule H regresszió-teszt, cél: 0)
   - Tartalomjegyzék blokkok száma (ToC idempotencia, cél: 1)
   - Törött ToC anchor (szóköz/nagybetű a #...-ben, cél: 0)
-  - 💡 Lényeg + 🗺️ Fejezet összegzés blokkok száma
+  - 💡 Összegzés (## alfejezet végén) + 🗺️ Fejezet összegfoglalása (# fejezet zárásánál) blokkok száma
 
 Exit kód: 0 = OK, 1 = kritikus hiba (>0 a "cél: 0" metrikákból).
 
@@ -67,8 +67,8 @@ def compute_metrics(text: str) -> dict:
     toc_blocks = len(re.findall(r'^##\s+Tartalomjegyz', text, re.M))
     # Broken anchor: space or uppercase inside (#...)
     broken_anchor = len(re.findall(r'\(#[^)]*[A-Z ][^)]*\)', text))
-    lenyeg = text.count('💡 Lényeg')
-    osszegzes = text.count('🗺️ Fejezet összegz')
+    osszegzes_sub = text.count('💡 **Összegzés')
+    osszegfoglalas = text.count('🗺️ **Fejezet összegfoglalása')
     images = text.count('![')
 
     return {
@@ -82,8 +82,8 @@ def compute_metrics(text: str) -> dict:
         "broken_markers": broken_marker,
         "toc_blocks": toc_blocks,
         "broken_anchors": broken_anchor,
-        "lenyeg_blocks": lenyeg,
-        "osszegzes_blocks": osszegzes,
+        "osszegzes_sub_blocks": osszegzes_sub,
+        "osszegfoglalas_blocks": osszegfoglalas,
         "images": images,
     }
 
@@ -143,8 +143,8 @@ def main():
         print(f"  ### alszakaszok:        {m['h3_subsections']}")
         print(f"  Legnagyobb fejezet:     '{m['max_chapter_name']}' ({m['max_chapter_subs']} ###)")
         print(f"  <sup> citációk:         {m['sup_citations']}")
-        print(f"  💡 Lényeg blokkok:      {m['lenyeg_blocks']}")
-        print(f"  🗺️ Fejezet összegzés:   {m['osszegzes_blocks']}")
+        print(f"  💡 Összegzés (##):      {m['osszegzes_sub_blocks']}")
+        print(f"  🗺️ Fejezet összegf. (#):{m['osszegfoglalas_blocks']}")
         print(f"  Képek (![):             {m['images']}")
         print(f"  --- kritikus metrikák ---")
         print(f"  Inline forrásblokk:     {m['inline_source_blocks']} (cél 0)")

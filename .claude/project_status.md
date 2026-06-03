@@ -87,3 +87,4 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 | 2026-06-03 | `02_image_extraction`: átnevezés, vektoros detektálás, false positive fix, kettős tördelés kezelés, PDF-split, dft+atg tesztfutás lezárva |
 | 2026-06-03 | `03_mindmap_builder`: skill spec v1.1 (input: `1_raw_inputs/` direkt PDF-olvasás, nem `2_clean_inputs/*.md`); mindmap draft: `atg/1_het/3_mindmap/mindmap.md` |
 | 2026-06-03 | Pipeline átszámozás: 05 szétvált (05_figure_integrator + 06_summarize_box_injector), 06–10 → 07–11 (skillek + scriptek), 12_youtube_finder + 13_jupyter_catalogizer beillesztve a kimeneti fázisba; meta-dokumentumok frissítve |
+| 2026-06-03 | `06_summarize_box_injector` v2.0: egyszintű `📦 Összegző` (per `##` fejezet) helyett kétszintű séma — `💡 Összegzés` minden `##` alfejezet végén, `🗺️ Fejezet összegfoglalása` minden `#` fejezet zárásánál; 04/08 skillek, Instructions §7, pipeline.md §4, `08_quality_check.py` count-minták és címkék frissítve |

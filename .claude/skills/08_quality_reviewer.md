@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 🤖,😎
 status: active
-version: 1.1
+version: 1.2
 updated: 2026-06-03
 description: Script-alapú lint + Claude Explore review; publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez.
 ---
@@ -42,7 +42,7 @@ Ellenőrzési szempontok:
 - Minimum terjedelem: `##` fejezetek legalább 3 bekezdéssel?
 - LaTeX hiány: egyetlen képlet sem jelenik meg egy képletintenzív témában?
 - Hivatkozások: a `citations.json` bejegyzések `[1]`, `[2]` formában megjelennek-e?
-- Összegző dobozok: minden `##` fejezet rendelkezik-e `> 📦` blokkal?
+- Összegző blokkok: minden `##` alfejezet végén van-e `> 💡 Összegzés` blokk, és minden `#` fejezet zárásánál `> 🗺️ Fejezet összegfoglalása` blokk? (formátum: [06_summarize_box_injector](06_summarize_box_injector.md) §3.1–3.2)
 
 ### 3.2. Claude Explore review
 
@@ -112,3 +112,4 @@ Tartalom: script kimenet + Claude értékelés + döntés + revision note (ha <3
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (mint 07_quality_reviewer) |
 | 2026-06-03 | 1.1 | Átszámozva 07→08; downstream 09–13, script 08_quality_check.py |
+| 2026-06-03 | 1.2 | §3.1 összegző-doboz check átírva a kétszintű sémára (`💡 Összegzés` per `##`, `🗺️ Fejezet összegfoglalása` per `#`) |

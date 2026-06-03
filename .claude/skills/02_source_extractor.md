@@ -129,8 +129,9 @@ A script idempotens — meglévő katalógust betölti, új bejegyzéseket fűz 
 
 ## 9. Visszajelzések
 
-<!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
-- 💬 NOTE: `nagy2023_slides.pptx` → 0 kép mert vektoros/EMF formátum (nem PICTURE type=13). Normál viselkedés; a PPTX szövegét Claude olvassa.
+- 💬 NOTE: `nagy2023_slides.pptx` → képek PLACEHOLDER (type=14) shape-ekben vannak, nem PICTURE (type=13)-ban. XML-alapú (`blipFill`) detektálással 8 kép kinyerhető. A `shape_type == 13` feltétel nem elégséges: az emberek változatos módszerekkel szerkesztenek PPTX-et.
+- 💬 NOTE: `gravdahl1999_chapter.pdf` (62 oldalas, 100% szkennelt) — Claude 17 ábra-oldalt azonosított (Fig 1.1–1.17). 0 fals pozitív, 0 fals negatív. Manuális crop szükséges (szkennelt ág).
+- 💬 NOTE: `chattopadhyay2013_paper.pdf` — p3 raszteres kép (`needs_crop: false`), p2+p4 vektoros fa-diagramok → auto-crop 25% margólevágással (`needs_crop: false`).
 
 ## 10. Változásjegyzék
 
@@ -139,3 +140,6 @@ A script idempotens — meglévő katalógust betölti, új bejegyzéseket fűz 
 | 2026-06-01 | 1.0 | Létrehozva (MinerU + 02-2 extractor) |
 | 2026-06-03 | 2.0 | Teljes újraírás: MinerU kiváltva PyMuPDF-fel (csak ábrák, nem szöveg); szkennelt PDF detektálás + Claude-alapú oldalazonosítás + `--source/--pages`; 02-1 + 02-2 egyesítve; verifikált atg-n |
 | 2026-06-03 | 2.1 | `--pages` ismétléssel N kép/oldal (N külön fájl, N catalog bejegyzés); `image_index` kivezetett; `_source_map.md` eltávolítva (provenance → `citations.json original_filename`) |
+| 2026-06-03 | 2.2 | PPTX extractor: `shape_type==13` → XML-alapú `blipFill` detektálás (minden shape-típus, GROUP rekurzív); `lxml`-függőség hozzáadva |
+| 2026-06-03 | 2.3 | `specific_pages` mód: born-digital oldalon nincs raszterkép → vektoros ábra detektálás, oldalrenderelés + `needs_crop: true` (chattopadhyay fadiagramok) |
+| 2026-06-03 | 2.4 | Auto-crop (`_auto_crop.py`): vektoros render után Pillow `getbbox()`, fehér margók levágása, `needs_crop: false` ha ≥8% eltávolítva; `_crop_tasks.md` generálás + `--sync-crop-tasks` flag (`_crop_tasks.py`) |

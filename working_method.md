@@ -30,12 +30,12 @@ A már kodifikált elveket nem ismétlem, csak megerősítem (kanonikus hely zá
 Lépésről lépésre a belépési ponttól: `CLAUDE.md → Instructions.md → pipeline.md → skills 00–10 (+ scriptek) → templates`.
 Nyugodt, szisztematikus tempó. Minden állomáson:
 
+0. **Cél-tisztázás** — ismertesd a jelenlegi forgatókönyvet (mit tud/csinál a skill most), majd kérdezd meg: „Mi lenne az elképzelésed / szándékod?" Ne feltételezd, hogy a jelenlegi állapot a kívánt.
 1. **Olvasás tetőtől talpig** — a skill ÉS a hozzá tartozó script(ek) együtt.
-2. **Cél-tisztázás** — „minek mi a célja?"; ha nem egyértelmű → kérdés.
-3. **Audit** — felesleg / redundancia / ellentmondás / hiányzó hibakezelés / fantom-hivatkozás.
-4. **Teszt** — valódi fixture-ön (`atg` = sok kis forrás, `dft` = 1 könyv).
-5. **Fix + visszajelzés**, majd **commit** tiszta egységként.
-6. **Iteráció** — ugyanazt a fájlt finomítjuk, amíg elég jó nem lesz.
+2. **Audit** — felesleg / redundancia / ellentmondás / hiányzó hibakezelés / fantom-hivatkozás.
+3. **Teszt** — valódi fixture-ön (`atg` = sok kis forrás, `dft` = 1 könyv).
+4. **Fix + visszajelzés**, majd **commit** tiszta egységként.
+5. **Iteráció** — ugyanazt a fájlt finomítjuk, amíg elég jó nem lesz.
 
 ## 3. A kérdések, amiket minden lépésnél felteszünk
 

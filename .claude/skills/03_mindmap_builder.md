@@ -24,22 +24,25 @@ A mindmap az összes downstream output (04–10) vezérfonala.
 
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
-| `2_clean_inputs/{forrás}/{forrás}.md` | 02_image_extraction | Tisztított szöveg, képhivatkozásokkal |
-| `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Kinyert ábrák metaadatai |
-| `1_raw_inputs/citations.json` | 01_source_collector | Forrás-metaadatok (szerző, év, oldalak) |
+| `1_raw_inputs/*.pdf`, `*.pptx` | 01_source_collector | Eredeti forrásanyagok — Claude közvetlenül olvassa |
+| `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Kinyert ábrák metaadatai (L3 hivatkozásokhoz) |
+| `1_raw_inputs/citations.json` | 01_source_collector | Forrás-metaadatok (szerző, év, citációs kulcsok) |
 
-**Előfeltétel:** `02_image_extraction` sikeresen lefutott; `2_clean_inputs/` nem üres.
+**Előfeltétel:** `02_image_extraction` sikeresen lefutott (`figure_catalog.json` elérhető); `1_raw_inputs/` nem üres.
+
+💬 NOTE: A 02 skill csak képeket állít elő — szöveg-szintézist Claude végzi közvetlenül a `1_raw_inputs/` forrásokból.
 
 ## 3. Eljárás
 
 ### 3.1. Forrásbeolvasás
 
-Olvasd be az összes `2_clean_inputs/` fájlt. Ha PDF-forrás, az oldalszámokat jegyezd fel.
-Ha weblap, a URL-t jegyezd fel. Cél: **teljes megértés**, nem szemelvényezés.
+Olvasd be az összes `1_raw_inputs/` forrást (PDF, PPTX). Ha PDF-forrás, az oldalszámokat jegyezd fel.
+Ha weblap-PDF, a URL-t jegyezd fel. Cél: **teljes megértés**, nem szemelvényezés.
 
 ```
-Elolvasandó fájlok: 2_clean_inputs/**/*.md
-Egyúttal: figure_catalog.json (elérhető ábrák listája)
+Elolvasandó fájlok: 1_raw_inputs/*.pdf, *.pptx
+Egyúttal: 2_clean_inputs/figure_catalog.json (elérhető ábrák listája)
+           1_raw_inputs/citations.json (citációs kulcsok)
 ```
 
 ### 3.2. Fogalmi szintézis
@@ -122,7 +125,7 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 
 ## 5. Ellenőrzés
 
-- [ ] Minden L1 ág azonosítható a forrásokban?
+- [ ] Minden L1 ág azonosítható az `1_raw_inputs/` forrásokban?
 - [ ] `[MSc]` jelölések konzisztensek (szülő [MSc] → gyerek is [MSc])?
 - [ ] Mermaid szintaxis hibamentes (idézőjelek, zárójelek kerülve)?
 - [ ] `status: approved` a YAML-ban?
@@ -151,3 +154,4 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (claude_play 08_mindmap_manager alapján, Claude-natív) |
+| 2026-06-03 | 1.1 | §2 input javítva: `2_clean_inputs/**/*.md` → `1_raw_inputs/` (02 skill csak képet termel, szöveg-szintézis Claude direkt PDF-olvasással); §3.1 + §5 igazítva |

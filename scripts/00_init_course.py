@@ -127,6 +127,7 @@ def main():
         for sub in WEEK_SUBDIRS:
             d = course_dir / f"{w}_het" / sub
             if d.exists():
+                skipped.append(f"{w}_het/{sub}/")
                 continue
             if not args.dry_run:
                 d.mkdir(parents=True, exist_ok=True)

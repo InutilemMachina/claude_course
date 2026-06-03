@@ -3,10 +3,11 @@ name: 00_init
 title: 00_INIT — Tantárgy inicializálás és mappastruktúra
 type: skill
 tags: [meta, skill]
+role: 🐍
 status: active
-version: 1.1
-updated: 2026-06-02
-description: Új tantárgy pipeline-jának inicializálása — subject_status.md és heti mappastruktúra létrehozása.
+version: 1.2
+updated: 2026-06-03
+description: Új tantárgy mappastruktúrájának és subject_status.md-jének létrehozása; használd a pipeline legelején, amikor új tantárgyat (vagy annak heti bontását) indítasz.
 ---
 
 # 00_INIT
@@ -33,7 +34,7 @@ A szint (BSc/MSc), célok, stílus **nem CLI-argumentum** — ezeket a generált
 
 **Előfeltétel:** A `templates/subject_status_template.md` sablon létezik; a gyökér írható.
 
-## 3. Eljárás
+## 3. Eljárás 🐍
 
 ### 3.1. Futtatás
 
@@ -74,14 +75,21 @@ A futás után **töltsd ki** a `subject_status.md` §1 (alapadatok), §4 (célo
 | `<tantárgy>/{N}_het/3_mindmap/` | Üres — `03_mindmap_builder`-nek |
 | `<tantárgy>/{N}_het/5_clean_outputs/` | Üres — végleges outputoknak |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture (bemenet):** nincs forrás-fixture (ez az első lépés); bemenet a CLI: `--subject smoke --weeks 2`.
+- **Akció:** `python scripts/00_init_course.py --subject smoke --weeks 2`
+- **Várt kimenet:** `test_outputs/smoke/subject_status.md` (frontmatter: `subject: smoke`, `weeks: 2`, `tags: [test]`) + `1_het/`…`2_het/` mind az 5 almappával; a script `Kész: 11 létrehozva` sorral zárul.
+- **Eval:** `--dry-run` ugyanezt jelzi módosítás nélkül; idempotens újrafuttatás → `0 létrehozva, 11 kihagyva`; a §2 státusz-tábla 2 hét-oszloppal generálódik.
+
+## 6. Ellenőrzés
 
 - [ ] `subject_status.md` létrejött a tantárgy gyökerében
 - [ ] Minden hétre (`1` … `N`) létrejött mind az **5** almappa
 - [ ] `3_mindmap/` jelen van minden hétnél
 - [ ] A script naplója `Kész: … létrehozva` sorral zárul, hiba nélkül
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 <!-- SZABÁLY: Minden felfedezett hibát ÉS megoldást ide kell dokumentálni azonnal. -->
 
@@ -91,19 +99,20 @@ A futás után **töltsd ki** a `subject_status.md` §1 (alapadatok), §4 (célo
 | Semmi sem jön létre újra | Idempotencia — már inicializált | Normál; töröld manuálisan, ha újra kell |
 | Rossz helyre kerül a tantárgy | `--root` alapértelmezés `test_outputs` | Éles tantárgyhoz add meg: `--root .` |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
-- [01_source_collector.md](01_source_collector.md) — következő lépés
+- upstream: — (első lépés) · downstream: [01_source_collector.md](01_source_collector.md)
 - [subject_status_template.md](../../templates/subject_status_template.md) — a másolt sablon
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva |
 | 2026-06-02 | 1.1 | Skill a script valóságához igazítva: `context.json` → `subject_status.md`, helyes argumentumok, 5 almappa, idempotencia |
+| 2026-06-03 | 1.2 | Sablonhoz igazítva: `role: 🐍`, triggerelő `description`, §5 Teszt (verifikált), upstream/downstream linkek; őszinte idempotencia-napló (a heti mappákat is számolja) |

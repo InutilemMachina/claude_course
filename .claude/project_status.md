@@ -14,7 +14,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 
 **Haladás (skill-tesztelési kör):**
 1. ✅ `skill_template.md` best-practice overhaul (role, triggerelő description, §3 dual-mód, §5 Teszt) → B-07 részben.
-2. ⚙️ Skillek tesztje a sablon szerint: ✅ `00_init` (+őszinte napló), ✅ `01_source_collector` (valódi `atg`-n), 🔲 `02_source_extractor` → B-08.
+2. ⚙️ Skillek tesztje a sablon szerint: ✅ `00_init` (+őszinte napló), ✅ `01_source_collector` (ideális forgatókönyv: naming + Deep Research + weblap→PDF Playwright-tel + provenance + retroaktív, valódi `atg`-n tesztelve), 🔲 `02_source_extractor` → B-08.
 3. 🔲 Állomás-túra: `02_source_extractor` (MinerU, `3_raw_outputs` rejtély) — ugyanaz a lépés, mint a B-08 02-teszt.
 
 ## Elkészült (✅)
@@ -42,7 +42,8 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - 🔲 B-05: `11_notebook_maker` skill (Jupyter szemléltetés) — jövőbeni lépés
 - 🔲 B-06: YouTube/médialink szekció az `08_question_bank`-ban — jövőbeni lépés
 - 🔲 B-07: `skill_template.md` best-practice felülvizsgálata — felépítés + hol éljen (`.claude/` vs `templates/`)
-- 🔲 B-08: 00, 01, 02 skillek aprólékos, end-to-end tesztelése `atg` + `dft`-n (draft→teszt→eval→fix, [Instructions §12](../Instructions.md)); a többi skill ezt követi
+- 🔲 B-08: 00, 01, 02 skillek aprólékos, end-to-end tesztelése `atg` + `dft`-n (draft→teszt→eval→fix, [Instructions §12](../Instructions.md)); a többi skill ezt követi — 00 ✅, 01 ✅, 02 hátra
+- 🔲 B-09: `_ieee_renderer` — ismeretlen évnél `é.n..` dupla pont (kozmetikai); a fallback paper-formátum trailing pontját rendezni
 
 ## Nyitott kérdések (❔)
 

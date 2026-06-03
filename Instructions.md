@@ -147,6 +147,8 @@ Diagram-típus döntési fa:
 | `paper` / `slides` | `[N] Szerző, "Cím," *Forrás*, Év.` |
 | `book` | `[N] Szerző, *Cím*, Kiadó, Év.` |
 | `chapter` | `[N] Szerző, "Cím," in *Könyv*, Év.` |
+| `report` | `[N] Szerző, "Cím," *Intézmény*, tech. rep., Év.` |
+| `thesis` | `[N] Szerző, "Cím," Ph.D. dissertation, *Intézmény*, Év.` |
 | `webpage` | `[N] Szerző, "Cím," *Forrás*. [Online]. Available: URL.` |
 
 ## 9. Szerkesztési szabályok

@@ -12,6 +12,8 @@ Forrástípus-specifikus formátum:
   paper / slides  : [N] Author, "Title," *Venue*, Year.
   book            : [N] Author, *Title*, Publisher, Year.
   chapter         : [N] Author, "Title," in *Book*, Publisher, Year.
+  report          : [N] Author, "Title," *Institution*, tech. rep., Year.
+  thesis          : [N] Author, "Title," Ph.D. dissertation, *Institution*, Year.
   webpage         : [N] Author, "Title," *Venue*. [Online]. Available: URL.
 
 Az inline [N] hivatkozásokat a tartalom-szintézis (04) állítja elő; ez a script
@@ -101,6 +103,20 @@ def format_ieee(num: int, entry: dict) -> str:
             return f"[{num}] {authors}, \"{title},\" in *{venue}*, {year}."
         else:
             return f"[{num}] {authors}, \"{title},\" {year}."
+
+    elif etype == "report":
+        # [N] Author, "Title," *Institution*, tech. rep., Year.
+        if venue:
+            return f"[{num}] {authors}, \"{title},\" *{venue}*, tech. rep., {year}."
+        else:
+            return f"[{num}] {authors}, \"{title},\" tech. rep., {year}."
+
+    elif etype == "thesis":
+        # [N] Author, "Title," Ph.D. dissertation, *Institution*, Year.
+        if venue:
+            return f"[{num}] {authors}, \"{title},\" Ph.D. dissertation, *{venue}*, {year}."
+        else:
+            return f"[{num}] {authors}, \"{title},\" dissertation, {year}."
 
     elif etype == "webpage":
         # [N] Author, "Title," *Venue*. [Online]. Available: [url](url).

@@ -2,3 +2,4 @@ test_sources/
 test_outputs/
 __pycache__/
 *.pyc
+.playwright-mcp/

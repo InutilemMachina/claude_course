@@ -1,10 +1,10 @@
 """
-06-1_typesetter.py -- Markdown linter a pipeline WIP kimenetre.
+07-1_typesetter.py -- Markdown linter a pipeline WIP kimenetre.
 
 Phase 2: Whitespace/formatting linting (rules A-K).
 
 Usage:
-    python scripts/06-1_typesetter.py --week-dir <path/to/N_het>
+    python scripts/07-1_typesetter.py --week-dir <path/to/N_het>
 """
 
 import argparse
@@ -385,17 +385,17 @@ def main():
 
     md_path = _resolve_md_path(args)
 
-    print(f"[11_typesetter] Input: {md_path}")
+    print(f"[07_typesetter] Input: {md_path}")
     text = load_md(md_path)
     original_len = len(text)
 
     text = phase2_linting(text)
     save_md(md_path, text)
     print(
-        f"[11_typesetter] Written back: {md_path} "
+        f"[07_typesetter] Written back: {md_path} "
         f"({original_len} -> {len(text)} chars)"
     )
-    print("[11_typesetter] TIP: Run 11_util_heading_numberer.py for Rule G (heading numbering).")
+    print("[07_typesetter] TIP: Run 07-2_heading_numberer.py for Rule G (heading numbering).")
 
 
 if __name__ == "__main__":

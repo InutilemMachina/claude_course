@@ -1,5 +1,5 @@
 """
-10-1_bsc_filter.py -- Remove MSc blocks and write BSc-only output files
+11-1_bsc_filter.py -- Remove MSc blocks and write BSc-only output files
 
 Reads 4_wip_outputs/N_*.md files, strips:
   - <!-- MSc --> ... <!-- /MSc --> HTML comment blocks
@@ -9,7 +9,7 @@ Reads 4_wip_outputs/N_*.md files, strips:
 Writes BSc versions to 5_clean_outputs/ with _bsc suffix.
 
 Usage:
-    python scripts/14_bsc_filter.py --week-dir <path/to/N_het> [options]
+    python scripts/11-1_bsc_filter.py --week-dir <path/to/N_het> [options]
 
     --week-dir   Path to weekly folder. Required.
     --week       Week number (default: read from citations.json _meta.week).

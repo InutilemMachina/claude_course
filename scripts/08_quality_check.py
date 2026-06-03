@@ -1,7 +1,7 @@
 """
-11b_quality_check.py -- Automatikus minőségi metrikák a kész Jegyzeten.
+08_quality_check.py -- Automatikus minőségi metrikák a kész Jegyzeten.
 
-A 11b_quality_reviewer skill §3.1 metrikáit futtatja deterministically,
+A 08_quality_reviewer skill §3.1 metrikáit futtatja deterministically,
 API/kvóta nélkül. Strukturális és formázási ellenőrzéseket végez, és
 exit kóddal jelzi a kritikus hibákat (CI-barát).
 
@@ -19,8 +19,8 @@ Mit ellenőriz:
 Exit kód: 0 = OK, 1 = kritikus hiba (>0 a "cél: 0" metrikákból).
 
 Usage:
-    python scripts/11b_quality_check.py --week-dir <path/to/N_het>
-    python scripts/11b_quality_check.py --week-dir <path> --json
+    python scripts/08_quality_check.py --week-dir <path/to/N_het>
+    python scripts/08_quality_check.py --week-dir <path> --json
 """
 
 import argparse

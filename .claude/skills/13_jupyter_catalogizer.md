@@ -1,23 +1,23 @@
 ---
-name: NN_skill_name
-title: NN_SKILL_NAME -- Rövid cím
+name: 13_jupyter_catalogizer
+title: 13_jupyter_catalogizer -- A tananyag gazdagítása Jupyter notebook-okkal
 type: skill
 tags: [meta, skill]
-role: 🐍 | 🤖 | 😎+🤖
-status: active
+role: 😎+🤖
+status: planned
 version: 1.0
-updated: YYYY-MM-DD
-description: <Mit csinál a lépés>; használd, amikor <konkrét trigger / bemenet áll elő>. Triggerelő mondat (mi + mikor), nem csak „miről szól". Pl.: „PDF/URL forrásokat rendez 1_raw_inputs/-ba és citations.json-t hoz létre; használd a 00_init után, új heti forrásgyűjtéskor."
+updated: 2026-06-03
+description: A publikálható jegyzet/prezentáció kijelölt ábráihoz/koncepcióihoz Jupyter notebookokat rendel és csatolmányként regisztrálja; használd a 08_quality_reviewer PUBLIKÁLHATÓ döntése után, opcionális gazdagító lépésként.
 ---
 
-# NN_SKILL_NAME
+# 13_JUPYTER_CATALOGIZER
 
 <!-- A `role` dönti el, hogyan fut a lépés: 🐍 script, 🤖 Claude, 😎+🤖 ember+Claude.
      A skill törzse legyen tömör; nehéz részletek külön fájlba (progresszív feltárás). -->
 
 ## 1. Cél
 
-Egy mondat: mi a lépés feladata.
+Egy mondat: Még nem tudom pontosan, de valami olyasmire gondoltam, hogy bizonyos ábrákat koncepciókat kijelölök a tananyagban, amihez majd külön jupyter notebook-okat generálunk. Ennek a skillnek a célja az lenne, hogy regisztrálja azt retrospektív a tananyagban (jegyzet/előadás), mint egy csatolmányt 💻 és egy külön fájlban táblázatként. Mivel a jupyter notebook-ok hosszú távon bővülnek, ezért még ki kell találni, hogy hogyan nevezzük a fájlt és hova kössük.
 
 **Input:** <fő bemenet egy sorban> · **Output:** <fő kimenet egy sorban>
 
@@ -25,9 +25,10 @@ Egy mondat: mi a lépés feladata.
 
 | Fájl | Honnan (skill) | Tartalom |
 |:-----|:---------------|:---------|
-| `N_.../fajl` | előző lépés | leírás |
+| `4_wip_outputs/N_Jegyzet.md` | 08_quality_reviewer | Publikálható jegyzet (notebook-jelölés alapja) |
+| `4_wip_outputs/N_Prezentacio.md` | 10_presentation_maker | Prezentáció (opcionális, ide is kerülhet csatolmány) |
 
-**Előfeltétel:** Mi kell teljesülni a futtatáshoz?
+**Előfeltétel:** `08_quality_reviewer` döntése `PUBLIKÁLHATÓ`. A kimeneti fázisban fut, a 09/10/11-gyel párhuzamosan (opcionális gazdagítás).
 
 ## 3. Eljárás
 
@@ -81,7 +82,7 @@ Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12]
 ## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
-- upstream: [NN_előző.md](NN_prev.md) · downstream: [NN_következő.md](NN_next.md)
+- upstream: [08_quality_reviewer.md](08_quality_reviewer.md) · párhuzamos: [12_youtube_finder.md](12_youtube_finder.md)
 
 ## 9. Visszajelzések 😎+🤖
 

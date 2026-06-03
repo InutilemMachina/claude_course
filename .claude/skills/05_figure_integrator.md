@@ -1,23 +1,24 @@
-﻿---
-name: 05_visual_enricher
-title: 05_VISUAL_ENRICHER — Ábrabeillesztés és összegző dobozok
+---
+name: 05_figure_integrator
+title: 05_FIGURE_INTEGRATOR — Ábrabeillesztés
 type: skill
 tags: [meta, skill]
+role: 🤖+🐍
 status: active
-version: 1.0
-updated: 2026-06-01
-description: figure_catalog alapján ábrák beillesztése a jegyzetbe, fejezetek végére összegző dobozok elhelyezése.
+version: 1.1
+updated: 2026-06-03
+description: figure_catalog alapján ábrák beillesztése a jegyzet megfelelő fejezet-szakaszaiba.
 ---
 
-# 05_VISUAL_ENRICHER
+# 05_FIGURE_INTEGRATOR
 
 ## 1. Cél
 
-A `figure_catalog.json`-ban leltározott ábrákat beilleszti a megfelelő fejezet-szakaszokba,
-és minden fejezet végére összegző dobozt helyez el.
+A `figure_catalog.json`-ban leltározott ábrákat beilleszti a megfelelő fejezet-szakaszokba.
+Az összegző dobozok elhelyezése külön lépés: [06_summarize_box_injector](06_summarize_box_injector.md).
 
 **Input:** `4_wip_outputs/N_Jegyzet.md` + `2_clean_inputs/figure_catalog.json`
-**Output:** `4_wip_outputs/N_Jegyzet.md` (gazdagítva, in-place)
+**Output:** `4_wip_outputs/N_Jegyzet.md` (ábrákkal gazdagítva, in-place)
 
 ## 2. Bemenetek
 
@@ -47,18 +48,7 @@ python scripts/05_figure_mapper.py --week N --subject "Jelatvitel"
 *{id} — {caption}* (Forrás: {source}, {page}. o.)
 ```
 
-### 3.3. Összegző dobozok elhelyezése
-
-Minden `## Fejezetnév` blokk végére:
-
-```markdown
-> 📦 **Összegző — Fejezetnév**
-> **Kulcsgondolat:** [1-2 mondatos lényeg]
-> **Kulcsfogalmak:** fogalom1, fogalom2, fogalom3
-> **Képletek:** $Eq.X.Y$ — rövid megnevezés
-```
-
-### 3.4. Manuális finomhangolás
+### 3.3. Manuális finomhangolás
 
 Claude ellenőrzi a beillesztett ábrákat:
 - Kontextuálisan illeszkedik-e az adott fejezethez?
@@ -68,12 +58,11 @@ Claude ellenőrzi a beillesztett ábrákat:
 
 | Fájl | Tartalom |
 |:-----|:---------|
-| `4_wip_outputs/N_Jegyzet.md` | Gazdagított verzió, ábrahivatkozásokkal és összegző dobozokkal |
+| `4_wip_outputs/N_Jegyzet.md` | Ábrahivatkozásokkal gazdagított verzió |
 
 ## 5. Ellenőrzés
 
 - [ ] Minden `figure_catalog` bejegyzés beillesztve vagy placeholder-rel jelezve
-- [ ] Összegző doboz minden `##` fejezet végén megjelenik
 - [ ] Képútvonalak érvényesek (relatív, létező fájl)
 - [ ] `<!-- FIGURE: -->` placeholder-ek számát naplózd (felhasználó eldönti mi legyen velük)
 
@@ -83,22 +72,22 @@ Claude ellenőrzi a beillesztett ábrákat:
 |:------|:---|:---------|
 | Ábra duplikáltan jelenik meg | Script kétszer futott | `N_Jegyzet.md` visszaállítás git-ből + újrafuttatás |
 | `suggested_section` nem talál fejezetet | Fejezetnév változott 04-ben | `figure_catalog.json` manuális frissítés |
-| Összegző doboz hiányos fejezetnél | `##` heading elmaradt a szintézisben | 04 kimenetet javítani, majd újrafuttatni |
 | Képfájl hiányzik | MinerU nem mentette | `<!-- FIGURE: {id} — MISSING -->` jelölés |
 
 ## 7. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
 - [04_content_synthesizer.md](04_content_synthesizer.md) — upstream
-- [06_typesetter.md](06_typesetter.md) — downstream
+- [06_summarize_box_injector.md](06_summarize_box_injector.md) — downstream
 
 ## 8. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
-- `05_figure_mapper.py` a `09_figure_mapper.py` másolata — egységesítés szükséges lehet
+-
 
 ## 9. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-01 | 1.0 | Létrehozva |
+| 2026-06-01 | 1.0 | Létrehozva (mint 05_visual_enricher) |
+| 2026-06-03 | 1.1 | Szétválasztva: összegző dobozok → 06_summarize_box_injector; átnevezés figure_integrator-ra; TODO lezárva |

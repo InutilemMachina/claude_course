@@ -1,20 +1,21 @@
 ﻿---
-name: 09_presentation_maker
-title: 09_PRESENTATION_MAKER — MARP prezentáció és PPTX generálás
+name: 10_presentation_maker
+title: 10_PRESENTATION_MAKER — MARP prezentáció és PPTX generálás
 type: skill
 tags: [meta, skill]
+role: 🤖+🐍
 status: active
-version: 1.0
-updated: 2026-06-01
+version: 1.1
+updated: 2026-06-03
 description: Approved mindmap és végleges jegyzet alapján MARP Markdown prezentáció és PPTX fájl generálása.
 ---
 
-# 09_PRESENTATION_MAKER
+# 10_PRESENTATION_MAKER
 
 ## 1. Cél
 
 A végleges jegyzetből és az approved mindmap-ből MARP-kompatibilis prezentációt generál,
-majd `09_pptx_gyarto.py`-val PPTX-re konvertálja.
+majd `10_pptx_gyarto.py`-val PPTX-re konvertálja.
 
 **Input:** `4_wip_outputs/N_Jegyzet.md` + `3_mindmap/mindmap.md`
 **Output:** `4_wip_outputs/N_Prezentacio.md` + `5_clean_outputs/N_Prezentacio.pptx`
@@ -23,11 +24,11 @@ majd `09_pptx_gyarto.py`-val PPTX-re konvertálja.
 
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
-| `4_wip_outputs/N_Jegyzet.md` | 07_quality_reviewer | Publikálható minőségű jegyzet |
+| `4_wip_outputs/N_Jegyzet.md` | 08_quality_reviewer | Publikálható minőségű jegyzet |
 | `3_mindmap/mindmap.md` | 03_mindmap_builder | Approved mindmap, navigátor diához |
 | `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Ábrák diákba illesztéséhez |
 
-**Előfeltétel:** `07_quality_reviewer` döntése `PUBLIKÁLHATÓ`; MARP CLI telepítve.
+**Előfeltétel:** `08_quality_reviewer` döntése `PUBLIKÁLHATÓ`; MARP CLI telepítve.
 
 ## 3. Eljárás
 
@@ -81,7 +82,7 @@ flowchart LR
 ### 3.2. PPTX generálás
 
 ```powershell
-python scripts/09_pptx_gyarto.py --week N --subject "Jelatvitel"
+python scripts/10_pptx_gyarto.py --week N --subject "Jelatvitel"
 ```
 
 - MARP CLI-vel konvertál: `marp N_Prezentacio.md --pptx`
@@ -121,7 +122,7 @@ python scripts/09_pptx_gyarto.py --week N --subject "Jelatvitel"
 ## 7. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
-- [07_quality_reviewer.md](07_quality_reviewer.md) — upstream
+- [08_quality_reviewer.md](08_quality_reviewer.md) — upstream
 - [03_mindmap_builder.md](03_mindmap_builder.md) — navigátor dia forrása
 
 ## 8. Visszajelzések
@@ -132,4 +133,5 @@ python scripts/09_pptx_gyarto.py --week N --subject "Jelatvitel"
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-01 | 1.0 | Létrehozva |
+| 2026-06-01 | 1.0 | Létrehozva (mint 09_presentation_maker) |
+| 2026-06-03 | 1.1 | Átszámozva 09→10; script 10_pptx_gyarto.py |

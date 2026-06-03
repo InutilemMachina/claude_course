@@ -1,7 +1,7 @@
 """
 _citations_util.py -- Megosztott citáció-segédfüggvények.
 
-Használja: 10-1_bsc_filter.py, 10-2_pandoc_export.py.
+Használja: 11-1_bsc_filter.py, 11-2_pandoc_export.py.
 """
 
 import json

@@ -1,9 +1,9 @@
 """
-pptx_gyarto.py -- Marp Markdown → PPTX converter
+10_pptx_gyarto.py -- Marp Markdown → PPTX converter
 Converts a Marp-formatted Markdown file to a PowerPoint presentation.
 
 Usage:
-    python scripts/pptx_gyarto.py <marp_md_file> [--template <template.pptx>] [--output <out.pptx>]
+    python scripts/10_pptx_gyarto.py <marp_md_file> [--template <template.pptx>] [--output <out.pptx>]
 
 If --template is not provided (or file missing), uses a built-in default style.
 

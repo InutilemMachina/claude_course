@@ -1,15 +1,16 @@
 ---
-name: 07_quality_reviewer
-title: 07_QUALITY_REVIEWER — Minőségellenőrzés és publikálhatóság
+name: 08_quality_reviewer
+title: 08_QUALITY_REVIEWER — Minőségellenőrzés és publikálhatóság
 type: skill
 tags: [meta, skill]
+role: 🤖,😎
 status: active
-version: 1.0
-updated: 2026-06-01
-description: Script-alapú lint + Claude Explore review; publikálhatóság ≥3/5 esetén 08-10 indul, különben vissza 04-hez.
+version: 1.1
+updated: 2026-06-03
+description: Script-alapú lint + Claude Explore review; publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez.
 ---
 
-# 07_QUALITY_REVIEWER
+# 08_QUALITY_REVIEWER
 
 ## 1. Cél
 
@@ -23,17 +24,17 @@ publikálható-e, vagy vissza kell küldeni a content synthesizer lépéshez.
 
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
-| `4_wip_outputs/N_Jegyzet.md` | 06_typesetter | Tipográfiailag normalizált jegyzet |
+| `4_wip_outputs/N_Jegyzet.md` | 07_typesetter | Tipográfiailag normalizált jegyzet |
 | `3_mindmap/mindmap.md` | 03_mindmap_builder | Approved mindmap (fedettség-ellenőrzéshez) |
 
-**Előfeltétel:** `06_typesetter` lefutott; `mindmap.md` `status: approved`.
+**Előfeltétel:** `07_typesetter` lefutott; `mindmap.md` `status: approved`.
 
 ## 3. Eljárás
 
 ### 3.1. Automatizált quality check
 
 ```powershell
-python scripts/07_quality_check.py --week N --subject "Jelatvitel"
+python scripts/08_quality_check.py --week N --subject "Jelatvitel"
 ```
 
 Ellenőrzési szempontok:
@@ -60,7 +61,8 @@ Eredmény: **átlag pontszám** (1–5), szöveges indoklással.
 ### 3.3. Döntési logika
 
 ```
-Átlag ≥ 3.0 → Publikálható → 08_question_bank + 09_presentation_maker + 10_bsc_export indul
+Átlag ≥ 3.0 → Publikálható → 09_question_bank + 10_presentation_maker + 11_bsc_export
+                              (+ 12_youtube_finder, 13_jupyter_catalogizer opcionális) indul
 Átlag < 3.0 → Visszaküldés → 04_content_synthesizer kap revision note-ot
 ```
 
@@ -96,9 +98,9 @@ Tartalom: script kimenet + Claude értékelés + döntés + revision note (ha <3
 ## 7. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
-- [06_typesetter.md](06_typesetter.md) — upstream
+- [07_typesetter.md](07_typesetter.md) — upstream
 - [04_content_synthesizer.md](04_content_synthesizer.md) — visszaküldési cél
-- [08_question_bank.md](08_question_bank.md) — downstream (ha publikálható)
+- [09_question_bank.md](09_question_bank.md) — downstream (ha publikálható)
 
 ## 8. Visszajelzések
 
@@ -108,4 +110,5 @@ Tartalom: script kimenet + Claude értékelés + döntés + revision note (ha <3
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-01 | 1.0 | Létrehozva |
+| 2026-06-01 | 1.0 | Létrehozva (mint 07_quality_reviewer) |
+| 2026-06-03 | 1.1 | Átszámozva 07→08; downstream 09–13, script 08_quality_check.py |

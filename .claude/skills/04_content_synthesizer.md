@@ -3,6 +3,7 @@ name: 04_content_synthesizer
 title: 04_CONTENT_SYNTHESIZER — Mindmap-vezérelt tartalom-szintézis
 type: skill
 tags: [meta, skill]
+role: 🤖
 status: active
 version: 1.0
 updated: 2026-06-01
@@ -82,7 +83,7 @@ flowchart LR / TD / sequenceDiagram
   - Összehasonlítás → Markdown table (nem Mermaid)
   - Időbeli lefolyás → `sequenceDiagram`
 - Ha `figure_catalog.json` tartalmaz releváns ábrát: `<!-- FIGURE: {fig_id} -- {leírás} -->` placeholder beillesztése
-- Ha nincs ábra: a placeholder elegendő — a 05_visual_enricher fogja kezelni
+- Ha nincs ábra: a placeholder elegendő — a 05_figure_integrator fogja kezelni
 
 ### 3.4. Hivatkozások
 
@@ -125,7 +126,7 @@ created: YYYY-MM-DD
 
 ## Tartalomjegyzék
 
-[automatikusan generálódik a 06-2_heading_numberer.py után]
+[automatikusan generálódik a 07-2_heading_numberer.py után]
 
 ---
 
@@ -146,7 +147,7 @@ created: YYYY-MM-DD
 
 Ha a mindmapben `[MSc]` jelölésű csomópont van:
 - A szövegben: `<!-- MSc -->` kommentblokk nyitja, `<!-- /MSc -->` zárja
-- A 10_bsc_export skill ezeket kiszűri a BSc-verzióból
+- A 11_bsc_export skill ezeket kiszűri a BSc-verzióból
 
 ### 3.8. Mentés és checkpoint
 
@@ -154,7 +155,7 @@ Ha a mindmapben `[MSc]` jelölésű csomópont van:
 4_wip_outputs/N_Jegyzet.md
 ```
 
-A 04 kimenet draft — a 05_visual_enricher fogja gazdagítani (ábra-beillesztés, összegzők).
+A 04 kimenet draft — a 05_figure_integrator (ábra-beillesztés) és 06_summarize_box_injector (összegzők) fogják gazdagítani.
 Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnézni.
 
 ## 4. Kimenetek
@@ -181,13 +182,13 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 | Mermaid szintaxishiba | Speciális karakter | Érvénytelen karakterek cseréje |
 | Üres hivatkozásjegyzék | citations.json nem olvasva | Kézzel kitölteni, majd _ieee_renderer.py |
 | [MSc] blokk nem záródik | Hiányzó `<!-- /MSc -->` | Keresés és pótlás |
-| Összegző doboz hiányzik | Kimaradt a sablonból | Pótlás 05_visual_enricher-ben is lehetséges |
+| Összegző doboz hiányzik | Kimaradt a sablonból | Pótlás 06_summarize_box_injector-ben is lehetséges |
 
 ## 7. Hivatkozások
 
 - [pipeline.md](../pipeline.md) — §2 Lépések és IO
 - [03_mindmap_builder.md](03_mindmap_builder.md) — upstream skill
-- [05_visual_enricher.md](05_visual_enricher.md) — downstream skill
+- [05_figure_integrator.md](05_figure_integrator.md) — downstream skill
 - [Instructions.md](../../Instructions.md) — §7 Vizuális gazdagítás, §8 Hivatkozási szabály
 
 ## 8. Visszajelzések

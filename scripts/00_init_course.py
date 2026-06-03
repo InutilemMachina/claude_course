@@ -39,9 +39,10 @@ WEEK_SUBDIRS = ["1_raw_inputs", "2_clean_inputs", "3_mindmap",
 # A subject_status.md §2 táblájának sorai = pipeline-lépések (🚦 = checkpoint).
 PIPELINE_STEPS = [
     "00 init", "01 source_collector", "02 image_extraction",
-    "03 mindmap 🚦", "04 content_synthesizer", "05 visual_enricher",
-    "06 typesetter", "07 quality_reviewer 🚦", "08 question_bank",
-    "09 presentation_maker", "10 bsc_export",
+    "03 mindmap_builder 🚦", "04 content_synthesizer", "05 figure_integrator",
+    "06 summarize_box_injector", "07 typesetter", "08 quality_reviewer 🚦",
+    "09 question_bank", "10 presentation_maker", "11 bsc_export",
+    "12 youtube_finder", "13 jupyter_catalogizer",
 ]
 
 

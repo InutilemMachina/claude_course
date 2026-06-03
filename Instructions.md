@@ -82,7 +82,7 @@ Te használhatod őket, de a user szinte soha nem illeszti be azokat, pl.:  `IDE
 | Több script egy lépéshez | `NN-M_name.py` | `02-1_mineru_pipeline.py` |
 | Megosztott segédkönyvtár | `_name.py` | `_citations_util.py` |
 
-- `NN`: pipeline lépés sorszáma (00–10), párhuzamos a skill-számokkal
+- `NN`: pipeline lépés sorszáma (00–13), párhuzamos a skill-számokkal
 - `M`: lépésen belüli sorrend (1, 2, ...)
 - `_` prefix: nem lépés-specifikus utility — nincs hozzá külön skill
 
@@ -185,7 +185,7 @@ A szimbólumok jelentése: §4.1. A bejegyzések helye:
 
 1. Skill draft a `skill_template.md` alapján (vagy `/skill-creator`)
 2. Teszt: 1-2 forrás, 1 fejezet — egyszerű bemenet
-3. Eval: `07_quality_check.py` + Claude Explore review
+3. Eval: `08_quality_check.py` + Claude Explore review
 4. Gap-azonosítás: mi hiányzik, mi rossz formátumú?
 5. Fix: skill `§3 Eljárás` + `§6 Hibakezelés` frissítése
 6. Commit: hard-cap ellenőrzés
@@ -194,3 +194,4 @@ A szimbólumok jelentése: §4.1. A bejegyzések helye:
 
 → Backlog kezelése: [project_status.md](.claude/project_status.md).
 7. pont: "- Összefoglaló → 📦 doboz (blockquote + bullets)" még kitérünk rá, hogy hogyan sikerül.
+[ ] Minden clean outputs-nak legyen majd egy fejléce és lábléce, de azt még meg kell tervezni

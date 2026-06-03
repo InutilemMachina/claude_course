@@ -1,5 +1,5 @@
 """
-heading_numberer.py -- Auto-number Markdown headings with dotted hierarchy.
+07-2_heading_numberer.py -- Auto-number Markdown headings with dotted hierarchy.
 
 Convention:
   # Title Case Title        (document title -- no number)
@@ -8,8 +8,8 @@ Convention:
   ### 1.1.1. Sub-sub        (level-3 content)
 
 Usage:
-  python scripts/heading_numberer.py <file.md> [--dry-run] [--base-level N]
-  python scripts/heading_numberer.py --all-in <folder> [--dry-run]
+  python scripts/07-2_heading_numberer.py <file.md> [--dry-run] [--base-level N]
+  python scripts/07-2_heading_numberer.py --all-in <folder> [--dry-run]
 """
 # QUESTION: miért van erre  a sok processzálásra egyáltalán szükség? 
 

@@ -1,15 +1,16 @@
 ---
-name: 06_typesetter
-title: 06_TYPESETTER — Lint és tipográfiai normalizálás
+name: 07_typesetter
+title: 07_TYPESETTER — Lint és tipográfiai normalizálás
 type: skill
 tags: [meta, skill]
+role: 🐍
 status: active
-version: 1.0
-updated: 2026-06-01
+version: 1.1
+updated: 2026-06-03
 description: Tipográfiai szabályok alkalmazása és fejezetek automatikus számozása a WIP jegyzeten.
 ---
 
-# 06_TYPESETTER
+# 07_TYPESETTER
 
 ## 1. Cél
 
@@ -23,16 +24,16 @@ terminológia-egységesítés, tábla szeparátor javítás, majd automatikus fe
 
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
-| `4_wip_outputs/N_Jegyzet.md` | 05_visual_enricher | Gazdagított WIP jegyzet |
+| `4_wip_outputs/N_Jegyzet.md` | 06_summarize_box_injector | Gazdagított WIP jegyzet |
 
-**Előfeltétel:** `05_visual_enricher` lefutott.
+**Előfeltétel:** `06_summarize_box_injector` lefutott.
 
 ## 3. Eljárás
 
 ### 3.1. Tipográfiai normalizáló
 
 ```powershell
-python scripts/06-1_typesetter.py --week N --subject "Jelatvitel"
+python scripts/07-1_typesetter.py --week N --subject "Jelatvitel"
 ```
 
 **Alkalmazott szabályok:**
@@ -49,7 +50,7 @@ python scripts/06-1_typesetter.py --week N --subject "Jelatvitel"
 ### 3.2. Fejezet-számozó
 
 ```powershell
-python scripts/06-2_heading_numberer.py --week N --subject "Jelatvitel"
+python scripts/07-2_heading_numberer.py --week N --subject "Jelatvitel"
 ```
 
 - `#` → számozatlan (cím marad)
@@ -89,8 +90,8 @@ Claude vizuálisan átnézi a diff-et (git diff):
 ## 7. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
-- [05_visual_enricher.md](05_visual_enricher.md) — upstream
-- [07_quality_reviewer.md](07_quality_reviewer.md) — downstream
+- [06_summarize_box_injector.md](06_summarize_box_injector.md) — upstream
+- [08_quality_reviewer.md](08_quality_reviewer.md) — downstream
 
 ## 8. Visszajelzések
 
@@ -100,4 +101,5 @@ Claude vizuálisan átnézi a diff-et (git diff):
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-01 | 1.0 | Létrehozva |
+| 2026-06-01 | 1.0 | Létrehozva (mint 06_typesetter) |
+| 2026-06-03 | 1.1 | Átszámozva 06→07 (05 szétválása miatt); script-hivatkozások 07-1/07-2 |

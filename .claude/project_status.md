@@ -2,7 +2,7 @@
 title: Project Status — claude_course
 type: project_status
 tags: [meta]
-updated: 2026-06-01
+updated: 2026-06-03
 ---
 
 # Project Status — claude_course
@@ -32,7 +32,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - ✅ Repo struktúra (`claude_course/`)
 - ✅ `CLAUDE.md`, `Instructions.md`, `pipeline.md`
 - ✅ `skill_template.md`
-- ✅ Skills 00–10: mind elkészült (03 + 04 sarokkövek)
+- ✅ Skills 00–13: 00–11 kész (03 + 04 sarokkövek), 12–13 tervezett stub (youtube/jupyter)
 - ✅ Scripts: portolva, refaktorálva, átnevezve az `NN-M_name` sémára
 - ✅ Script számozási séma alkotmányosan rögzítve (`Instructions.md §5.1`)
 - ✅ Meta-fájlok deduplikálva — "egy utasítás egy helyen" elv érvényesítve
@@ -49,8 +49,8 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - 🔲 B-02: `dft` pipeline lépésteszt (1 könyvfejezet feldolgozása)
 - ✅ B-03: Citáció-rendszer egységesítve — egyetlen `citations.json` (`type`-alapú IEEE), `[1]` jelölés, NLM-kód törölve, `_ieee_renderer` tesztelve — **kész**
 - ✅ B-04: `00_init_course.py` tesztelve (`3_mindmap/` + subject_status generálás) — **kész**
-- 🔲 B-05: `11_notebook_maker` skill (Jupyter szemléltetés) — jövőbeni lépés
-- 🔲 B-06: YouTube/médialink szekció az `08_question_bank`-ban — jövőbeni lépés
+- ⚙️ B-05: Jupyter szemléltetés — `13_jupyter_catalogizer` stub létrehozva és pipeline-ba illesztve (kimeneti fázis); tartalmi kidolgozás hátravan
+- ⚙️ B-06: YouTube/médialink — dedikált `12_youtube_finder` stub létrehozva és pipeline-ba illesztve (a `09_question_bank` helyett); tartalmi kidolgozás hátravan
 - 🔲 B-07: `skill_template.md` best-practice felülvizsgálata — felépítés + hol éljen (`.claude/` vs `templates/`)
 - ✅ B-08: 00, 01, 02 skillek tesztelve és sablon-konformra hozva — **kész**
 - 🔲 B-09: `_ieee_renderer` — ismeretlen évnél `é.n..` dupla pont (kozmetikai); a fallback paper-formátum trailing pontját rendezni
@@ -70,7 +70,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 ## Nyitott kérdések (❔)
 
 - ❔ Q-01: DUE template DOCX portolása — `templates/` mappába szükséges-e?
-- ❔ Q-02: A `subject_status.md` (sablon: `subject_status_template.md`) mikor és ki által töltődik ki — különösen a §5 kérdésbank-beállítás a `08_question_bank` skill véglegesítése után? (😎 induláskor vagy 🤖 a 08 konfigjából?)
+- ❔ Q-02: A `subject_status.md` (sablon: `subject_status_template.md`) mikor és ki által töltődik ki — különösen a §5 kérdésbank-beállítás a `09_question_bank` skill véglegesítése után? (😎 induláskor vagy 🤖 a 09 konfigjából?)
 - ❔ Q-03 (B-07-hez): A `.claude/skills/` lépés-dokumentumok maradjanak protokoll-doksik, vagy váljanak valódi, hívható Claude-skillekké (`SKILL.md` + `name`/`description`)? — Mindent a maga idejében; a B-07/B-08 keretében döntjük el.
 
 ## Változásjegyzék
@@ -86,3 +86,4 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 | 2026-06-02 | Citáció-rendszer: egyetlen `citations.json` (`type`-alapú), `[1]` jelölés, halott NLM-kód törölve `_citations_util`-ból, `_ieee_renderer` út+mező javítva és tesztelve |
 | 2026-06-03 | `02_image_extraction`: átnevezés, vektoros detektálás, false positive fix, kettős tördelés kezelés, PDF-split, dft+atg tesztfutás lezárva |
 | 2026-06-03 | `03_mindmap_builder`: skill spec v1.1 (input: `1_raw_inputs/` direkt PDF-olvasás, nem `2_clean_inputs/*.md`); mindmap draft: `atg/1_het/3_mindmap/mindmap.md` |
+| 2026-06-03 | Pipeline átszámozás: 05 szétvált (05_figure_integrator + 06_summarize_box_injector), 06–10 → 07–11 (skillek + scriptek), 12_youtube_finder + 13_jupyter_catalogizer beillesztve a kimeneti fázisba; meta-dokumentumok frissítve |

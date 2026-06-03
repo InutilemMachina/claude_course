@@ -2,8 +2,8 @@
 title: Pipeline.md — claude_course
 type: meta
 status: active
-version: 1.1
-updated: 2026-06-02
+version: 1.2
+updated: 2026-06-03
 description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 ---
 
@@ -17,10 +17,11 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | Anyaggyűjtés | `01_source_collector` |
 | Olvas → megért → szintetizál | `02_image_extraction` + `03_mindmap_builder` |
 | **Elmetérkép** | **03 kimenet: mindmap** (😎 revideálja) |
-| Word: ír, hivatkozik, képek, egyenletek | `04_content_synthesizer` |
-| Word → PowerPoint | `09_presentation_maker` |
-| Vizsgakérdések (Moodle MCQ) | `08_question_bank` |
-| Jupyter notebook | 🔲 jövőbeni `11_notebook_maker` |
+| Word: ír, hivatkozik, képek, egyenletek, táblázatok, diagrammok | `04_content_synthesizer` + `05_figure_integrator` + `06_summarize_box_injector` |
+| Word → PowerPoint | `10_presentation_maker` |
+| Vizsgakérdések (Moodle MCQ) | `09_question_bank` |
+| Youtube search | 🔲 tervezett `12_youtube_finder` |
+| Jupyter notebook | 🔲 tervezett `13_jupyter_catalogizer` |
 
 **Kulcselv:** → [Instructions.md §2](../Instructions.md)
 
@@ -33,12 +34,15 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | `1_raw_inputs/` | 🐍 | [`02_image_extraction`](skills/02_image_extraction.md) — MinerU + HTML/PPTX | 🐍 | `2_clean_inputs/` + `figure_catalog.json` |
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
-| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`05_visual_enricher`](skills/05_visual_enricher.md) — `05_figure_mapper.py` + összegzők | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (gazdagítva) |
-| `4_wip_outputs/N_Jegyzet.md` | 🐍 | `06-1_typesetter.py` | 🐍 | `4_wip_outputs/N_Jegyzet.md` (lint) |
-| `4_wip_outputs/N_Jegyzet.md` | 🐍+🤖 | [`07_quality_reviewer`](skills/07_quality_reviewer.md) — `07_quality_check.py` | 🐍+🤖 🚦😎 | `4_wip_outputs/N_Review.md` |
-| `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`08_question_bank`](skills/08_question_bank.md) — mindmap-alapú MCQ | 🤖 | `4_wip_outputs/N_Kerdesbank.md` |
-| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`09_presentation_maker`](skills/09_presentation_maker.md) — MARP → PPTX | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` + `5_clean_outputs/N_Prezentacio.pptx` |
-| `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`10_bsc_export`](skills/10_bsc_export.md) — `10-1_bsc_filter.py` + pandoc | 🐍 | `5_clean_outputs/N_Jegyzet[_bsc].docx` |
+| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`05_figure_integrator`](skills/05_figure_integrator.md) — `05_figure_mapper.py` | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (ábrák) |
+| `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`06_summarize_box_injector`](skills/06_summarize_box_injector.md) — összegző dobozok | 🤖 | `4_wip_outputs/N_Jegyzet.md` (összegzők) |
+| `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`07_typesetter`](skills/07_typesetter.md) — `07-1_typesetter.py` + `07-2_heading_numberer.py` | 🐍 | `4_wip_outputs/N_Jegyzet.md` (lint) |
+| `4_wip_outputs/N_Jegyzet.md` | 🐍+🤖 | [`08_quality_reviewer`](skills/08_quality_reviewer.md) — `08_quality_check.py` | 🐍+🤖 🚦😎 | `4_wip_outputs/N_Review.md` |
+| `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`09_question_bank`](skills/09_question_bank.md) — mindmap-alapú MCQ | 🤖 | `4_wip_outputs/N_Kerdesbank.md` |
+| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`10_presentation_maker`](skills/10_presentation_maker.md) — MARP → PPTX (`10_pptx_gyarto.py`) | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` + `5_clean_outputs/N_Prezentacio.pptx` |
+| `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`11_bsc_export`](skills/11_bsc_export.md) — `11-1_bsc_filter.py` + pandoc (`11-2`) | 🐍 | `5_clean_outputs/N_Jegyzet[_bsc].docx` |
+| `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`12_youtube_finder`](skills/12_youtube_finder.md) — videó-csatolmányok 🔲 *tervezett* | 🤖+😎 | videó-katalógus + csatolmány-jelölés |
+| `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`13_jupyter_catalogizer`](skills/13_jupyter_catalogizer.md) — notebook-csatolmányok 🔲 *tervezett* | 🤖+😎 | notebook-katalógus + csatolmány-jelölés |
 
 ## 2.1 Vizualizáció
 
@@ -65,23 +69,26 @@ flowchart TD
     subgraph CREATE["④ Tartalom-alkotás"]
         direction TB
         C1["04 content_synthesizer<br>🤖<br>mindmap-vezérelt szintézis<br>+ Mermaid + IEEE hivatkozások<br>→ 4_wip_outputs/N_Jegyzet.md"]
-        C2["05 visual_enricher<br>🤖 + 🐍<br>05_figure_mapper + összegző dobozok<br>→ N_Jegyzet.md (gazdagítva)"]
-        C1 --> C2
+        C2["05 figure_integrator<br>🤖 + 🐍<br>05_figure_mapper<br>→ N_Jegyzet.md (ábrák)"]
+        C3["06 summarize_box_injector<br>🤖<br>összegző dobozok<br>→ N_Jegyzet.md (összegzők)"]
+        C1 --> C2 --> C3
     end
 
     subgraph QUALITY["⑤ Minőség"]
         direction TB
-        Q1["06 typesetter<br>🐍<br>06-1_typesetter.py"]
-        Q2["07 quality_reviewer<br>🐍 + 🤖<br>metrikák + Explore review<br>→ N_Review.md"]
+        Q1["07 typesetter<br>🐍<br>07-1_typesetter.py"]
+        Q2["08 quality_reviewer<br>🐍 + 🤖<br>metrikák + Explore review<br>→ N_Review.md"]
         Q3{"😎 Checkpoint<br>publikálhatóság ≥ 3/5"}
         Q1 --> Q2 --> Q3
     end
 
     subgraph OUTPUT["⑥ Kimenetek — párhuzamosan"]
         direction TB
-        O1["08 question_bank<br>🤖<br>Moodle MCQ (A–D)"]
-        O2["09 presentation_maker<br>🤖 + 🐍<br>MARP → PPTX"]
-        O3["10 bsc_export<br>🐍<br>10-1_bsc_filter<br>→ 5_clean_outputs/ .docx"]
+        O1["09 question_bank<br>🤖<br>Moodle MCQ (A–D)"]
+        O2["10 presentation_maker<br>🤖 + 🐍<br>MARP → PPTX"]
+        O3["11 bsc_export<br>🐍<br>11-1_bsc_filter<br>→ 5_clean_outputs/ .docx"]
+        O4["12 youtube_finder<br>🤖 + 😎<br>videó-csatolmányok<br>🔲 tervezett"]
+        O5["13 jupyter_catalogizer<br>🤖 + 😎<br>notebook-csatolmányok<br>🔲 tervezett"]
     end
 
     INIT --> EXT --> UNDERSTAND --> CREATE --> QUALITY
@@ -94,11 +101,11 @@ flowchart TD
 | Checkpoint | Feltétel | Következő lépés |
 |:-----------|:---------|:----------------|
 | 03 után 🚦 | Mindmap revideálva, [MSc] jelölés kész, struktúra jóváhagyva | 04 content_synthesizer |
-| 07 után 🚦 | Publikálhatóság ≥ 3/5, N_Review.md jóváhagyva | 08 + 09 + 10 párhuzamosan |
+| 08 után 🚦 | Publikálhatóság ≥ 3/5, N_Review.md jóváhagyva | 09 + 10 + 11 (opc. 12, 13) párhuzamosan |
 
 ## 4. Vizuális gazdagítás
 
-A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus helye: [Instructions.md §7](../Instructions.md). A pipeline-ban ezt a `04 content_synthesizer` és `05 visual_enricher` lépések valósítják meg, az `figure_catalog.json` alapján.
+A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus helye: [Instructions.md §7](../Instructions.md). A pipeline-ban ezt a `04 content_synthesizer`, `05 figure_integrator` (ábrák, `figure_catalog.json` alapján) és `06 summarize_box_injector` (összegző dobozok) lépések valósítják meg.
 
 ## 5. Mappastruktúra
 
@@ -124,9 +131,9 @@ A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus hely
 
 | Típus | Lépések | Indok |
 |-------|---------|-------|
-| Szekvenciális (foreground) | 02→03→04→05→06→07 | Output-függőség; checkpointok |
-| Párhuzamos (background) | 08 ‖ 09 ‖ 10 | Független outputok |
-| Interaktív (inline) | 03 checkpoint, 07 checkpoint | Emberi döntés szükséges |
+| Szekvenciális (foreground) | 02→03→04→05→06→07→08 | Output-függőség; checkpointok |
+| Párhuzamos (background) | 09 ‖ 10 ‖ 11 (‖ 12 ‖ 13) | Független outputok |
+| Interaktív (inline) | 03 checkpoint, 08 checkpoint | Emberi döntés szükséges |
 
 Az agent-prompt minden skill esetén a skill `§3 Eljárás` szekciója alapján generálódik.
 
@@ -140,3 +147,4 @@ Az agent-prompt minden skill esetén a skill `§3 Eljárás` szekciója alapján
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (claude_play archív alapján, NLM-mentes) |
 | 2026-06-02 | 1.1 | Mermaid vertikalizálva + `<br>` sortörés-javítás; D1/D2 deduplikáció (vizuális → Instructions §7, IEEE → §8); 05 script a táblába |
+| 2026-06-03 | 1.2 | 05 szétválasztva: 05_figure_integrator + 06_summarize_box_injector; 06–10 lépések +1 átszámozva (→ 07–11), scriptek párhuzamosan; 12_youtube_finder + 13_jupyter_catalogizer beillesztve a kimeneti fázisba |

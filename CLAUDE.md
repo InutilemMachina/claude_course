@@ -42,7 +42,7 @@ Funkcionális index (mi mire való). Elvek és dokumentációs tekintély-sorren
 - [.claude/pipeline.md](.claude/pipeline.md) — pipeline-gráf, lépések, függőségek
 - [.claude/project_status.md](.claude/project_status.md) — futási állapot + Backlog
 - [.claude/skill_template.md](.claude/skill_template.md) — skill-sablon
-- [.claude/skills/](.claude/skills/) — pipeline-lépések protokolljai (00–10)
+- [.claude/skills/](.claude/skills/) — pipeline-lépések protokolljai (00–13)
 - [scripts/](scripts/) — végrehajtó automatizmusok (Python)
 - [templates/](templates/) — DUE DOCX/PPTX sablonok és építő scriptek
 - `test_sources/`, `test_outputs/` — lépésteszt be-/kimenetek (git-ignorált)

@@ -1,15 +1,16 @@
 ---
-name: 08_question_bank
-title: 08_QUESTION_BANK — Moodle-kompatibilis MCQ kérdésbank
+name: 09_question_bank
+title: 09_QUESTION_BANK — Moodle-kompatibilis MCQ kérdésbank
 type: skill
 tags: [meta, skill]
+role: 🤖
 status: active
-version: 1.0
-updated: 2026-06-01
+version: 1.1
+updated: 2026-06-03
 description: Mindmap L1 ágankénti bontásban MCQ kérdésbank generálása BSc (20+ kérdés) és MSc szinteken.
 ---
 
-# 08_QUESTION_BANK
+# 09_QUESTION_BANK
 
 ## 1. Cél
 
@@ -23,10 +24,10 @@ mindmap L1 ágankénti bontásban, BSc és MSc szintű kérdésekkel.
 
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
-| `4_wip_outputs/N_Jegyzet.md` | 07_quality_reviewer | Publikálható minőségű jegyzet |
+| `4_wip_outputs/N_Jegyzet.md` | 08_quality_reviewer | Publikálható minőségű jegyzet |
 | `3_mindmap/mindmap.md` | 03_mindmap_builder | Approved mindmap, L1 ágak |
 
-**Előfeltétel:** `07_quality_reviewer` döntése `PUBLIKÁLHATÓ`; mindmap `status: approved`.
+**Előfeltétel:** `08_quality_reviewer` döntése `PUBLIKÁLHATÓ`; mindmap `status: approved`.
 
 ## 3. Eljárás
 
@@ -125,7 +126,7 @@ created: YYYY-MM-DD
 ## 7. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
-- [07_quality_reviewer.md](07_quality_reviewer.md) — upstream
+- [08_quality_reviewer.md](08_quality_reviewer.md) — upstream
 - [03_mindmap_builder.md](03_mindmap_builder.md) — L1 ágak forrása
 
 ## 8. Visszajelzések
@@ -136,4 +137,5 @@ created: YYYY-MM-DD
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-01 | 1.0 | Létrehozva |
+| 2026-06-01 | 1.0 | Létrehozva (mint 08_question_bank) |
+| 2026-06-03 | 1.1 | Átszámozva 08→09 |

@@ -15,7 +15,7 @@ description: PDF/PPTX forrásokból PNG képeket nyerünk ki 2_clean_inputs/-ba 
 ## 1. Cél
 
 A `1_raw_inputs/` forrásokból PNG képeket nyerünk ki `2_clean_inputs/<stem>/images/`-ba,
-és felépítjük a `figure_catalog.json`-t a downstream 05_visual_enricher számára.
+és felépítjük a `figure_catalog.json`-t a downstream 05_figure_integrator számára.
 A szöveg-szintézist Claude végzi közvetlenül — itt **csak ábrák** kellenek.
 
 **Input:** `1_raw_inputs/*.pdf`, `*.pptx` · **Output:** `2_clean_inputs/` képek + `figure_catalog.json`
@@ -138,7 +138,7 @@ A script idempotens — meglévő katalógust betölti, új bejegyzéseket fűz 
 
 - [pipeline.md](../pipeline.md)
 - upstream: [01_source_collector.md](01_source_collector.md) · downstream: [03_mindmap_builder.md](03_mindmap_builder.md)
-- [05_visual_enricher.md](05_visual_enricher.md) — `figure_catalog.json` fogyasztó
+- [05_figure_integrator.md](05_figure_integrator.md) — `figure_catalog.json` fogyasztó
 
 ## 9. Visszajelzések
 

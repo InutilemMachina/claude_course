@@ -1,5 +1,5 @@
 """
-10-2_pandoc_export.py -- Camera-ready DOCX export Pandoc-kal.
+11-2_pandoc_export.py -- Camera-ready DOCX export Pandoc-kal.
 
 A 4_wip_outputs/N_Jegyzet.md (vagy 5_clean_outputs/N_Jegyzet_bsc.md) Markdown
 fájlt Word DOCX-be konvertálja a templates/due_jegyzet_template.docx
@@ -10,9 +10,9 @@ Előfeltétel: pandoc telepítve (https://pandoc.org/installing.html).
 Ha a pandoc nincs telepítve, a script világos hibaüzenetet ad és kilép (exit 2).
 
 Usage:
-    python scripts/14_util_pandoc_export.py --week-dir <path/to/N_het>
-    python scripts/14_util_pandoc_export.py --week-dir <path> --bsc   # a _bsc verziót
-    python scripts/14_util_pandoc_export.py --week-dir <path> --no-template
+    python scripts/11-2_pandoc_export.py --week-dir <path/to/N_het>
+    python scripts/11-2_pandoc_export.py --week-dir <path> --bsc   # a _bsc verziót
+    python scripts/11-2_pandoc_export.py --week-dir <path> --no-template
 """
 
 import argparse

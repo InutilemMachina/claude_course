@@ -15,7 +15,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 **Haladás (skill-tesztelési kör):**
 1. ✅ `skill_template.md` best-practice overhaul → B-07 részben.
 2. ✅ Skillek tesztje: `00_init` + `01_source_collector` + `02_image_extraction` — mind sablon-konform, verifikált → B-08 kész.
-3. 🔲 Állomás-túra folytatása: `03_mindmap_builder`.
+3. ✅ `03_mindmap_builder` tesztelve: skill spec javítva (v1.1), mindmap draft generálva `atg/1_het` — checkpoint vár.
 
 **02_image_extraction — lezárt fejlesztések (2026-06-03):**
 - Átnevezés: `02_source_extractor` → `02_image_extraction` (skill + script + összes hivatkozás)
@@ -85,3 +85,4 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 | 2026-06-02 | `00_init`: `context` → `subject_status.md`, NLM-mentes sablon, auto-kitöltött frontmatter + igazított státusz-tábla |
 | 2026-06-02 | Citáció-rendszer: egyetlen `citations.json` (`type`-alapú), `[1]` jelölés, halott NLM-kód törölve `_citations_util`-ból, `_ieee_renderer` út+mező javítva és tesztelve |
 | 2026-06-03 | `02_image_extraction`: átnevezés, vektoros detektálás, false positive fix, kettős tördelés kezelés, PDF-split, dft+atg tesztfutás lezárva |
+| 2026-06-03 | `03_mindmap_builder`: skill spec v1.1 (input: `1_raw_inputs/` direkt PDF-olvasás, nem `2_clean_inputs/*.md`); mindmap draft: `atg/1_het/3_mindmap/mindmap.md` |

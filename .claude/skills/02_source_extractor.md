@@ -1,117 +1,140 @@
 ---
 name: 02_source_extractor
-title: 02_SOURCE_EXTRACTOR — MinerU PDF + HTML/PPTX extraktor
+title: 02_SOURCE_EXTRACTOR — Ábra-kinyerő (PDF/PPTX → PNG + figure_catalog)
 type: skill
 tags: [meta, skill]
+role: 🐍+🤖
 status: active
-version: 1.0
-updated: 2026-06-01
-description: 1_raw_inputs/ forrásokból Markdown szöveg és figure_catalog.json kinyerése MinerU és egyedi extractorok segítségével.
+version: 2.0
+updated: 2026-06-03
+description: PDF/PPTX forrásokból PNG képeket nyerünk ki 2_clean_inputs/-ba és felépítjük a figure_catalog.json-t; szkennelt könyvekhez Claude azonosítja az ábra-oldalakat, majd --source/--pages futtatással kinyerjük őket. Használd a 01_source_collector után, a 03_mindmap_builder előtt.
 ---
 
 # 02_SOURCE_EXTRACTOR
 
 ## 1. Cél
 
-A `1_raw_inputs/` nyers forrásokból tisztított Markdown szöveget és ábrakatalógust nyerünk ki,
-hogy a 03_mindmap_builder és 04_content_synthesizer egységes formátumban dolgozzon.
+A `1_raw_inputs/` forrásokból PNG képeket nyerünk ki `2_clean_inputs/<stem>/images/`-ba,
+és felépítjük a `figure_catalog.json`-t a downstream 05_visual_enricher számára.
+A szöveg-szintézist Claude végzi közvetlenül — itt **csak ábrák** kellenek.
 
-**Input:** `1_raw_inputs/*.pdf`, `*.url`, `*.pptx`
-**Output:** `2_clean_inputs/{forrás}/{forrás}.md` + `2_clean_inputs/figure_catalog.json`
+**Input:** `1_raw_inputs/*.pdf`, `*.pptx` · **Output:** `2_clean_inputs/` képek + `figure_catalog.json`
 
 ## 2. Bemenetek
 
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
-| `1_raw_inputs/*.pdf` | 01_source_collector | Nyers PDF forrásanyagok |
-| `1_raw_inputs/*.url` | 01_source_collector | URL hivatkozások |
-| `1_raw_inputs/*.pptx` | 01_source_collector | PowerPoint előadások |
-| `1_raw_inputs/citations.json` | 01_source_collector | Bibliográfiai metaadatok |
+| `1_raw_inputs/*.pdf` | 01_source_collector | Átnevezett PDF-ek (born-digital és szkennelt) |
+| `1_raw_inputs/*.pptx` | 01_source_collector | Átnevezett PPTX előadások |
+| `1_raw_inputs/citations.json` | 01_source_collector | Fájlnév → citáció-kulcs (catalog-hoz) |
 
-**Előfeltétel:** MinerU telepítve és futtatható; `1_raw_inputs/` nem üres.
+**Előfeltétel:** `pymupdf` és `python-pptx` telepítve; `1_raw_inputs/` nem üres.
 
-## 3. Eljárás
+## 3. Eljárás 🐍+🤖
 
-### 3.1. PDF extraktor — MinerU
-
-```powershell
-python scripts/02-1_mineru_pipeline.py --week N --subject "Jelatvitel"
-```
-
-- Minden PDF-et külön almappában dolgoz fel: `2_clean_inputs/{forrás_neve}/`
-- Kimenet: `{forrás_neve}.md` + `images/` almappa ábrafájlokkal
-- `figure_catalog.json` automatikusan frissül
-
-### 3.2. Web/HTML extraktor
+### 3.1. Automatikus futtatás 🐍
 
 ```powershell
-python scripts/02-2_source_extractor.py --mode url --week N --subject "Jelatvitel"
+python scripts/02_source_extractor.py --week-dir test_outputs/atg/1_het
 ```
 
-- `.url` fájlokból letölti és Markdown-ra konvertálja a tartalmat
-- Képek: `2_clean_inputs/{forrás_neve}/images/`-be mentve
+- **Born-digital PDF:** beágyazott képek kinyerése; dekoráció/logó (<10 000 px²) kihagyva.
+- **PPTX:** dia-képek kinyerése PNG-ként.
+- **Szkennelt PDF (>50% oldal = teljes oldalas kép):** kihagyja + figyelmeztetés:
+  `⚠️ Használd: --source <fájlnév> --pages <oldalszámok> (Claude azonosítja)`
 
-### 3.3. PPTX extraktor
+### 3.2. Szkennelt forrás — Claude azonosítja az ábra-oldalakat 🤖
+
+Ha az automatikus futás szkennelt forrást jelez, Claude elolvassa a PDF-et és azonosítja
+mely oldalakon van releváns ábra:
+
+> „Olvasd el a `gravdahl1999_chapter.pdf`-et és add meg, mely oldalakon van ábra."
+
+Claude visszaad egy oldallistát (pl. `5, 12, 23`), majd:
 
 ```powershell
-python scripts/02-2_source_extractor.py --mode pptx --week N --subject "Jelatvitel"
+python scripts/02_source_extractor.py \
+  --week-dir test_outputs/atg/1_het \
+  --source gravdahl1999_chapter.pdf --pages "5,12,23"
 ```
 
-- Diákból szöveg + ábra kinyerés
-- Mermaid diagram-javaslat komment formában ahol logikailag lehetséges
+- **Szkennelt oldal:** teljes oldal renderelve PNG-ként (`p005_page.png`), `needs_crop: true`.
+- **Born-digital oldal:** oldalanként **annyi PNG**, ahány kép van rajta.
+- A crop-ot 😎 végzi manuálisan a `needs_crop: true` bejegyzéseknél.
 
-### 3.4. figure_catalog.json struktúra
+### 3.3. figure_catalog.json bővítése
 
-```json
-[
-  {
-    "id": "fig_001",
-    "source": "Proakis_2001_DSP",
-    "page": 23,
-    "filename": "2_clean_inputs/Proakis_2001_DSP/images/fig_001.png",
-    "caption": "Block diagram of a digital communication system",
-    "suggested_section": null
-  }
-]
-```
+A script idempotens — meglévő katalógust betölti, új bejegyzéseket fűz hozzá.
 
 ## 4. Kimenetek
 
 | Fájl | Tartalom |
 |:-----|:---------|
-| `2_clean_inputs/{forrás}/{forrás}.md` | Tisztított Markdown, képhivatkozásokkal |
-| `2_clean_inputs/{forrás}/images/` | Kinyert ábrafájlok |
-| `2_clean_inputs/figure_catalog.json` | Összes ábra metaadatai |
+| `2_clean_inputs/<stem>/images/<img>.png` | Kinyert PNG (born-digital vagy oldal-render) |
+| `2_clean_inputs/figure_catalog.json` | Ábra-katalóg (id, source, page, filename, needs_crop, citation_key) |
 
-## 5. Ellenőrzés
+**`figure_catalog.json` séma:**
 
-- [ ] Minden PDF-hez létrejött `.md` fájl
-- [ ] `figure_catalog.json` valid JSON és nem üres (ha volt ábra a forrásban)
-- [ ] Markdown fájlok olvashatók, nem tartalmaznak OCR szemetet (>10% zaj → újrafuttatás)
-- [ ] Képútvonalak a `.md`-ben relatívak és létező fájlokra mutatnak
+```json
+[
+  {
+    "id": "fig_001",
+    "source_file": "chattopadhyay2013_paper.pdf",
+    "citation_key": "3",
+    "page": 3,
+    "image_index": 1,
+    "filename": "2_clean_inputs/chattopadhyay2013_paper/images/p003_img001.png",
+    "needs_crop": false,
+    "caption": null,
+    "suggested_section": null
+  }
+]
+```
 
-## 6. Hibakezelés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het/1_raw_inputs/` (6 PDF + 1 PPTX, az 01-teszt kimenetéből).
+- **Akció (automatikus):** `python scripts/02_source_extractor.py --week-dir test_outputs/atg/1_het --dry-run`
+- **Várt kimenet (dry-run, verifikált):**
+  - `chattopadhyay2013_paper.pdf` → 1 kép (born-digital, p3)
+  - `gravdahl1999_book.pdf`, `gravdahl1999_chapter.pdf`, `tavakoli2004_paper.pdf` → szkennelt, 1-1 figyelmeztetés + `--source/--pages` utasítás
+  - `wikipedia2024_webpage.pdf` → 3 kép
+  - `nagy2023_slides.pptx` → 0 kép (vektoros tartalom, nincs PICTURE shape)
+- **Akció (szkennelt, --pages):** `--source gravdahl1999_chapter.pdf --pages "5,12"` → 2 `needs_crop: true` PNG
+- **Eval:** `figure_catalog.json` valid JSON; `needs_crop: true` bejegyzések jelöltek; a figyelmeztető üzenet tartalmazza a pontos parancsot.
+
+## 6. Ellenőrzés
+
+- [ ] Minden born-digital PDF-hez létrejöttek a PNG-k
+- [ ] Szkennelt forrásokhoz figyelmeztetés + pontos `--source/--pages` utasítás jelenik meg
+- [ ] `figure_catalog.json` valid JSON, `needs_crop: true` ahol kell
+- [ ] Képútvonalak (`filename`) létező fájlokra mutatnak
+- [ ] Idempotens: újrafuttatás nem duplikál
+
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
-| MinerU `CUDA out of memory` | Túl nagy PDF / GPU memória | `--device cpu` flag; oldalszám-korlát |
-| Üres `.md` output | Szkenelt (nem OCR) PDF | MinerU OCR mode: `--ocr true` |
-| `figure_catalog.json` hiányzó bejegyzések | Raszteres ábra felismerés sikertelen | Manuális bejegyzés; `suggested_section: null` |
-| PPTX képlet `.pptx`-ben `####` | Math blokk konverzió hiba | Kézzel javítandó LaTeX-re |
-| URL letöltés timeout | Lassú szerver / captcha | Manuális mentés HTML-ként + `--mode html` |
+| `HIBA: PyMuPDF nincs telepítve` | Hiányzó csomag | `pip install pymupdf` |
+| `HIBA: python-pptx nincs telepítve` | Hiányzó csomag | `pip install python-pptx` |
+| PPTX → 0 kép | Vektoros/EMF tartalom (nem PICTURE shape) | Normál; a PPTX szövegét Claude olvassa közvetlenül |
+| Szkennelt forrás összes oldala figyelmeztet | >50% szkennelt → helyes | Claude azonosítja az ábra-oldalakat, majd `--pages` |
+| `needs_crop: true` bejegyzés, de nincs PNG | `--dry-run` volt | Futtasd le `--dry-run` nélkül |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
-- [03_mindmap_builder.md](03_mindmap_builder.md) — következő lépés
-- [05_visual_enricher.md](05_visual_enricher.md) — figure_catalog fogyasztó
+- upstream: [01_source_collector.md](01_source_collector.md) · downstream: [03_mindmap_builder.md](03_mindmap_builder.md)
+- [05_visual_enricher.md](05_visual_enricher.md) — `figure_catalog.json` fogyasztó
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
+- 💬 NOTE: `nagy2023_slides.pptx` → 0 kép mert vektoros/EMF formátum (nem PICTURE type=13). Normál viselkedés; a PPTX szövegét Claude olvassa.
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-01 | 1.0 | Létrehozva |
+| 2026-06-01 | 1.0 | Létrehozva (MinerU + 02-2 extractor) |
+| 2026-06-03 | 2.0 | Teljes újraírás: MinerU kiváltva PyMuPDF-fel (csak ábrák, nem szöveg); szkennelt PDF detektálás + Claude-alapú oldalazonosítás + `--source/--pages`; 02-1 + 02-2 egyesítve; verifikált atg-n |

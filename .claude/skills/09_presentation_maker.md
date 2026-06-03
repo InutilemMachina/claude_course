@@ -1,4 +1,4 @@
----
+﻿---
 name: 09_presentation_maker
 title: 09_PRESENTATION_MAKER — MARP prezentáció és PPTX generálás
 type: skill
@@ -25,7 +25,7 @@ majd `09_pptx_gyarto.py`-val PPTX-re konvertálja.
 |:-----|:-------|:---------|
 | `4_wip_outputs/N_Jegyzet.md` | 07_quality_reviewer | Publikálható minőségű jegyzet |
 | `3_mindmap/mindmap.md` | 03_mindmap_builder | Approved mindmap, navigátor diához |
-| `2_clean_inputs/figure_catalog.json` | 02_source_extractor | Ábrák diákba illesztéséhez |
+| `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Ábrák diákba illesztéséhez |
 
 **Előfeltétel:** `07_quality_reviewer` döntése `PUBLIKÁLHATÓ`; MARP CLI telepítve.
 

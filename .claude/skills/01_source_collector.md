@@ -1,4 +1,4 @@
----
+﻿---
 name: 01_source_collector
 title: 01_SOURCE_COLLECTOR — Forrásgyűjtés, elnevezés és citations.json
 type: skill
@@ -19,7 +19,7 @@ A heti forrásokat (PDF, PPTX, weblap) `1_raw_inputs/`-ba rendezi **egységes n�
 Opcionálisan **Deep Research**-csel bővít; a zárt hozzáférésűeknél szól, amit 😎 utólag letölt,
 azt **retroaktívan** elnevezi és beírja.
 
-**Input:** meglévő forrásfájlok + URL-ek (😎-tól) · **Output:** `1_raw_inputs/` (átnevezve) + `_source_map.md` + `citations.json`
+**Input:** meglévő forrásfájlok + URL-ek (😎-tól) · **Output:** `1_raw_inputs/` (átnevezve) + `citations.json`
 
 ## 2. Bemenetek
 
@@ -154,7 +154,7 @@ Fixture-alapú teszt (verifikált mechanizmusokkal):
 ## 6. Ellenőrzés
 
 - [ ] Minden fájl a 3.2 konvenció szerint van elnevezve
-- [ ] `_source_map.md` minden gyűjtött forrást tartalmaz (eredeti → új)
+- [ ] `citations.json` minden bejegyzésnél `original_filename` kitöltve
 - [ ] Weblapok valid PDF-ként mentve (`%PDF` fejléc, >0 oldal)
 - [ ] `citations.json` valid JSON; minden `filename` létező fájlra mutat
 - [ ] Closed-access források jelölve, 😎 értesítve (3.7)
@@ -172,7 +172,7 @@ Fixture-alapú teszt (verifikált mechanizmusokkal):
 ## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
-- upstream: [00_init.md](00_init.md) · downstream: [02_source_extractor.md](02_source_extractor.md)
+- upstream: [00_init.md](00_init.md) · downstream: [02_image_extraction.md](02_image_extraction.md)
 - [_ieee_renderer.py](../../scripts/_ieee_renderer.py) — a citations.json fogyasztója
 
 ## 9. Visszajelzések

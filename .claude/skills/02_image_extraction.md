@@ -1,6 +1,6 @@
----
-name: 02_source_extractor
-title: 02_SOURCE_EXTRACTOR — Ábra-kinyerő (PDF/PPTX → PNG + figure_catalog)
+﻿---
+name: 02_image_extraction
+title: 02_image_extraction — Ábra-kinyerő (PDF/PPTX → PNG + figure_catalog)
 type: skill
 tags: [meta, skill]
 role: 🐍+🤖
@@ -10,7 +10,7 @@ updated: 2026-06-03
 description: PDF/PPTX forrásokból PNG képeket nyerünk ki 2_clean_inputs/-ba és felépítjük a figure_catalog.json-t; szkennelt könyvekhez Claude azonosítja az ábra-oldalakat, majd --source/--pages futtatással kinyerjük őket. Használd a 01_source_collector után, a 03_mindmap_builder előtt.
 ---
 
-# 02_SOURCE_EXTRACTOR
+# 02_image_extraction
 
 ## 1. Cél
 
@@ -35,7 +35,7 @@ A szöveg-szintézist Claude végzi közvetlenül — itt **csak ábrák** kelle
 ### 3.1. Automatikus futtatás 🐍
 
 ```powershell
-python scripts/02_source_extractor.py --week-dir test_outputs/atg/1_het
+python scripts/02_image_extraction.py --week-dir test_outputs/atg/1_het
 ```
 
 - **Born-digital PDF:** beágyazott képek kinyerése; dekoráció/logó (<10 000 px²) kihagyva.
@@ -52,8 +52,21 @@ mely oldalakon van releváns ábra:
 
 Claude visszaad egy oldallistát (pl. `5, 12, 23`), majd:
 
+#### ⚠️ Speciális PDF-formátumok — figyelj ezekre szkennelés előtt
+
+**1. Könyv előoldalak (front matter) — ne dobd ki:**
+Könyveknél a tényleges tartalom nem az 1. PDF-oldalon kezdődik — borító, copyright, tartalomjegyzék, előszó tipikusan 3–6 PDF-oldalt tesz ki. Ne feltételezd, hogy PDF p1 = könyv 1. fejezete. A fejezet-határokat a fejezet-címek alapján azonosítsd. **A tartalomjegyzéket tartalmazó oldal(ak) értékes inputok — jóformán egy kész mindmap — maradjanak benne a fejezet-splitben (tipikusan a ch01 PDF-be).**
+
+**2. Kettős tördelés (dual-page layout):**
+Ha a PDF-oldal képe extrém széles és alacsony (képarány > 1.5, pl. 2332×500 px), valószínűleg egy szkennelt könyvből két könyvoldalt látunk egymás mellett egy PDF-lapon. Következmények:
+- 1 PDF-oldal = 2 könyvoldal → a crop-nak először félbe kell vágni, majd az ábrára szűkíteni
+- Ha mindkét oldalon van ábra: `--pages N,N` (dupla hivatkozás)
+- A kettős tördelés tényét jegyezd fel a `_crop_tasks.md` fejlécébe
+- **Fejezet-split határán lévő „átlógó" oldal:** ha egy PDF-oldal bal fele az egyik fejezet végét, jobb fele a következő fejezet elejét tartalmazza, azt az oldalt **félbe kell vágni** — bal fele az előző fejezetfájl végére, jobb fele a következő fejezetfájl elejére kerül. Nem duplikálunk, nem hagyunk ki. Ez determinisztikus: teli vagy üres oldaltól független. (`page.show_pdf_page(..., clip=fitz.Rect(...))`)
+- **Ideiglenes lapok (`_page_scan/` és hasonlók) törlése kötelező** — szemetet nem hagyunk magunk után. A scan elvégzése után azonnal takarítani kell.
+
 ```powershell
-python scripts/02_source_extractor.py \
+python scripts/02_image_extraction.py \
   --week-dir test_outputs/atg/1_het \
   --source gravdahl1999_chapter.pdf --pages "5,12,23"
 ```
@@ -94,7 +107,7 @@ A script idempotens — meglévő katalógust betölti, új bejegyzéseket fűz 
 ## 5. Teszt
 
 - **Fixture:** `test_outputs/atg/1_het/1_raw_inputs/` (6 PDF + 1 PPTX, az 01-teszt kimenetéből).
-- **Akció (automatikus):** `python scripts/02_source_extractor.py --week-dir test_outputs/atg/1_het --dry-run`
+- **Akció (automatikus):** `python scripts/02_image_extraction.py --week-dir test_outputs/atg/1_het --dry-run`
 - **Várt kimenet (dry-run, verifikált):**
   - `chattopadhyay2013_paper.pdf` → 1 kép (born-digital, p3)
   - `gravdahl1999_book.pdf`, `gravdahl1999_chapter.pdf`, `tavakoli2004_paper.pdf` → szkennelt, 1-1 figyelmeztetés + `--source/--pages` utasítás

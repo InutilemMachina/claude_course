@@ -1,10 +1,10 @@
----
+﻿---
 title: Pipeline.md — claude_course
 type: meta
 status: active
 version: 1.1
 updated: 2026-06-02
-description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
+description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 ---
 
 # PIPELINE.MD — claude_course
@@ -15,7 +15,7 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 |--------|-----------------|
 | Célcsoport, tanterv | `00_init` — subject_status.md |
 | Anyaggyűjtés | `01_source_collector` |
-| Olvas → megért → szintetizál | `02_source_extractor` + `03_mindmap_builder` |
+| Olvas → megért → szintetizál | `02_image_extraction` + `03_mindmap_builder` |
 | **Elmetérkép** | **03 kimenet: mindmap** (😎 revideálja) |
 | Word: ír, hivatkozik, képek, egyenletek | `04_content_synthesizer` |
 | Word → PowerPoint | `09_presentation_maker` |
@@ -30,7 +30,7 @@ description: Claude-natív tananyagfejlesztési pipeline. NLM-mentes.
 |:------|:--------|:------|:----------------|:-------|
 | Célcsoport, hetek, tantárgy | 😎 | [`00_init`](skills/00_init.md) — `00_init_course.py` | 🐍 | `subject_status.md` + mappák |
 | URL-ek, PDF-ek, PPTX-ek | 😎+🤖 | [`01_source_collector`](skills/01_source_collector.md) | 🤖+😎 | `1_raw_inputs/` + `citations.json` |
-| `1_raw_inputs/` | 🐍 | [`02_source_extractor`](skills/02_source_extractor.md) — MinerU + HTML/PPTX | 🐍 | `2_clean_inputs/` + `figure_catalog.json` |
+| `1_raw_inputs/` | 🐍 | [`02_image_extraction`](skills/02_image_extraction.md) — MinerU + HTML/PPTX | 🐍 | `2_clean_inputs/` + `figure_catalog.json` |
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`05_visual_enricher`](skills/05_visual_enricher.md) — `05_figure_mapper.py` + összegzők | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (gazdagítva) |
@@ -52,7 +52,7 @@ flowchart TD
     end
 
     subgraph EXT["② Forrás-feldolgozás"]
-        E1["02 source_extractor<br>🐍<br>MinerU + HTML/PPTX<br>→ 2_clean_inputs/<br>+ figure_catalog.json"]
+        E1["02 image_extraction<br>🐍<br>MinerU + HTML/PPTX<br>→ 2_clean_inputs/<br>+ figure_catalog.json"]
     end
 
     subgraph UNDERSTAND["③ Megértés — sarokkő"]

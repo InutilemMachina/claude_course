@@ -23,6 +23,7 @@ A pipeline az oktató tradicionális munkafolyamatát modellezi Claude segítsé
 - A pipeline legyen lehetőleg automatizált, determinisztikus és minimalista.
 - A részletek ne ismétlődjenek különböző fájlokban.
 - **A megértés diktálja a struktúrát** — nem a fejezetek, hanem a fogalmi összefüggések.
+- **A problémát a gyökérokánál kell kijavítani** — tüneti kezelés helyett az ok megszüntetése.
 
 ## 3. Dokumentációs hierarchia
 

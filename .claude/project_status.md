@@ -1,4 +1,4 @@
----
+﻿---
 title: Project Status — claude_course
 type: project_status
 tags: [meta]
@@ -14,8 +14,18 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 
 **Haladás (skill-tesztelési kör):**
 1. ✅ `skill_template.md` best-practice overhaul → B-07 részben.
-2. ✅ Skillek tesztje: `00_init` + `01_source_collector` + `02_source_extractor` — mind sablon-konform, verifikált → B-08 kész.
+2. ✅ Skillek tesztje: `00_init` + `01_source_collector` + `02_image_extraction` — mind sablon-konform, verifikált → B-08 kész.
 3. 🔲 Állomás-túra folytatása: `03_mindmap_builder`.
+
+**02_image_extraction — lezárt fejlesztések (2026-06-03):**
+- Átnevezés: `02_source_extractor` → `02_image_extraction` (skill + script + összes hivatkozás)
+- Vektoros ábra detektálás born-digital PDF-eknél (`get_drawings()` + false positive szűrő)
+- Wikipedia false positive javítás (vízszintes elválasztók + apró elemek kizárva)
+- `_crop_tasks.md`: caption mező hozzáadva szkennelt oldalakhoz
+- Kettős tördelés kezelése: straddle oldal félbevágása PyMuPDF `show_pdf_page(clip=...)` segítségével
+- PDF darabolás multi-week forráshoz (`hesselmann1983_ch01/02/03.pdf`)
+- Tesztfutás: `atg/1_het` → 36 kép; `dft` 3 het → 23 kép; mind `needs_crop: true` ahol várható
+- Skill + Instructions + Backlog frissítve (kettős tördelés, front matter, gyökérok-elv, TOC-alapú határdetektálás ötlet)
 
 ## Elkészült (✅)
 
@@ -45,6 +55,18 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - ✅ B-08: 00, 01, 02 skillek tesztelve és sablon-konformra hozva — **kész**
 - 🔲 B-09: `_ieee_renderer` — ismeretlen évnél `é.n..` dupla pont (kozmetikai); a fallback paper-formátum trailing pontját rendezni
 
+## Ötletek — jövőbeni megfontolásra (💡)
+
+- 💡 **Automatikus fejezethatár-detektálás kettős tördelésű PDF-eknél — TOC-alapú megközelítés:** a tartalomjegyzék oldalait OCR-ezve közvetlenül megkapjuk a fejezet → könyvoldal-szám leképezést. Ebből a PDF-oldal index és az oldalpáritás (páros/páratlan könyvoldal = bal/jobb fél) pontosan kiszámítható — anélkül, hogy minden oldalt végig kellene szkennelni. Csak 1-2 TOC oldalt kell feldolgozni. Ez a gyökér-megközelítés: a könyv saját struktúráját használjuk a struktúra feltárásához.
+
+
+- 💡 **Range-alapú shared sources:** ha egy forrás több egymást követő hétre vonatkozik, de nem az összesre, a tárgy mappán belül egy tartomány-névvel ellátott shared mappa lehetne megoldás. Pl.:
+  ```
+  3-6_shared_sources/   ← 3.–6. hét közös forrása
+  8-12_shared_sources/  ← 8.–12. hét közös forrása
+  ```
+  Így az 1 fájl → sok hét (minden hétre) és az 1 fájl → néhány hét (range) eset is lefedett, anélkül hogy a fájlt n-szer kellene másolni. A script keresési sorrendje: `1_raw_inputs/` → `../0_shared_sources/` → `../<tól>-<ig>_shared_sources/` (ahol a hét száma a tartományba esik).
+
 ## Nyitott kérdések (❔)
 
 - ❔ Q-01: DUE template DOCX portolása — `templates/` mappába szükséges-e?
@@ -62,3 +84,4 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 | 2026-06-02 | E2E átfésülés indul: meta-réteg rendberakva (soft-cap, vertikális diagram, dedup) |
 | 2026-06-02 | `00_init`: `context` → `subject_status.md`, NLM-mentes sablon, auto-kitöltött frontmatter + igazított státusz-tábla |
 | 2026-06-02 | Citáció-rendszer: egyetlen `citations.json` (`type`-alapú), `[1]` jelölés, halott NLM-kód törölve `_citations_util`-ból, `_ieee_renderer` út+mező javítva és tesztelve |
+| 2026-06-03 | `02_image_extraction`: átnevezés, vektoros detektálás, false positive fix, kettős tördelés kezelés, PDF-split, dft+atg tesztfutás lezárva |

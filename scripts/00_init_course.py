@@ -1,4 +1,4 @@
-"""
+﻿"""
 00_init_course.py -- Új tantárgy struktúra + subject_status.md inicializálás.
 
 Felállítja egy tantárgy mappastruktúráját, és a
@@ -38,7 +38,7 @@ WEEK_SUBDIRS = ["1_raw_inputs", "2_clean_inputs", "3_mindmap",
 
 # A subject_status.md §2 táblájának sorai = pipeline-lépések (🚦 = checkpoint).
 PIPELINE_STEPS = [
-    "00 init", "01 source_collector", "02 source_extractor",
+    "00 init", "01 source_collector", "02 image_extraction",
     "03 mindmap 🚦", "04 content_synthesizer", "05 visual_enricher",
     "06 typesetter", "07 quality_reviewer 🚦", "08 question_bank",
     "09 presentation_maker", "10 bsc_export",

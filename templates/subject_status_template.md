@@ -1,4 +1,4 @@
----
+﻿---
 title: {{SUBJECT}} — tantárgy-státusz
 type: subject_status
 tags: [{{TAGS}}]
@@ -55,7 +55,7 @@ A projekt-szintű `project_status.md` tantárgy-szintű megfelelője.
 | *Téma*                  | Surge       | Stall       | Aktív szab. |
 | 00 init                 | ✅          | ✅          | ✅          |
 | 01 source_collector     | ✅          | ✅          | ⚙️          |
-| 02 source_extractor     | ✅          | ✅          | ❌          |
+| 02 image_extraction     | ✅          | ✅          | ❌          |
 | 03 mindmap 🚦           | ✅          | ✅          | ❌          |
 | 04 content_synthesizer  | ✅          | ✅          | ❌          |
 | 05 visual_enricher      | ✅          | ⚙️          | ❌          |

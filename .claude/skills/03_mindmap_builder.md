@@ -1,4 +1,4 @@
----
+﻿---
 name: 03_mindmap_builder
 title: 03_MINDMAP_BUILDER — Hierarchikus elmetérkép generálása
 type: skill
@@ -24,11 +24,11 @@ A mindmap az összes downstream output (04–10) vezérfonala.
 
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
-| `2_clean_inputs/{forrás}/{forrás}.md` | 02_source_extractor | Tisztított szöveg, képhivatkozásokkal |
-| `2_clean_inputs/figure_catalog.json` | 02_source_extractor | Kinyert ábrák metaadatai |
+| `2_clean_inputs/{forrás}/{forrás}.md` | 02_image_extraction | Tisztított szöveg, képhivatkozásokkal |
+| `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Kinyert ábrák metaadatai |
 | `1_raw_inputs/citations.json` | 01_source_collector | Forrás-metaadatok (szerző, év, oldalak) |
 
-**Előfeltétel:** `02_source_extractor` sikeresen lefutott; `2_clean_inputs/` nem üres.
+**Előfeltétel:** `02_image_extraction` sikeresen lefutott; `2_clean_inputs/` nem üres.
 
 ## 3. Eljárás
 

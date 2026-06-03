@@ -1,4 +1,4 @@
----
+﻿---
 name: 04_content_synthesizer
 title: 04_CONTENT_SYNTHESIZER — Mindmap-vezérelt tartalom-szintézis
 type: skill
@@ -24,9 +24,9 @@ koherens, vizuálisan gazdag wip-jegyzetet ír (`4_wip_outputs/N_Jegyzet.md`).
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
 | `3_mindmap/mindmap.md` | 03_mindmap_builder | Jóváhagyott hierarchikus mindmap |
-| `2_clean_inputs/{forrás}.md` | 02_source_extractor | Forrásszövegek (referencia olvasáshoz) |
+| `2_clean_inputs/{forrás}.md` | 02_image_extraction | Forrásszövegek (referencia olvasáshoz) |
 | `1_raw_inputs/citations.json` | 01_source_collector | Forrás-metaadatok (IEEE citáláshoz) |
-| `2_clean_inputs/figure_catalog.json` | 02_source_extractor | Elérhető ábrák listája |
+| `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Elérhető ábrák listája |
 
 **Előfeltétel:** `3_mindmap/mindmap.md` tartalmazza `status: approved`-t.
 

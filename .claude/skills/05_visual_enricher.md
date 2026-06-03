@@ -1,4 +1,4 @@
----
+﻿---
 name: 05_visual_enricher
 title: 05_VISUAL_ENRICHER — Ábrabeillesztés és összegző dobozok
 type: skill
@@ -24,7 +24,7 @@ A `figure_catalog.json`-ban leltározott ábrákat beilleszti a megfelelő fejez
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
 | `4_wip_outputs/N_Jegyzet.md` | 04_content_synthesizer | WIP jegyzet szöveg |
-| `2_clean_inputs/figure_catalog.json` | 02_source_extractor | Ábrák metaadatai + `suggested_section` |
+| `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Ábrák metaadatai + `suggested_section` |
 
 **Előfeltétel:** `04_content_synthesizer` lefutott; `figure_catalog.json` nem üres.
 

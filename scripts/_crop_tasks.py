@@ -1,7 +1,7 @@
-"""
+﻿"""
 _crop_tasks.py — Crop-feladatlista generálás és checkbox→catalog szinkron.
 
-Standalone utility; a 02_source_extractor.py dynamikusan tölti be.
+Standalone utility; a 02_image_extraction.py dynamikusan tölti be.
 
 Funkciók:
     generate_crop_tasks(week_dir)  — figure_catalog.json → _crop_tasks.md

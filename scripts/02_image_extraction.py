@@ -1,5 +1,5 @@
-"""
-02_source_extractor.py -- Ábra-kinyerő a 1_raw_inputs/ forrásokból.
+﻿"""
+02_image_extraction.py -- Ábra-kinyerő a 1_raw_inputs/ forrásokból.
 
 Minden forrástípusból PNG képeket ment 2_clean_inputs/<stem>/images/-ba,
 és felépíti/frissíti a 2_clean_inputs/figure_catalog.json-t.
@@ -11,8 +11,8 @@ Minden forrástípusból PNG képeket ment 2_clean_inputs/<stem>/images/-ba,
 A szöveg-szintézist Claude végzi közvetlenül a forrásból — itt CSAK ábrák kellenek.
 
 Usage:
-    python scripts/02_source_extractor.py --week-dir test_outputs/atg/1_het
-    python scripts/02_source_extractor.py --week-dir test_outputs/atg/1_het --dry-run
+    python scripts/02_image_extraction.py --week-dir test_outputs/atg/1_het
+    python scripts/02_image_extraction.py --week-dir test_outputs/atg/1_het --dry-run
 """
 
 import argparse
@@ -38,9 +38,12 @@ except Exception:
     _auto_crop_fn = None  # Pillow hiánya vagy hiba: auto-crop kikapcsolva
 
 # ── Küszöbértékek ──────────────────────────────────────────────────────────────
-MIN_AREA   = 10_000   # px² alatt: dekoráció/logó → kihagyva (pl. 100×100)
-PAGE_FILL  = 0.85     # oldal-terület %-a felett: szkennelt oldal → render + warn
-RENDER_DPI = 150      # szkennelt oldal renderelési felbontása
+MIN_AREA           = 10_000  # px² alatt: dekoráció/logó → kihagyva (pl. 100×100)
+PAGE_FILL          = 0.85    # oldal-terület %-a felett: szkennelt oldal → render + warn
+RENDER_DPI         = 150     # szkennelt oldal renderelési felbontása
+VECTOR_MIN_DRAW    = 10      # ennyi szignifikáns drawing-elem felett: vektoros ábra
+VECTOR_MIN_ELEM_AREA = 200   # pt² — ez alatt: bullet, underline → nem számít
+VECTOR_DIVIDER_H   = 5       # pt — ennél alacsonyabb + oldal-szélességű elem: fejléc-vonal → kihagyva
 
 
 # ── Segédfüggvények ────────────────────────────────────────────────────────────
@@ -267,6 +270,7 @@ def extract_pdf(src: Path, out_dir: Path, citation_key: str,
     for page_num, page in enumerate(doc, 1):
         page_area = page.rect.width * page.rect.height
         is_scanned_page = page_num in scanned_pages
+        page_raster_saved = 0
 
         for img_idx, img_info in enumerate(page.get_images(full=True), 1):
             xref = img_info[0]
@@ -317,6 +321,54 @@ def extract_pdf(src: Path, out_dir: Path, citation_key: str,
                     "suggested_section": None,
                 })
             saved += 1
+            page_raster_saved += 1
+
+        # Born-digital oldal, nincs raszterkép → vektoros ábra detektálás
+        if not is_scanned_page and page_raster_saved == 0:
+            page_w = page.rect.width
+            sig_drawings = [
+                d for d in page.get_drawings()
+                if d["rect"].width * d["rect"].height >= VECTOR_MIN_ELEM_AREA
+                and not (d["rect"].height < VECTOR_DIVIDER_H
+                         and d["rect"].width > 0.6 * page_w)
+            ]
+            if len(sig_drawings) >= VECTOR_MIN_DRAW:
+                mat = fitz.Matrix(RENDER_DPI / 72, RENDER_DPI / 72)
+                pix = page.get_pixmap(matrix=mat)
+                img_bytes = pix.tobytes("png")
+                img_name = f"p{page_num:03d}_fig001.png"
+                rel_path = f"2_clean_inputs/{src.stem}/images/{img_name}"
+                needs_crop = True
+                if _auto_crop_fn is not None and not dry_run:
+                    img_path = out_dir / "images" / img_name
+                    img_path.parent.mkdir(parents=True, exist_ok=True)
+                    img_path.write_bytes(img_bytes)
+                    cropped, ratio = _auto_crop_fn(img_path)
+                    if cropped:
+                        needs_crop = False
+                        print(f"  ✂️  AUTO-CROP (vektor): oldal {page_num} → {img_name} ({ratio:.0%} levágva)")
+                    else:
+                        print(f"  ⚠️  CROP SZÜKSÉGES (vektor): oldal {page_num} → {img_name} ({len(sig_drawings)} drawing)")
+                        crop_warn += 1
+                else:
+                    print(f"  ⚠️  CROP SZÜKSÉGES (vektor): oldal {page_num} → {img_name} ({len(sig_drawings)} drawing)")
+                    if not dry_run:
+                        img_path = out_dir / "images" / img_name
+                        img_path.parent.mkdir(parents=True, exist_ok=True)
+                        img_path.write_bytes(img_bytes)
+                    crop_warn += 1
+                if not already_in_catalog(catalog, src.name, rel_path):
+                    catalog.append({
+                        "id": next_fig_id(catalog),
+                        "source_file": src.name,
+                        "citation_key": citation_key,
+                        "page": page_num,
+                        "filename": rel_path,
+                        "needs_crop": needs_crop,
+                        "caption": None,
+                        "suggested_section": None,
+                    })
+                    saved += 1
 
     doc.close()
     return saved, skipped, crop_warn

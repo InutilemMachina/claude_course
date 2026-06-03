@@ -22,6 +22,8 @@ A már kodifikált elveket nem ismétlem, csak megerősítem (kanonikus hely zá
 - **Egy fájl = egy cél; egy információ egy kanonikus helyen** (Instructions §2).
 - **A megértés diktálja a struktúrát** — fogalmi összefüggések, nem fejezetek.
 - **Interfész-központúság** — minden lépésnek explicit be- és kimenete van.
+- **Cselekedj lokálisan, gondolkodj globálisan**  — Minden lépés kihatással lehet a pipeline más részeire.
+- (Előre fele haladva dolgozunk a tananyag-pipeline-on ezért későbbi lépések lehet, hogy nem lesznek már adekvátak)
 - **NLM-mentesség** — a `claude_play` maradványait felismerjük és irtjuk.
 - **Best practice elsőként** — Anthropic skill-elvek + skill_template.md.
 
@@ -43,7 +45,7 @@ Nyugodt, szisztematikus tempó. Minden állomáson:
 - **Hol van felesleg / redundancia / ellentmondás?**
 - **Tényleg kell-e** minden mező / szekció / fájl?
 - **Mi a be- és kimenet?** Koherens-e **upstream ÉS downstream**?
-- **Követi-e a best practice-t** (Anthropic + skill_template)?
+- **Követi-e a best practice-t** (Anthropic + skill_template + references)?
 - **Tesztelhető-e? Le van-e tesztelve** valódi adaton?
 - **YAML header, globális értelmesség, a fájl szerepe és kontextusa** rendben?
 - **A linkek valódi, létező fájlra mutatnak?** (relatív útvonal-mélység is)

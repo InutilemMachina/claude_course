@@ -3,6 +3,7 @@ name: 03_mindmap_builder
 title: 03_MINDMAP_BUILDER — Hierarchikus elmetérkép generálása
 type: skill
 tags: [meta, skill]
+role: ??
 status: active
 version: 1.0
 updated: 2026-06-01
@@ -13,12 +14,13 @@ description: Claude elolvassa az összes forrást és fogalmi összefüggések a
 
 ## 1. Cél
 
-Claude az összes `2_clean_inputs/` forrást teljes egészében elolvassa, és fogalmi összefüggések
+Claude az összes `1_raw_inputs/` forrást teljes egészében elolvassa, és fogalmi összefüggések
 alapján — nem merev fejezet-hierarchia szerint — hierarchikus mindmapet generál.
 A mindmap az összes downstream output (04–10) vezérfonala.
 
-**Input:** `2_clean_inputs/**/*.md` (MinerU/extraktor kimenetek)
-**Output:** `3_mindmap/mindmap.md` (Mermaid `flowchart LR`, 😎 jóváhagyás után végleges)
+**Input:** `1_raw_inputs/*.pdf, *.pptx` (eredeti forrásanyagok)
+**Output:** `3_mindmap/mindmap.md` (Mermaid `flowchart LR`, ?? jóváhagyás után végleges)
+**WIP Output:** `test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_horz.md` (LR) és `{N}_Mindmap_vert.md` (TD) — draft
 
 ## 2. Bemenetek
 
@@ -30,7 +32,7 @@ A mindmap az összes downstream output (04–10) vezérfonala.
 
 **Előfeltétel:** `02_image_extraction` sikeresen lefutott (`figure_catalog.json` elérhető); `1_raw_inputs/` nem üres.
 
-💬 NOTE: A 02 skill csak képeket állít elő — szöveg-szintézist Claude végzi közvetlenül a `1_raw_inputs/` forrásokból.
+?? NOTE: A 02 skill csak képeket állít elő — szöveg-szintézist Claude végzi közvetlenül a `1_raw_inputs/` forrásokból.
 
 ## 3. Eljárás
 
@@ -84,11 +86,24 @@ flowchart LR
 
 ### 3.4. Mentés
 
+**Fő output:**
 ```
 3_mindmap/mindmap.md
 ```
 
-YAML frontmatter kötelező:
+**WIP másolatok (draft munkafolyamati verziók):**
+```
+test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_horz.md    ‹ flowchart LR
+test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_vert.md    ‹ flowchart TD
+```
+
+A wip_outputs verziókban:
+- Csak cím és mindmap Mermaid blokk marad (YAML frontmatter + referencia-tábla törlve)
+- lowchart LR › horz (horizontal/baloldali-jobboldali)
+- lowchart TD › ert (vertical/topdown)
+- Mindkét verzió ugyanazt az elemetérképet tartalmazza, csak más irányultságban
+
+YAML frontmatter kötelező a fő fájlban:
 
 ```yaml
 ---
@@ -98,13 +113,13 @@ tags: [prod/test, mindmap]
 subject: {tantárgy neve}
 week: N
 sources: [fájlnév1, fájlnév2, ...]
-msc_nodes: [csomópont1, csomópont2, ...]  ← Claude javaslata
+msc_nodes: [csomópont1, csomópont2, ...]  ‹ Claude javaslata
 created: YYYY-MM-DD
-status: draft  ← 😎 jóváhagyás után: approved
+status: draft  ‹ ?? jóváhagyás után: approved
 ---
 ```
 
-### 3.5. Checkpoint — 😎 felhasználói revízió
+### 3.5. Checkpoint — ?? felhasználói revízió
 
 A draft mindmap elkészítése után:
 
@@ -115,18 +130,20 @@ A draft mindmap elkészítése után:
 
 A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 
-**⚠️ A 04_content_synthesizer csak `status: approved` mindmap alapján indul!**
+**?? A 04_content_synthesizer csak `status: approved` mindmap alapján indul!**
 
 ## 4. Kimenetek
 
 | Fájl | Tartalom |
 |:-----|:---------|
 | `3_mindmap/mindmap.md` | Mermaid flowchart LR, [MSc] jelölések, status: approved |
+| `test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_horz.md` | Draft LR verzió — cím + flowchart LR, metaadat nélkül |
+| `test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_vert.md` | Draft TD verzió — cím + flowchart TD, metaadat nélkül |
 
 ## 5. Ellenőrzés
 
 - [ ] Minden L1 ág azonosítható az `1_raw_inputs/` forrásokban?
-- [ ] `[MSc]` jelölések konzisztensek (szülő [MSc] → gyerek is [MSc])?
+- [ ] `[MSc]` jelölések konzisztensek (szülő [MSc] › gyerek is [MSc])?
 - [ ] Mermaid szintaxis hibamentes (idézőjelek, zárójelek kerülve)?
 - [ ] `status: approved` a YAML-ban?
 - [ ] Ábrahivatkozások (`Fig.X.Y`) egyeznek a `figure_catalog.json`-nel?
@@ -154,4 +171,9 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (claude_play 08_mindmap_manager alapján, Claude-natív) |
-| 2026-06-03 | 1.1 | §2 input javítva: `2_clean_inputs/**/*.md` → `1_raw_inputs/` (02 skill csak képet termel, szöveg-szintézis Claude direkt PDF-olvasással); §3.1 + §5 igazítva |
+| 2026-06-03 | 1.1 | §2 input javítva: `2_clean_inputs/**/*.md` › `1_raw_inputs/` (02 skill csak képet termel, szöveg-szintézis Claude direkt PDF-olvasással); §3.1 + §5 igazítva |
+| 2026-06-03 | 1.2 | §3.4, §4 bővítve: WIP draft verziók (1_Mindmap_horz.md LR + 1_Mindmap_vert.md TD) wip_outputs/atg/ alatt
+
+
+
+

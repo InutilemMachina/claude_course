@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 😎+🤖
 status: active
-version: 1.3
+version: 1.4
 updated: 2026-06-03
 description: Heti források gyűjtése 1_raw_inputs/-ba egységes névvel, weblapok PDF-ként, eredeti→új név szótárral és citations.json-nal; használd a 00_init után, forrásgyűjtéskor — opcionális Deep Research-csel.
 ---
@@ -91,53 +91,60 @@ Alternatíva (kézi): [SingleFile](https://github.com/gildas-lormeau/SingleFile)
 
 ### 3.5. Átnevezés + provenance 🤖
 
-Minden gyűjtött fájlt nevezz át a 3.2 konvencióra, és rögzítsd az eredeti→új leképezést
-a **`1_raw_inputs/_source_map.md`** szótárban (olcsó, ember-olvasható):
-
-```markdown
-# Forrás-térkép (eredeti → új)
-
-| Eredeti név / URL | Új név | Megjegyzés |
-|:------------------|:-------|:-----------|
-| D6 kieg - gravdahl1999-Book--….pdf | gravdahl1999_book.pdf | |
-| https://en.wikipedia.org/wiki/Compressor_stall | wikipedia2024_webpage.pdf | Playwright PDF |
-```
+Minden gyűjtött fájlt nevezz át a 3.2 konvencióra. A provenance (eredeti→új leképezés)
+az `original_filename` mezőben él a `citations.json`-ban — külön szótárfájl nem kell.
 
 ### 3.6. citations.json 🤖
 
 A `1_raw_inputs/citations.json` kulcs = hivatkozás száma (`"1"`, `"2"`, …) = szövegbeli `[1]`.
-A `filename` az **új** névre mutat; `type` = a 3.2 típuskód.
+A `filename` az **új** névre mutat; az `original_filename` megőrzi az eredeti nevet (provenance).
+A kész outputba (`## Hivatkozásjegyzék`) csak `author`/`title`/`year`/`venue`/`url` kerül — a fájlnevek nem.
 
 ```json
 {
   "_meta": {"subject": "atg", "week": 1},
-  "1": {"type": "book", "author": "J. T. Gravdahl", "title": "Compressor Surge and Rotating Stall", "year": 1999, "venue": "Springer", "filename": "gravdahl1999_book.pdf"},
-  "2": {"type": "webpage", "author": null, "title": "Compressor stall", "year": 2024, "url": "https://en.wikipedia.org/wiki/Compressor_stall", "filename": "wikipedia2024_webpage.pdf"}
+  "1": {
+    "type": "book",
+    "author": "J. T. Gravdahl",
+    "title": "Compressor Surge and Rotating Stall",
+    "year": 1999,
+    "venue": "Springer",
+    "filename": "gravdahl1999_book.pdf",
+    "original_filename": "D6 kieg - gravdahl1999-Book--Compressor Surge and Rotating Stall.pdf"
+  },
+  "2": {
+    "type": "webpage",
+    "author": null,
+    "title": "Compressor stall",
+    "year": 2024,
+    "url": "https://en.wikipedia.org/wiki/Compressor_stall",
+    "filename": "wikipedia2024_webpage.pdf",
+    "original_filename": "https://en.wikipedia.org/wiki/Compressor_stall"
+  }
 }
 ```
 
 - **Kötelező:** `type`, `title`. A többi `null`/elhagyható.
-- A `## Hivatkozásjegyzék` listát ebből rendereli a [`_ieee_renderer.py`](../../scripts/_ieee_renderer.py) (`type`-onként).
+- A `## Hivatkozásjegyzék` listát ebből rendereli a [`_ieee_renderer.py`](../../scripts/_ieee_renderer.py).
 
 ### 3.7. Retroaktív kezelés 😎→🤖
 
 Amit 😎 utólag tölt le (closed access): Claude **átnevezi** a konvencióra,
-bővíti a `_source_map.md`-t és a `citations.json`-t.
+és bővíti a `citations.json`-t (`filename` + `original_filename`).
 
 ## 4. Kimenetek
 
 | Fájl | Tartalom |
 |:-----|:---------|
 | `1_raw_inputs/<szerzo><ev>_<tipus>.<ext>` | Átnevezett források (weblap is PDF) |
-| `1_raw_inputs/_source_map.md` | Eredeti → új név szótár (provenance) |
-| `1_raw_inputs/citations.json` | Bibliográfia (IEEE-hez) |
+| `1_raw_inputs/citations.json` | Bibliográfia (IEEE-hez) + provenance (`original_filename`) |
 
 ## 5. Teszt
 
 Fixture-alapú teszt (verifikált mechanizmusokkal):
 
 - **Fixture:** `test_sources/atg/*` (6 PDF + 2 PPTX) → `1_raw_inputs/`; +1 weblap URL.
-- **Akció:** átnevezés a 3.2 szerint; weblap→PDF a 3.4 Playwright-snippettel; `_source_map.md` + `citations.json` felépítése.
+- **Akció:** átnevezés a 3.2 szerint; weblap→PDF a 3.4 Playwright-snippettel; `citations.json` felépítése (`filename` + `original_filename`).
 - **Várt kimenet + verifikáció (lefuttatva):**
   - Weblap→PDF: a „Compressor stall" wiki → **5 oldalas, valid PDF** (`page.pdf()`).
   - Access-detektálás: arXiv-PDF → `application/pdf` = **open**; ScienceDirect → `text/html` = **closed**.
@@ -180,3 +187,4 @@ Fixture-alapú teszt (verifikált mechanizmusokkal):
 | 2026-06-02 | 1.1 | Egységes `citations.json` (a `citations_seed` + a nem létező init-script megszűnt); `type`-alapú IEEE séma; `[1]` jelölés |
 | 2026-06-03 | 1.2 | Sablonhoz igazítva: `role`, triggerelő `description`, §5 Teszt, upstream/downstream linkek |
 | 2026-06-03 | 1.3 | Ideális forgatókönyv: naming convention, Deep Research + access-detektálás, weblap→PDF (Playwright, tesztelt), `_source_map.md` provenance, retroaktív kezelés; renderer `report`/`thesis`-re bővítve |
+| 2026-06-03 | 1.4 | Provenance `citations.json`-ba (`original_filename` mező); `_source_map.md` kivezetett |

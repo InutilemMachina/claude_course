@@ -79,39 +79,39 @@ def extract_pdf(src: Path, out_dir: Path, citation_key: str,
     doc = fitz.open(str(src))
     n_pages = len(doc)
 
-    # specific_pages mód: Claude azonosított oldalak feldolgozása
+    # specific_pages mód: Claude azonosított oldalak feldolgozása.
+    # Az ismétlések adják meg a képszámot: "5,12,12,12" → p5: 1 kép, p12: 3 kép.
+    # Szkennelt oldalnál: N kép → N külön fájl (p012_fig001.png, p012_fig002.png, …)
+    # Born-digital oldalnál: a beágyazott képek alapján mentünk, ismétlések figyelmen kívül.
     if specific_pages is not None:
+        from collections import Counter
+        page_counts = Counter(specific_pages)  # {oldal: hány képet kér}
         saved = skipped = crop_warn = 0
-        for page_num in specific_pages:
+
+        for page_num, fig_count in sorted(page_counts.items()):
             if page_num < 1 or page_num > n_pages:
-                print(f"  SKIP  oldal {page_num}: kívül esik a dokumentumon ({n_pages} old.)")
+                print(f"  SKIP  oldal {page_num}: kívül esik ({n_pages} old.)")
                 continue
             page = doc[page_num - 1]
             page_area = page.rect.width * page.rect.height
             page_imgs = page.get_images(full=True)
-            found_on_page = 0
-            for img_idx, img_info in enumerate(page_imgs, 1):
-                xref = img_info[0]
-                base = doc.extract_image(xref)
-                w, h = base["width"], base["height"]
-                area = w * h
-                if area < MIN_AREA:
-                    skipped += 1
-                    continue
-                needs_crop = False
-                if area / page_area >= PAGE_FILL:
-                    # Szkennelt oldal: teljes lap render
-                    mat = fitz.Matrix(RENDER_DPI / 72, RENDER_DPI / 72)
-                    pix = page.get_pixmap(matrix=mat)
-                    img_bytes = pix.tobytes("png")
-                    img_name = f"p{page_num:03d}_page.png"
-                    needs_crop = True
-                    crop_warn += 1
-                    print(f"  ⚠️  CROP SZÜKSÉGES: oldal {page_num} → {img_name}")
-                    # Szkennelt oldalnál 1 render elegendő, a többi beágyazott kép
-                    # ugyanaz az oldal → nem mentjük duplán
-                    found_on_page += 1
+
+            # Szkennelt oldal detektálás (első kép > PAGE_FILL?)
+            is_scanned = any(
+                (doc.extract_image(img[0])["width"] * doc.extract_image(img[0])["height"])
+                / page_area >= PAGE_FILL
+                for img in page_imgs[:1]  # csak az első képet nézzük (gyors)
+            ) if page_imgs else False
+
+            if is_scanned:
+                # Szkennelt oldal: N = fig_count másolatot ment, külön fájlnévvel
+                mat = fitz.Matrix(RENDER_DPI / 72, RENDER_DPI / 72)
+                pix = page.get_pixmap(matrix=mat)
+                img_bytes = pix.tobytes("png")
+                for fig_idx in range(1, fig_count + 1):
+                    img_name = f"p{page_num:03d}_fig{fig_idx:03d}.png"
                     rel_path = f"2_clean_inputs/{src.stem}/images/{img_name}"
+                    print(f"  ⚠️  CROP SZÜKSÉGES: oldal {page_num} kép {fig_idx} → {img_name}")
                     if not dry_run:
                         img_path = out_dir / "images" / img_name
                         img_path.parent.mkdir(parents=True, exist_ok=True)
@@ -121,16 +121,22 @@ def extract_pdf(src: Path, out_dir: Path, citation_key: str,
                         "source_file": src.name,
                         "citation_key": citation_key,
                         "page": page_num,
-                        "image_index": img_idx,
                         "filename": rel_path,
-                        "needs_crop": needs_crop,
+                        "needs_crop": True,
                         "caption": None,
                         "suggested_section": None,
                     })
                     saved += 1
-                    break  # szkennelt oldalból csak 1 render kell
-                else:
-                    # Born-digital: minden képet külön ment
+                    crop_warn += 1
+            else:
+                # Born-digital oldal: beágyazott képek alapján mentünk
+                for img_idx, img_info in enumerate(page_imgs, 1):
+                    xref = img_info[0]
+                    base = doc.extract_image(xref)
+                    w, h = base["width"], base["height"]
+                    if w * h < MIN_AREA:
+                        skipped += 1
+                        continue
                     img_name = f"p{page_num:03d}_img{img_idx:03d}.png"
                     img_bytes = base["image"]
                     if base["ext"] != "png":
@@ -148,14 +154,13 @@ def extract_pdf(src: Path, out_dir: Path, citation_key: str,
                         "source_file": src.name,
                         "citation_key": citation_key,
                         "page": page_num,
-                        "image_index": img_idx,
                         "filename": rel_path,
                         "needs_crop": False,
                         "caption": None,
                         "suggested_section": None,
                     })
                     saved += 1
-                    found_on_page += 1
+
         doc.close()
         return saved, skipped, crop_warn
 
@@ -228,7 +233,6 @@ def extract_pdf(src: Path, out_dir: Path, citation_key: str,
                 "source_file": src.name,
                 "citation_key": citation_key,
                 "page": page_num,
-                "image_index": img_idx,
                 "filename": rel_path,
                 "needs_crop": needs_crop,
                 "caption": None,

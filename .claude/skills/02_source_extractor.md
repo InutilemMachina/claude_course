@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 🐍+🤖
 status: active
-version: 2.0
+version: 2.1
 updated: 2026-06-03
 description: PDF/PPTX forrásokból PNG képeket nyerünk ki 2_clean_inputs/-ba és felépítjük a figure_catalog.json-t; szkennelt könyvekhez Claude azonosítja az ábra-oldalakat, majd --source/--pages futtatással kinyerjük őket. Használd a 01_source_collector után, a 03_mindmap_builder előtt.
 ---
@@ -100,7 +100,7 @@ A script idempotens — meglévő katalógust betölti, új bejegyzéseket fűz 
   - `gravdahl1999_book.pdf`, `gravdahl1999_chapter.pdf`, `tavakoli2004_paper.pdf` → szkennelt, 1-1 figyelmeztetés + `--source/--pages` utasítás
   - `wikipedia2024_webpage.pdf` → 3 kép
   - `nagy2023_slides.pptx` → 0 kép (vektoros tartalom, nincs PICTURE shape)
-- **Akció (szkennelt, --pages):** `--source gravdahl1999_chapter.pdf --pages "5,12"` → 2 `needs_crop: true` PNG
+- **Akció (szkennelt, --pages):** `--source gravdahl1999_chapter.pdf --pages "5,12,12,12"` → p5: 1 PNG, p12: 3 PNG (`fig001/002/003`), mind `needs_crop: true`
 - **Eval:** `figure_catalog.json` valid JSON; `needs_crop: true` bejegyzések jelöltek; a figyelmeztető üzenet tartalmazza a pontos parancsot.
 
 ## 6. Ellenőrzés
@@ -138,3 +138,4 @@ A script idempotens — meglévő katalógust betölti, új bejegyzéseket fűz 
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (MinerU + 02-2 extractor) |
 | 2026-06-03 | 2.0 | Teljes újraírás: MinerU kiváltva PyMuPDF-fel (csak ábrák, nem szöveg); szkennelt PDF detektálás + Claude-alapú oldalazonosítás + `--source/--pages`; 02-1 + 02-2 egyesítve; verifikált atg-n |
+| 2026-06-03 | 2.1 | `--pages` ismétléssel N kép/oldal (N külön fájl, N catalog bejegyzés); `image_index` kivezetett; `_source_map.md` eltávolítva (provenance → `citations.json original_filename`) |

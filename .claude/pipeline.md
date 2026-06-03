@@ -110,12 +110,13 @@ A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus hely
 // 1_raw_inputs/citations.json — fájlnév-alapú, IEEE-kompatibilis
 {
   "_meta": {"subject": "...", "week": 1},
-  "1": {"type": "book", "author": "...", "title": "...", "year": "...", "venue": "...", "filename": "...", "pages": "..."},
-  "2": {"type": "webpage", "author": "...", "title": "...", "year": "...", "url": "..."}
+  "1": {"type": "book", "author": "...", "title": "...", "year": "...", "venue": "...", "filename": "gravdahl1999_book.pdf", "original_filename": "D6 kieg - gravdahl1999-Book-….pdf"},
+  "2": {"type": "webpage", "author": "...", "title": "...", "year": "...", "url": "...", "filename": "wikipedia2024_webpage.pdf", "original_filename": "https://…"}
 }
 ```
 
 - A kulcs (`"1"`, `"2"`) megegyezik a szövegbeli `[1]`, `[2]` jelöléssel.
+- `filename` = konvenciós név; `original_filename` = provenance (nem kerül a kész outputba).
 - Hivatkozási formátum (IEEE, `type`-alapú) és a `## Hivatkozásjegyzék` kötelezettség: [Instructions.md §8](../Instructions.md).
 - Generálás: `_ieee_renderer.py` (a `1_raw_inputs/citations.json`-ból).
 

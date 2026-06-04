@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 🐍+🤖
 status: active
-version: 2.9
+version: 2.10
 updated: 2026-06-04
 description: PDF/PPTX forrásokból egységes pNNN_figNNN.png néven képeket nyerünk ki 2_clean_inputs/-ba, felépítjük a figure_catalog.json (v4)-t image_rag meta-mezőkkel, és szkennelt PDF-eknél OCR-cache-t (text/pNNN.txt) készítünk. Használd a 01_source_collector után, a 02b_figure_enricher előtt.
 ---
@@ -93,22 +93,14 @@ A `02b_figure_enricher` ezt fogyasztja a `text_context` és inline hivatkozások
 
 **`figure_catalog.json` séma (v4):**
 
+Útmutató a JSON melletti **`CATALOG_GUIDE.md`** fájlban (generált, a 02 script hozza létre a `2_clean_inputs/` mellé). Tartalmazza: `_` prefix konvenció, 4-állapotú `_status` táblázat, mezők leírása, example entry.
+
 ```json
 {
   "_meta": {
     "schema_version": 4,
     "last_updated": "YYYY-MM-DD",
-    "subject": "atg",
-    "week": 1,
-    "_usage": {
-      "_": "Útmutató 😎-nak...",
-      "roles": { ... },
-      "value_convention": { ... },
-      "_status_derivation": { ... },
-      "fields": { ... },
-      "example_entry": { ... },
-      "where_to_write_observations": { ... }
-    }
+    "_guide": "CATALOG_GUIDE.md"
   },
   "sources": {
     "chattopadhyay2013_paper.pdf": {
@@ -144,10 +136,14 @@ A `02b_figure_enricher` ezt fogyasztja a `text_context` és inline hivatkozások
 4. Szemantikus (retrieval): `visual_content`, `text_context`, `keywords`
 5. Összegző + user: `_status` (derived), `notes`
 
-**`_status` derivation (a script számolja, ne szerkeszd kézzel):**
-- `verified` ← `caption_verified == true`
-- `draft` ← `visual_content` kitöltve, de `caption_verified == false`
-- `un-processed` ← `visual_content == null`
+**`_status` derivation (a script számolja, ne szerkeszd kézzel) — 4 állapot:**
+
+| `_status` | Feltétel | Mit jelent |
+|-----------|----------|------------|
+| `complete` | `caption_verified:true` ÉS `visual_content` kitöltve | Teljesen kész, 05 retrieval használhatja |
+| `caption-ok` | `caption_verified:true`, de `visual_content:null` | Caption jóváhagyva, 02b bootstrap hiányzik |
+| `draft` | `visual_content` kitöltve, de `caption_verified:false` | 02b futott, 😎 jóváhagyás hiányzik |
+| `un-processed` | Sem `caption_verified`, sem `visual_content` | 02b még nem futott |
 
 **Idempotencia szabály (incremental rebuild esetén):**
 - Strukturális mezők (`id`, `page`, `path`, `needs_crop`): a script soha nem írja felül a meglévőt; csak fűz új bejegyzést a megfelelő `sources[<src>]["figures"]` listához.
@@ -228,4 +224,5 @@ A `_meta._usage` blokkban az új `example_entry` mező egy teljes, fiktív péld
 | 2026-06-03 | 2.4 | Auto-crop (`_auto_crop.py`) + `_crop_tasks.md` |
 | 2026-06-03 | 2.5 | `_crop_tasks.md`: minden katalógus-bejegyzés listázva, caption-auto-detekció |
 | 2026-06-03 | 2.6 | `_crop_tasks.md` markdown táblázat formátum |
+| 2026-06-04 | 2.10 | **Block 9 koherencia-fix**: (1) `_status` 4-állapotú (`complete\|caption-ok\|draft\|un-processed`); (2) `keywords:None` alapérték; (3) `_meta` minimalizálva (nincs `subject`, `week`, `_usage`; csak `schema_version + last_updated + _guide`); (4) `CATALOG_GUIDE.md` generálva a katalógus mellé (tartalmazza: `_` prefix konvenció, 4-állapotú `_status` táblázat, mezők, example entry). |
 | 2026-06-04 | 2.9 | **v4 séma + OCR + naming-konvenció (Block 8)**: `_meta + sources` csoportosítás, 11 mező logikus sorrendben, `_status` derived flag, `_usage.example_entry` self-documenting, `pNNN_figNNN.png` egységes naming, pytesseract OCR-cache szkennelt oldalakhoz (`text/pNNN.txt`), `_crop_tasks.{py,md}` round-trip eltávolítva. A v2 / v3 közbenső sémák (image_rag branch evolúció) törölve a rewind-dal — a main-en csak v1 séma volt, az image_rag újra létrehozva v4-gyel egyenesen. |

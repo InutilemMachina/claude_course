@@ -78,67 +78,107 @@ ENTRY_DEFAULTS = {
     # 4. Szemantikus (retrieval — 02b tölti)
     "visual_content":   None,    # 🤖→😎
     "text_context":     None,    # 🤖→😎
-    "keywords":         [],      # 🤖→😎
+    "keywords":         None,    # 🤖→😎  null=un-processed (nem []=no-results)
     # 5. Összegző + user
     "_status":          "un-processed",  # 🐍 derived
     "notes":            [],      # 😎
 }
 
-USAGE_GUIDE = {
-    "_": "👇 Útmutató 😎-nak a katalógus szerkesztéséhez. "
-         "Részletes szabályok: .claude/skills/02b_figure_enricher.md",
-    "roles": {
-        "🐍": "Python script tölti automatikusan",
-        "🤖": "Claude tölti (02b skill)",
-        "😎": "User tölti vagy verifikálja",
-        "🤖→😎": "Claude javasol, te véglegesíted",
-    },
-    "value_convention": {
-        "un-processed": "null = feldolgozás nem futott le",
-        "no-results":   "[]   = feldolgozva, de üres eredmény",
-        "true-false":   "bool = tudottan pozitív/negatív",
-    },
-    "_status_derivation": {
-        "un-processed": "visual_content == null  (Claude még nem dolgozta fel)",
-        "draft":        "visual_content kitöltve, de caption_verified == false",
-        "verified":     "caption_verified == true  (😎 megerősítette)",
-        "_": "🐍 derived — minden mentésnél újraszámolódik; 😎 ne nyúljon hozzá",
-    },
-    "fields": {
-        "id":               "🐍 egyedi azonosító (fig_NNN); stabil lookup-kulcs: (source_file, path)",
-        "page":             "🐍 forrás-oldal száma",
-        "path":             "🐍 kép path 2_clean_inputs/<src>/images/pNNN_figNNN.png alatt",
-        "needs_crop":       "🐍→😎 true = még vágni kell; false = vágás kész / nem kellett",
-        "caption":          "🤖→😎 az ábra eredeti felirata, paragrafus-szennyezés nélkül",
-        "caption_verified": "😎 true, ha vizuálisan ÉS szövegileg megerősítetted",
-        "visual_content":   "🤖→😎 1-3 mondat: mit ábrázol (diagram, tengelyek, fő elemek)",
-        "text_context":     "🤖→😎 1-3 mondat: mi a szöveg-környezet lényege (forrás-PDF + OCR cache)",
-        "keywords":         "🤖→😎 3-8 kulcsszó; logók: tartalmazzon 'logo' vagy 'decoration' tag-et",
-        "_status":          "🐍 derived: un-processed | draft | verified  (NE szerkeszd kézzel)",
-        "notes":            "😎 lista szabad-szövegű megjegyzésekkel; "
-                            "'✅ reviewed' string = az entry teljes átnézését jelzi",
-    },
-    "example_entry": {
-        "_comment": "PÉLDA — ne szerkeszd. Egy teljesen kitöltött entry mintája.",
-        "id": "fig_000_EXAMPLE",
-        "page": 7,
-        "path": "2_clean_inputs/example_paper/images/p007_fig001.png",
-        "needs_crop": False,
-        "caption": "Figure 2: Sample compressor map showing surge line and operating point.",
-        "caption_verified": True,
-        "visual_content": "Kompresszor-jelleggörbe: PR a Y-tengelyen, Mass flow az X-en. "
-                          "Bal felső sarokban a surge line; egy 'A' pont a stabil tartományban.",
-        "text_context": "A '3. SURGE FUNDAMENTALS' szekció elején, a surge line bevezetésénél. "
-                        "Hivatkozás: p6 (Section 3 intro).",
-        "keywords": ["surge line", "compressor map", "operating point", "stability boundary"],
-        "_status": "verified",
-        "notes": ["Az 'A' pont feliratát meg lehetett volna nagyobbra venni.", "✅ reviewed"],
-    },
-    "where_to_write_observations": {
-        "egy_konkret_abrahoz": "az entry `notes` listájához (push új string)",
-        "folyamat_szintu":     ".claude/sprints/image_rag/review_notes.md → ## Aktuális",
-    },
+# ── CATALOG_GUIDE.md template (generálódik 2_clean_inputs/ mellé) ─────────────
+# A JSON-ban _meta csak gépi adatokat tartalmaz; az útmutató itt él.
+CATALOG_GUIDE_TEMPLATE = """\
+# figure_catalog.json — Útmutató
+
+**Részletes szabályok:** `.claude/skills/02b_figure_enricher.md`
+
+---
+
+## Prefix-konvenció
+
+```
+_ prefix  = script-kezelt mező, ne szerkeszd kézzel
+  Példák:  _status (derived), _meta (gépi metaadat)
+
+Nincs _   = user-editable
+  Példák:  notes, keywords, caption, caption_verified, visual_content, text_context
+```
+
+---
+
+## Szerepkörök
+
+| Jelölés | Ki tölti |
+|---------|----------|
+| 🐍 | Python script automatikusan |
+| 🤖 | Claude (02b skill) |
+| 😎 | User verifikálja vagy javítja |
+| 🤖→😎 | Claude javasol, te véglegesíted |
+
+---
+
+## `_status` értékek (🐍 derived — NE szerkeszd kézzel)
+
+| Érték | Feltétel | Teendő |
+|-------|----------|--------|
+| `complete` | `caption_verified:true` ÉS `visual_content` kitöltve | Kész, 05 retrieval használhatja |
+| `caption-ok` | `caption_verified:true`, de `visual_content:null` | 02b bootstrap hiányzik |
+| `draft` | `visual_content` kitöltve, de `caption_verified:false` | 😎 jóváhagyás hiányzik |
+| `un-processed` | Sem verified, sem visual_content | 02b még nem futott |
+
+---
+
+## Értékkonvenciók
+
+| JSON érték | Jelentés |
+|------------|---------|
+| `null` | Feldolgozás nem futott le (`un-processed`) |
+| `[]` | Feldolgozva, de üres eredmény (`no-results`) |
+| `true/false` | Boolean: tudottan pozitív/negatív |
+
+**Tilos:** `""` (üres string) — helyette `null`.
+
+---
+
+## Mezők
+
+| Mező | Ki | Leírás |
+|------|----|--------|
+| `id` | 🐍 | Egyedi azonosító (fig_NNN). Stabil lookup-kulcs: `(source_file, path)` |
+| `page` | 🐍 | Forrás-oldal száma |
+| `path` | 🐍 | Kép path `2_clean_inputs/<src>/images/pNNN_figNNN.png` alatt |
+| `needs_crop` | 🐍→😎 | `true` = még vágni kell; `false` = kész / nem kellett |
+| `caption` | 🤖→😎 | Az ábra eredeti felirata, paragrafus-szennyezés nélkül |
+| `caption_verified` | 😎 | `true`, ha vizuálisan ÉS szövegileg megerősítetted |
+| `visual_content` | 🤖→😎 | 1-3 mondat: mit ábrázol (diagram, tengelyek, fő elemek) |
+| `text_context` | 🤖→😎 | 1-3 mondat: mi a szöveg-környezet lényege |
+| `keywords` | 🤖→😎 | 3-8 kulcsszó; logók esetén tartalmazzon `"logo"` tag-et |
+| `_status` | 🐍 | Derived állapot — lásd fenti táblázat. NE szerkeszd kézzel |
+| `notes` | 😎 | Szabad szövegű megjegyzések listája. `"✅ reviewed"` = teljes átnézés |
+
+**Megjegyzések írása:**
+- Egy konkrét ábrához → az entry `notes` listájába
+- Sprint/folyamat szinten → `.claude/sprints/image_rag/review_notes.md`
+
+---
+
+## Példa — teljesen kitöltött entry
+
+```json
+{
+  "id": "fig_000_EXAMPLE",
+  "page": 7,
+  "path": "2_clean_inputs/example_paper/images/p007_fig001.png",
+  "needs_crop": false,
+  "caption": "Figure 2: Sample compressor map showing surge line and operating point.",
+  "caption_verified": true,
+  "visual_content": "Kompresszor-jelleggörbe: PR a Y-tengelyen, Mass flow az X-en. Bal felső sarokban a surge line; egy A pont a stabil tartományban.",
+  "text_context": "A 3. SURGE FUNDAMENTALS szekció elején, a surge line bevezetésénél. Hivatkozás: p6 (Section 3 intro).",
+  "keywords": ["surge line", "compressor map", "operating point", "stability boundary"],
+  "_status": "complete",
+  "notes": ["Az A pont feliratát meg lehetett volna nagyobbra venni.", "✅ reviewed"]
 }
+```
+"""
 
 
 # ── Helperek (séma-tudatosak) ──────────────────────────────────────────────────
@@ -153,25 +193,22 @@ def load_citations(week_dir: Path) -> dict:
             if k != "_meta" and v.get("filename")}
 
 
-def new_catalog(subject: str | None = None, week: int | None = None) -> dict:
-    """Üres v4 katalógus váz, beleértve a 😎 útmutatót."""
+def new_catalog() -> dict:
+    """Üres v4 katalógus váz. _meta = gépi adatok; útmutató → CATALOG_GUIDE.md."""
     return {
         "_meta": {
             "schema_version": SCHEMA_VERSION,
             "last_updated": date.today().isoformat(),
-            "subject": subject,
-            "week": week,
-            "_usage": dict(USAGE_GUIDE),
+            "_guide": "CATALOG_GUIDE.md",
         },
         "sources": {},
     }
 
 
-def load_catalog(path: Path, subject: str | None = None,
-                 week: int | None = None) -> dict:
+def load_catalog(path: Path) -> dict:
     """v4 katalógus betöltése. Más sémát hard error-ral elutasít."""
     if not path.exists():
-        return new_catalog(subject, week)
+        return new_catalog()
     raw = json.loads(path.read_text(encoding="utf-8"))
     schema = raw.get("_meta", {}).get("schema_version") if isinstance(raw, dict) else None
     if schema != SCHEMA_VERSION:
@@ -179,14 +216,23 @@ def load_catalog(path: Path, subject: str | None = None,
             f"HIBA: nem v{SCHEMA_VERSION} séma ({schema}) a katalógusban {path}. "
             "Wipe + regen, vagy explicit migráció szükséges."
         )
-    # Defenzív: hiányzó mezők kitöltése + _usage frissítése (de meglevőt nem írunk felül)
+    # Defenzív: hiányzó mezők kitöltése
     for src_data in raw.get("sources", {}).values():
         for e in src_data.get("figures", []):
             for k, default in ENTRY_DEFAULTS.items():
                 if k not in e:
-                    e[k] = default.copy() if isinstance(default, (list, dict)) else default
-    raw.setdefault("_meta", {}).setdefault("_usage", dict(USAGE_GUIDE))
+                    e[k] = default.copy() if isinstance(default, list) else default
     return raw
+
+
+def write_catalog_guide(clean_in: Path, dry_run: bool) -> None:
+    """CATALOG_GUIDE.md generálása a katalógus mellé (ha még nem létezik)."""
+    guide_path = clean_in / "CATALOG_GUIDE.md"
+    if guide_path.exists():
+        return  # idempotens: meglevőt nem írjuk felül
+    if not dry_run:
+        guide_path.write_text(CATALOG_GUIDE_TEMPLATE, encoding="utf-8")
+        print(f"  📄 CATALOG_GUIDE.md generálva → {guide_path}")
 
 
 def _ensure_source(catalog: dict, source_file: str, citation_key: str) -> dict:
@@ -237,11 +283,13 @@ def make_entry(fig_id: str, page: int, path_str: str, needs_crop: bool) -> dict:
 
 
 def _compute_status(entry: dict) -> str:
-    """Származtatott állapot. Lásd 02b skill §3.2.0."""
-    if entry.get("caption_verified"):
-        return "verified"
-    if entry.get("visual_content"):
-        return "draft"
+    """Származtatott 4-állapotú státusz. _ prefix = script-managed, ne szerkeszd.
+    Lásd CATALOG_GUIDE.md _status táblázat."""
+    caption_ok = bool(entry.get("caption_verified"))
+    has_meta   = bool(entry.get("visual_content"))
+    if caption_ok and has_meta:   return "complete"
+    if caption_ok:                return "caption-ok"
+    if has_meta:                  return "draft"
     return "un-processed"
 
 
@@ -258,6 +306,7 @@ def save_catalog(catalog: dict, path: Path, dry_run: bool):
     catalog["_meta"]["last_updated"] = date.today().isoformat()
     path.write_text(json.dumps(catalog, ensure_ascii=False, indent=2),
                     encoding="utf-8")
+    write_catalog_guide(path.parent, dry_run)
 
 
 # ── OCR helper ─────────────────────────────────────────────────────────────────
@@ -663,15 +712,7 @@ def main():
     if not raw_in.is_dir():
         sys.exit(f"HIBA: nem található {raw_in}")
 
-    # subject/week kinyerése a week_dir-ből
-    parts = week_dir.parts
-    subject = parts[-2] if len(parts) >= 2 else None
-    try:
-        week = int(parts[-1].split("_")[0]) if parts[-1] else None
-    except (ValueError, IndexError):
-        week = None
-
-    catalog = load_catalog(cat_path, subject=subject, week=week)
+    catalog = load_catalog(cat_path)
     citations = load_citations(week_dir)
     prefix = "[DRY] " if args.dry_run else ""
 

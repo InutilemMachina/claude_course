@@ -61,15 +61,18 @@ Minden `source_file` egyedi értékére (a `catalog["sources"]` kulcsain végigi
 
 ### 3.2.0. Az `_status` mező (derivált, ne szerkeszd)
 
-A 02 script automatikusan újraszámolja minden `save_catalog()` előtt:
+A 02 script automatikusan újraszámolja minden `save_catalog()` előtt. **4-állapotú** (Block 9):
 
-| Feltétel | `_status` |
-|----------|-----------|
-| `caption_verified == true` | `verified` |
-| `visual_content` kitöltve (de nem verified) | `draft` |
-| `visual_content == null` | `un-processed` |
+| `_status` | Feltétel | Mit jelent |
+|-----------|----------|------------|
+| `complete` | `caption_verified:true` ÉS `visual_content` kitöltve | Teljesen kész, 05 retrieval használhatja |
+| `caption-ok` | `caption_verified:true`, de `visual_content:null` | Caption jóváhagyva, 02b bootstrap hiányzik |
+| `draft` | `visual_content` kitöltve, de `caption_verified:false` | 02b futott, 😎 jóváhagyás hiányzik |
+| `un-processed` | Sem `caption_verified`, sem `visual_content` | 02b még nem futott |
 
-A 02b skill célja, hogy a `un-processed` bejegyzéseket `draft` állapotba hozza. A `verified` átmenetet a 😎 csinálja a `caption_verified:true` flippeléssel.
+**`_` prefix konvenció**: a `_status` mezőt — és minden `_`-szel kezdődő mezőt — csak a script kezeli. A `_meta` blokk is script-managed (csak `schema_version`, `last_updated`, `_guide` van benne). Az útmutató a JSON melletti `CATALOG_GUIDE.md` fájlban él.
+
+A 02b skill célja: `un-processed` → `draft` (visual_content kitöltése). A `caption-ok` → `complete` átmenetet is a 02b hozhatja, ha a captionnel együtt a visual_content-et is tölti. A végleges `complete` átmenetet a 😎 csinálja a `caption_verified:true` flippeléssel.
 
 ### 3.2.1. `un-processed` / `no-results` / `true-false` konvenció
 

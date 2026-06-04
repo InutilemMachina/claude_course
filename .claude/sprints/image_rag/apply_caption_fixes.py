@@ -101,15 +101,14 @@ def main():
                 entry["needs_crop"] = desired
                 crop_changed += 1
 
-    # _status újraszámolás (a 02 script ezt save-kor mindig megteszi,
-    # itt manuálisan, mivel direkten írunk a JSON-be):
+    # _status újraszámolás — 4-állapotú logika (Block 9)
     for entry in _all_figures(catalog):
-        if entry.get("caption_verified"):
-            entry["_status"] = "verified"
-        elif entry.get("visual_content"):
-            entry["_status"] = "draft"
-        else:
-            entry["_status"] = "un-processed"
+        caption_ok = bool(entry.get("caption_verified"))
+        has_meta   = bool(entry.get("visual_content"))
+        if caption_ok and has_meta:   entry["_status"] = "complete"
+        elif caption_ok:              entry["_status"] = "caption-ok"
+        elif has_meta:                entry["_status"] = "draft"
+        else:                         entry["_status"] = "un-processed"
 
     catalog.setdefault("_meta", {})["last_updated"] = date.today().isoformat()
     CATALOG.write_text(json.dumps(catalog, ensure_ascii=False, indent=2),

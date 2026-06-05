@@ -14,7 +14,7 @@ description: Belépési pont és index a claude_course pipeline-hoz.
 `claude_course` — Claude-natív tananyagfejlesztési pipeline.
 
 - **NLM nem szükséges.** Claude tölti be az „elmetérkép" szerepét.
-- **Mindmap:** a megértés diktálja a struktúrát, nem a fejezetek.
+- **Mindmap:** a megértés diktálja a struktúrát, nem a fejezetek, de a fejezetekből is lehet mindmap.
 - **Vizuálisan gazdag:** Mermaid diagramok, valódi ábrák, MARP prezentáció.
 - Archív referencia: [`claude_play`](../claude_play/) (NLM-alapú előd)
 
@@ -54,7 +54,7 @@ Funkcionális index (mi mire való). Elvek és dokumentációs tekintély-sorren
 
 ## 5. Kommunikáció
 
-- Tömör, egyértelmű, redundanciamentes.
+- Tömör, egyszerű, redundanciamentes.
 - Ne ismételd meg a globális szabályokat.
 - Ha valami nem egyértelmű, a megfelelő kanonikus fájlra hivatkozz.
 

@@ -17,13 +17,14 @@ A pipeline az oktató tradicionális munkafolyamatát modellezi Claude segítsé
 ## 2. Alapelvek
 
 - Az egyszerűbb megoldás előnyösebb.
+- A lapos struktúra érthetőbb, nem szeretjük az ágas-bogas folyamatokat.
 - Egy fájl = egy cél.
 - Minden információ csak egyetlen kanonikus helyen szerepel.
 - A dokumentáció legyen rövid, világos, szabványos.
 - A pipeline legyen lehetőleg automatizált, determinisztikus és minimalista.
 - A részletek ne ismétlődjenek különböző fájlokban.
-- **A megértés diktálja a struktúrát** — nem a fejezetek, hanem a fogalmi összefüggések.
-- **A problémát a gyökérokánál kell kijavítani** — tüneti kezelés helyett az ok megszüntetése.
+- A problémát a gyökérokánál kell kijavítani — tüneti kezelés helyett az ok megszüntetése.
+- Adatokon alapuló döntéshozatal az alternatívák megválaszolásában.
 
 ## 3. Dokumentációs hierarchia
 
@@ -72,7 +73,8 @@ Te használhatod őket, de a user szinte soha nem illeszti be azokat, pl.:  `IDE
 - Meta-, skill- és script-fájlok neve: angol.
 - Meta- és skillfájlok tartalma: magyar (esetleges angol kifejezésekkel).
 - Szóköz tilos. Alulvonás használható.
-- Pipeline lépések sorszámozása stabil maradjon.
+- Pipeline lépések sorszámozása stabil maradjon
+- Scriptek sorszámozása kövesse a Pipeline lépések számát. Allépések esetén dash.
 
 **Script számozási séma** (`scripts/` mappa):
 

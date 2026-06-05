@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.1
-updated: 2026-06-03
-description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
+version: 1.2
+updated: 2026-06-05
+description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
 ---
 
 # 04_CONTENT_SYNTHESIZER
@@ -25,11 +25,11 @@ koherens, vizuálisan gazdag wip-jegyzetet ír (`4_wip_outputs/N_Jegyzet.md`).
 | Fájl | Honnan | Tartalom |
 |:-----|:-------|:---------|
 | `3_mindmap/mindmap.md` | 03_mindmap_builder | Jóváhagyott hierarchikus mindmap |
-| `2_clean_inputs/{forrás}.md` | 02_image_extraction | Forrásszövegek (referencia olvasáshoz) |
+| `2_clean_inputs/<stem>/mineru/<stem>.md` | 02_mineru_to_catalog | **Elsődleges szövegforrás** — szekciónként olvasd, fejezetek szerint citálj. Formulák és táblák innen jönnek, ne gépeld újra. |
 | `1_raw_inputs/citations.json` | 01_source_collector | Forrás-metaadatok (IEEE citáláshoz) |
-| `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Elérhető ábrák listája |
+| `2_clean_inputs/figure_catalog.json` | 02_mineru_to_catalog | Elérhető ábrák + caption + text_context (placeholder-elhelyezéshez) |
 
-**Előfeltétel:** `3_mindmap/mindmap.md` tartalmazza `status: approved`-t.
+**Előfeltétel:** `3_mindmap/mindmap.md` tartalmazza `status: approved`-t; `2_clean_inputs/<stem>/mineru/<stem>.md` elérhető (ha nem: raw PDF fallback, de minőségromlással).
 
 ## 3. Eljárás
 
@@ -88,13 +88,21 @@ A `💡 Összegzés` (minden `##` alfejezet végén) és a `🗺️ Fejezet öss
 - Ha `figure_catalog.json` tartalmaz releváns ábrát: `<!-- FIGURE: {fig_id} -- {leírás} -->` placeholder beillesztése
 - Ha nincs ábra: a placeholder elegendő — a 05_figure_integrator fogja kezelni
 
-### 3.4. Hivatkozások
+### 3.4. Formulák és táblák — MinerU-ból, ne kézzel
+
+**LaTeX formulák:** a MinerU `<stem>.md`-ben `$...$` / `$$...$$` formátumban már kinyerve. Másold át pontosan — ne gépeld újra, ne konvertáld. Ha a forrásban számozva van (`Eq. 3.1`), az `Eq.X.Y` referencia megtartandó.
+
+**Táblák:** a MinerU Markdown-táblát ad. Másold át közvetlenül a megfelelő szekció alá. Ne rajzolj ASCII-táblát a helyén.
+
+**Ellenőrzés:** ha egy fejezet MinerU markdown-jában tábla vagy formula van, a szintézisben is szerepelnie kell — nem hagyható ki szövegre cserélve.
+
+### 3.5. Hivatkozások
 
 - Minden kulcsmegállapítás után: `[1]`, `[2]` stb. (a `citations.json` kulcsai szerint)
 - Közvetlen idézetnél: `„szöveg"` [1, p.XX]
 - Képlet eredeténél: `(Eq.X.Y)` vagy `(p.XX)` ha a forrás tartalmazza
 
-### 3.5. Hivatkozásjegyzék (kötelező)
+### 3.6. Hivatkozásjegyzék (kötelező)
 
 A fájl végén:
 
@@ -108,7 +116,7 @@ A fájl végén:
 
 A `citations.json` tartalmából automatikusan renderelhető `_ieee_renderer.py`-val.
 
-### 3.6. Teljes dokumentum struktúra
+### 3.7. Teljes dokumentum struktúra
 
 ```markdown
 ---
@@ -146,13 +154,13 @@ created: YYYY-MM-DD
 [IEEE lista]
 ```
 
-### 3.7. MSc-tartalom kezelése
+### 3.8. MSc-tartalom kezelése
 
 Ha a mindmapben `[MSc]` jelölésű csomópont van:
 - A szövegben: `<!-- MSc -->` kommentblokk nyitja, `<!-- /MSc -->` zárja
 - A 11_bsc_export skill ezeket kiszűri a BSc-verzióból
 
-### 3.8. Mentés és checkpoint
+### 3.9. Mentés és checkpoint
 
 ```
 4_wip_outputs/N_Jegyzet.md
@@ -185,6 +193,8 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 | Fejezetek nem fedik a mindmapet | Figyelmen kívül hagyott L1 ág | Mindmap újraolvasás; fejezet hozzáadása |
 | Mermaid szintaxishiba | Speciális karakter | Érvénytelen karakterek cseréje |
 | Üres hivatkozásjegyzék | citations.json nem olvasva | Kézzel kitölteni, majd _ieee_renderer.py |
+| MinerU markdown hiányzik | `02_mineru_to_catalog` nem futott | Fallback: raw PDF, de formulák/táblák elvesznek — jelezd a szövegben |
+| Formula kézzel begépelve, eltér a forrástól | MinerU markdown figyelmen kívül hagyva | A `<stem>.md` LaTeX-ét másold pontosan, ne szintetizáld |
 | [MSc] blokk nem záródik | Hiányzó `<!-- /MSc -->` | Keresés és pótlás |
 | `💡 Összegzés` / `🗺️ Fejezet összegfoglalása` hiányzik | Kimaradt a sablonból | Pótlás 06_summarize_box_injector-ben (kanonikus formátum: ott §3.1–3.2) |
 
@@ -202,4 +212,5 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (NLM 04+05 kiváltása, Claude-natív) |
+| 2026-06-05 | 1.2 | MinerU-first: §2 MinerU `.md` elsődleges szövegforrás; §3.4 új szekció (formulák+táblák MinerU-ból, ne kézzel); §3.5–3.9 átszámozva; §6 két új hibasor. |
 | 2026-06-03 | 1.1 | Sablon-sor: `📦 Összegző` → `💡 Összegzés` (`##` alfejezet végén); `🗺️ Fejezet összegfoglalása` placeholder a `#` fejezet zárásánál — kanonikus formátum a 06 skillben |

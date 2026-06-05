@@ -2,8 +2,8 @@
 title: Pipeline.md — claude_course
 type: meta
 status: active
-version: 1.3
-updated: 2026-06-03
+version: 1.6
+updated: 2026-06-04
 description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 ---
 
@@ -31,7 +31,9 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 |:------|:--------|:------|:----------------|:-------|
 | Célcsoport, hetek, tantárgy | 😎 | [`00_init`](skills/00_init.md) — `00_init_course.py` | 🐍 | `subject_status.md` + mappák |
 | URL-ek, PDF-ek, PPTX-ek | 😎+🤖 | [`01_source_collector`](skills/01_source_collector.md) | 🤖+😎 | `1_raw_inputs/` + `citations.json` |
-| `1_raw_inputs/` | 🐍 | [`02_image_extraction`](skills/02_image_extraction.md) — MinerU + HTML/PPTX | 🐍 | `2_clean_inputs/` + `figure_catalog.json` |
+| `1_raw_inputs/` | 🐍 | `02_mineru_to_catalog` — `scripts/02_mineru_to_catalog.py` (MinerU + PPTX) **standard** | 🐍 | `2_clean_inputs/` képek + `figure_catalog.json` (v4, caption+text_context+keywords előtöltve) |
+| `1_raw_inputs/` | 🐍 | [`02_image_extraction`](skills/02_image_extraction.md) — PyMuPDF + OCR cache **fallback** (ha nincs conda mineru env) | 🐍 | `2_clean_inputs/` képek + `text/` OCR + `figure_catalog.json` (v4, strukturális mezők) |
+| `2_clean_inputs/figure_catalog.json` | 🤖 | [`02b_figure_enricher`](skills/02b_figure_enricher.md) — `visual_content` + `keywords` finomítás (csak ez marad Claude-ra) | 🤖 | ugyanaz, `visual_content` + végleges `keywords` kitöltve |
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`05_figure_integrator`](skills/05_figure_integrator.md) — `05_figure_mapper.py` | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (ábrák) |
@@ -56,7 +58,12 @@ flowchart TD
     end
 
     subgraph EXT["② Forrás-feldolgozás"]
-        E1["02 image_extraction<br>🐍<br>MinerU + HTML/PPTX<br>→ 2_clean_inputs/<br>+ figure_catalog.json"]
+        direction TB
+        E1m["02_mineru_to_catalog<br>🐍 (standard)<br>MinerU PDF + python-pptx<br>→ képek + katalógus<br>caption+text_ctx+kw auto"]
+        E1["02_image_extraction<br>🐍 (fallback)<br>PyMuPDF + OCR<br>→ képek + katalógus<br>strukturális mezők only"]
+        E2["02b figure_enricher<br>🤖<br>visual_content + keywords<br>(Claude-only munka)"]
+        E1m --> E2
+        E1 -.->|"ha nincs MinerU env"| E2
     end
 
     subgraph UNDERSTAND["③ Megértés — sarokkő"]
@@ -149,3 +156,6 @@ Az agent-prompt minden skill esetén a skill `§3 Eljárás` szekciója alapján
 | 2026-06-02 | 1.1 | Mermaid vertikalizálva + `<br>` sortörés-javítás; D1/D2 deduplikáció (vizuális → Instructions §7, IEEE → §8); 05 script a táblába |
 | 2026-06-03 | 1.2 | 05 szétválasztva: 05_figure_integrator + 06_summarize_box_injector; 06–10 lépések +1 átszámozva (→ 07–11), scriptek párhuzamosan; 12_youtube_finder + 13_jupyter_catalogizer beillesztve a kimeneti fázisba |
 | 2026-06-03 | 1.3 | §4: 06 kimenete `📦 Összegző` (egyszintű) → kétszintű (`💡 Összegzés` per `##` + `🗺️ Fejezet összegfoglalása` per `#`) |
+| 2026-06-05 | 1.6 | **MinerU-first pipeline**: `02_mineru_to_catalog.py` a standard 02 lépés (caption+text_context+keywords draft gépileg auto-kitöltve MinerU _content_list.json-ból); `02_image_extraction.py` fallback marad. `02b_figure_enricher` csak `visual_content` + keywords finomítás = Claude-only minimális munka. Sprint: [ocr_lab/decision.md](sprints/image_rag/ocr_lab/decision.md). |
+| 2026-06-05 | 1.5 | **image_rag_OCR sprint**: 02c_mineru_layout opcionális lépés (MinerU layout/formula/képpárosítás) `02 → 02c → 02b` chain-ben. 02b_figure_enricher v1.1: backend-preferencia chain (MinerU > PyMuPDF4LLM > Tesseract > Claude Read). Komparatív kutatás: [.claude/sprints/image_rag/ocr_lab/decision.md](sprints/image_rag/ocr_lab/decision.md). |
+| 2026-06-04 | 1.4 | **image_rag sprint (Block 8)**: 02b_figure_enricher beillesztve a 02 és 03 közé; `figure_catalog.json` séma v4 (`_meta + sources` csoportosítva, 11 mező logikus sorrendben, `_status` derived flag, `_usage.example_entry` self-documenting); egységes `pNNN_figNNN.png` naming-konvenció; OCR-cache szkennelt PDF-ekhez. Sprint plan: [.claude/sprints/image_rag/image_rag_plan.md](sprints/image_rag/image_rag_plan.md) |

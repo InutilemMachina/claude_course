@@ -5,18 +5,29 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.0
-updated: 2026-06-04
-description: A figure_catalog.json (v4) bejegyzéseinek szemantikus meta-mezőit (visual_content, text_context, keywords) Claude tölti ki a forrás-PDF/PPTX olvasásával (vagy OCR-cache-ből) + a kép-fájlok megtekintésével. Használd a 02_image_extraction után, a 03_mindmap_builder előtt. Az `_status` mező automatikusan frissül `un-processed → draft → verified` állapotokon át.
+version: 1.2
+updated: 2026-06-05
+description: Ha `02_mineru_to_catalog.py` futott (standard), Claude CSAK a `visual_content`-et tölti (`Read(image)` + leírás) és finomítja a keywords draft-ot. caption + text_context gépileg előtöltve. Fallback (ha csak `02_image_extraction` futott): teljes backend-chain (MinerU > PyMuPDF4LLM > Tesseract > Claude Read). Használd a 02* lépések után, a 03 előtt.
 ---
 
 # 02b_figure_enricher
 
 ## 1. Cél
 
-A `figure_catalog.json` strukturális mezőit (`id`, `page`, `path`, `needs_crop`) a 02 script tölti determinisztikusan. Az image_rag szemantikus retrieval-jéhez szükséges meta-mezőket (`caption`, `visual_content`, `text_context`, `keywords`) **ez a skill tölti Claude-dal**, forrásonként, a forrás-PDF/PPTX olvasásával (vagy OCR cache-ből) + a kép-fájlok `Read`-elésével.
+### Ha `02_mineru_to_catalog.py` futott (standard pipeline, v1.2 viselkedés)
 
-**Input:** `2_clean_inputs/figure_catalog.json` (v4 séma, `_status: "un-processed"` bejegyzések) · **Output:** ugyanaz a fájl, kitöltött meta-mezőkkel + `_status: "draft"`. A 😎 véglegesítés (`caption_verified:true` → `_status: "verified"`) külön gesztus.
+A `figure_catalog.json` mezőinek döntő többsége **gépileg előtöltve** (caption, text_context, keywords draft). Claude 02b-ben **csak** a következőket csinálja:
+
+1. **`visual_content`**: minden bejegyzésnél `Read(image)` → 1-3 mondatos leírás (amit csak vizuálisan látni).
+2. **`keywords` finomítás**: ha a szkript draft < 3 tag, vagy ha a vizuális tartalom lényeges új tag-eket hoz (pl. „surge line", „pressure ratio").
+
+**Ez drasztikusan csökkenti a session-munkát**: caption-keresés + text extraction → Claude már nem csinálja.
+
+### Ha csak `02_image_extraction.py` futott (fallback pipeline)
+
+Teljes mező-kitöltés szükséges: caption, text_context, visual_content, keywords — a §3.1 backend-chain szerint.
+
+**Input:** `2_clean_inputs/figure_catalog.json` (v4 séma) · **Output:** ugyanaz, `visual_content` kitöltve, `_status: "draft"`. A 😎 véglegesítés (`caption_verified:true`) külön gesztus.
 
 ## 2. Bemenetek
 
@@ -26,6 +37,7 @@ A `figure_catalog.json` strukturális mezőit (`id`, `page`, `path`, `needs_crop
 | `1_raw_inputs/*.pdf`, `*.pptx` | `01_source_collector` | Szövegkontextus forrása (born-digital PDF text-stream / PPTX szöveg) |
 | `2_clean_inputs/<stem>/text/pNNN.txt` | `02_image_extraction` OCR-cache | Szkennelt PDF-oldalak OCR-szövege (ha Tesseract elérhető volt) |
 | `2_clean_inputs/<stem>/images/pNNN_figNNN.png` | `02_image_extraction` | A kép-fájlok — Claude `Read`-eli |
+| `2_clean_inputs/<stem>/mineru/{<stem>.md, <stem>_content_list.json, images/}` | `02c_mineru_layout` (opcionális) | Layout-aware markdown + captionpárosítás + LaTeX formula. Ha létezik → preferenciát kap |
 
 **Előfeltétel:** `02_image_extraction` lefutott, a katalógus v4 sémában van, `needs_crop:true` bejegyzésekhez a manuális vágás opcionálisan kész.
 
@@ -33,20 +45,36 @@ A `figure_catalog.json` strukturális mezőit (`id`, `page`, `path`, `needs_crop
 
 Forrásonként dolgozunk: egy forrás-PDF szövegét **egyszer** olvasuk be (cache), majd ábránként töltjük a meta-mezőket.
 
-### 3.1. Source-loop
+### 3.1. Source-loop — backend-preferencia chain (v1.1)
 
-Minden `source_file` egyedi értékére (a `catalog["sources"]` kulcsain végigiterálva):
+Az image_rag_OCR sprint komparatív kutatása (lásd `.claude/sprints/image_rag/ocr_lab/decision.md`) szerint a `text_context` legjobb forrása forrás-típustól függ. A skill **négy-rétegű preferencia chain**-t követ source-onként:
 
-1. **Forrás-szöveg betöltése:**
-   - PDF (born-digital): `PyMuPDF.get_text("text")` oldalanként → `{page_num: text}` cache.
-   - PDF (szkennelt): elsősorban `2_clean_inputs/<stem>/text/pNNN.txt` cache (a 02 OCR eredménye); fallback: a PyMuPDF üres stringet ad.
-   - PPTX: dia-szövegek (text-frame iteration).
+```
+1. MinerU       (2_clean_inputs/<stem>/mineru/<stem>.md + _content_list.json)
+       ↓ ha hiányzik VAGY a forrás-szegmens üres
+2. PyMuPDF4LLM  (born-digital text-stream — pip install pymupdf4llm)
+       ↓ ha üres (szkennelt)
+3. Tesseract    (2_clean_inputs/<stem>/text/pNNN.txt — a 02 cache-elte)
+       ↓ ha üres VAGY magyar oldalon char_count < 0.7 × PyMuPDF-mérce
+4. Claude Read fallback  (Read PNG → értsd meg → Write text/pNNN.txt — idempotens cache)
+```
+
+Minden `source_file` egyedi értékére (a `catalog["sources"]` kulcsain iterálva):
+
+1. **Forrás-szöveg betöltése a chain mentén:**
+   - **L1 (MinerU)**: ha létezik `<stem>/mineru/<stem>.md`, töltsd be; ha létezik `<stem>/mineru/<stem>_content_list.json`, parse-old a `text_level`/`type=image`/`img_caption` mezőket — ezek a `caption`, `visual_content`, `text_context` elsődleges forrásai. Heading-szintek a 03 mindmap-nek is.
+   - **L2 (PyMuPDF4LLM)**: `import pymupdf4llm; pymupdf4llm.to_markdown(pdf, pages=[…])` oldalonkénti vagy forrás-szintű MD. Born-digital pontosabb mint Tesseract.
+   - **L3 (Tesseract cache)**: olvasd a `text/pNNN.txt`-t. Ha hiányzik a 02 nem futtatott OCR-t (pl. nincs Tesseract binary) → L4.
+   - **L4 (Claude Read fallback)**: ha az oldalhoz nincs használható szöveg, ÉS a `images/pNNN_fig*.png` (vagy szkennelt oldal-render) létezik, akkor a session `Read`-eli a PNG-t, kiolvassa a látható szöveget magyar diakritikákkal és `Write`-tal idempotensen kiírja a `text/pNNN.txt`-be. Ezt **egyszer csinálja oldalanként** (cache hit esetén skip).
+   - PPTX: `python-pptx` text-frame iteration (változatlan).
 2. **A forráshoz tartozó figures listázása**: `catalog["sources"][src]["figures"]`.
 3. **Minden figure-re** (`fig_id` sorrendben):
    - `Read` az image fájl a `path` mezőből → vizuális tartalom megértése.
-   - A `page` mező alapján a forrás-szövegblokkban lokalizáld a kép környezetét (felirat + körülvevő bekezdés).
+   - A `page` mező alapján a forrás-szövegben lokalizáld a kép környezetét (felirat + körülvevő bekezdés). MinerU `_content_list.json` esetén a `page_idx == page-1` és `img_caption` mezők közvetlen találat.
    - Töltsd ki a meta-mezőket (lásd 3.2.).
 4. **Mentés**: forrás végén egy `save_catalog()` hívás. A `_status` automatikusan újraszámolódik (`un-processed → draft`).
+
+**Megjegyzés:** a chain nem kötelező, csak ajánlott. Ha csak Tesseract output van (mert `02c_mineru_layout` nem futott), a skill változatlanul működik.
 
 ### 3.2. Mezők kitöltési szabályai
 
@@ -126,13 +154,15 @@ A skill csak akkor írja felül a mezőt, ha **null vagy üres** volt. `caption_
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
 | `Read(image)` hibás karaktert ad | PNG sérült vagy nem PNG | Nézd meg a fájlméretet; ha 0 byte, `02` újra futtatása |
-| Szkennelt forrásnál üres szövegkörnyezet | OCR nem futott (Tesseract hiánya) | Telepítsd: `pip install pytesseract` + Tesseract binary; futtasd újra a 02-t |
+| Szkennelt forrásnál üres szövegkörnyezet | OCR nem futott (Tesseract hiánya) | Aktiválható L4 Claude Read fallback (lásd §3.1) — nincs külső dep. Vagy: `pip install pytesseract` + UB-Mannheim Tesseract binary (PATH-ra vagy `C:\Program Files\Tesseract-OCR`); magyar nyelv: `hun.traineddata` `~/.tessdata/` alá + `TESSDATA_PREFIX` env-var |
+| Magyar oldalon Tesseract diakritika hibás (pl. „centrifugalis" ≠ „centrifugális") | Tesseract LSTM gyengeség `hun` modellen low-DPI render-újra-OCR-en | Preferálj PyMuPDF4LLM-et (born-digital) vagy MinerU-t (`-l latin`); end-game Claude Read fallback. Mérés alapja: 0.59 char ratio nagyi-n (lásd ocr_lab/decision.md) |
+| MinerU output dupla `<stem>/auto/` szint | MinerU 2.7.6 mindig `<output>/<stem>/auto/`-ba ír | A `02c_mineru_layout.py` flat-eli `2_clean_inputs/<stem>/mineru/`-ra `shutil.move`-val |
 | `caption` és kép nem egyezik | Auto-detekció félrement (lásd 02 §9.1) | Caption korrekció: írd át manuálisan; user `caption_verified:true`-t állít |
 
 ## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
-- upstream: [02_image_extraction.md](02_image_extraction.md) · downstream: [03_mindmap_builder.md](03_mindmap_builder.md), [05_figure_integrator.md](05_figure_integrator.md)
+- upstream (standard): `scripts/02_mineru_to_catalog.py` · upstream (fallback): [02_image_extraction.md](02_image_extraction.md) · downstream: [03_mindmap_builder.md](03_mindmap_builder.md), [05_figure_integrator.md](05_figure_integrator.md)
 - Sprint kontextus: [.claude/sprints/image_rag/image_rag_plan.md](../sprints/image_rag/image_rag_plan.md)
 
 ## 9. Visszajelzések 😎+🤖
@@ -144,4 +174,6 @@ A skill csak akkor írja felül a mezőt, ha **null vagy üres** volt. `caption_
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-05 | 1.2 | MinerU-first pipeline. §1 kettéválasztva (standard vs fallback). Claude feladata redukálva: csak `visual_content` + keywords finomítás ha 02_mineru_to_catalog futott. |
+| 2026-06-05 | 1.1 | image_rag_OCR sprint. §3.1 backend-preferencia chain (MinerU > PyMuPDF4LLM > Tesseract > Claude Read). §7 új sorok: magyar diakritika gyengeség, MinerU dupla-szint. Hivatkozás: `.claude/sprints/image_rag/ocr_lab/decision.md`. |
 | 2026-06-04 | 1.0 | Létrehozva (image_rag sprint, Block 8). v4 katalógus séma. atg/1_het pilot: chattopadhyay + tavakoli (8 ábra). |

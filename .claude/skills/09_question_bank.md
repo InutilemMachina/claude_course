@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.1
-updated: 2026-06-03
-description: Mindmap L1 ágankénti bontásban MCQ kérdésbank generálása BSc (20+ kérdés) és MSc szinteken.
+version: 1.2
+updated: 2026-06-05
+description: Mindmap L1 ágankénti bontásban MCQ kérdésbank generálása BSc (20+ kérdés) és MSc szinteken. A számítási feladatok alapja a MinerU-ból kinyert formulák és táblák — ne a jegyzetből rekonstruálj, hanem a forrásból citálj.
 ---
 
 # 09_QUESTION_BANK
@@ -26,6 +26,7 @@ mindmap L1 ágankénti bontásban, BSc és MSc szintű kérdésekkel.
 |:-----|:-------|:---------|
 | `4_wip_outputs/N_Jegyzet.md` | 08_quality_reviewer | Publikálható minőségű jegyzet |
 | `3_mindmap/mindmap.md` | 03_mindmap_builder | Approved mindmap, L1 ágak |
+| `2_clean_inputs/<stem>/mineru/<stem>.md` | 02_mineru_to_catalog | **Számítási kérdések forrása** — MinerU-kinyert formulák (LaTeX), táblázatok (MD), egyenlet-számok. Innen vedd a konkrét számokat, ne a szintetizált jegyzetből rekonstruálj. |
 
 **Előfeltétel:** `08_quality_reviewer` döntése `PUBLIKÁLHATÓ`; mindmap `status: approved`.
 
@@ -37,8 +38,10 @@ Claude elolvassa a teljes notes-t és mindmap-et, majd mindmap L1 ágankénti bo
 
 **BSc kérdések (kötelező minimumok):**
 - Összesen legalább **20 elméleti MCQ** kérdés
-- Legalább **5 számítási feladat** (számot, képletet igénylő)
+- Legalább **5 számítási feladat** — konkrét képlet MinerU `.md`-ből, konkrét számok a forrás táblázataiból; ne becsüld, ne konstruálj
 - L1 áganként legalább 3 kérdés
+
+**A jó számítási feladat ismertetőjele:** hivatkozik egy konkrét MinerU-kinyert képletre (`Eq.X.Y`) vagy tábla-értékre. Ha a forrásban nincs konkrét szám, az elméleti kérdések számát növeld helyette.
 
 **MSc kérdések:**
 - `<!-- MSc -->` blokkban, az adott L1 szekció végén
@@ -122,6 +125,7 @@ created: YYYY-MM-DD
 | Több helyes válasz egy kérdésnél | Nem egyértelmű zavaró opciók | Zavaró opciókat konkretizálni |
 | MSc blokk nem zárt | `<!-- /MSc -->` hiányzik | Manuálisan hozzáadni |
 | Számítási feladatnál hibás szám | Számítás-ellenőrzés kihagyva | Képleteket manuálisan ellenőrizni |
+| Számítási kérdés „légből kapott" számokkal | MinerU markdown nem olvasva | Nyisd meg `<stem>/mineru/<stem>.md`-t, keresd a releváns formulát/táblát |
 
 ## 7. Hivatkozások
 
@@ -138,4 +142,5 @@ created: YYYY-MM-DD
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (mint 08_question_bank) |
+| 2026-06-05 | 1.2 | MinerU-first: §2 MinerU `.md` mint számítási forrás; §3.1 számítási feladat kritérium pontosítva (Eq.X.Y referencia kötelező); §6 új hibasor. |
 | 2026-06-03 | 1.1 | Átszámozva 08→09 |

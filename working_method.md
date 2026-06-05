@@ -18,14 +18,14 @@ Ezt a fájlt követem minden átnézési/refaktor session során.
 A már kodifikált elveket nem ismétlem, csak megerősítem (kanonikus hely zárójelben):
 
 - **A kevesebb néha több** — soft-cap, ne bokrosodjon; helyi javítás > új fájl (Instructions §10).
+- **Cél-orientált** - a beszélgetések a célra tartsanak, ne a bokrosodás irányába.
 - **Tisztaság és egyértelműség** — rövid, világos, szabványos (Instructions §2).
 - **Egy fájl = egy cél; egy információ egy kanonikus helyen** (Instructions §2).
-- **A megértés diktálja a struktúrát** — fogalmi összefüggések, nem fejezetek.
 - **Interfész-központúság** — minden lépésnek explicit be- és kimenete van.
 - **Cselekedj lokálisan, gondolkodj globálisan**  — Minden lépés kihatással lehet a pipeline más részeire.
 - (Előre fele haladva dolgozunk a tananyag-pipeline-on ezért későbbi lépések lehet, hogy nem lesznek már adekvátak)
 - **NLM-mentesség** — a `claude_play` maradványait felismerjük és irtjuk.
-- **Best practice elsőként** — Anthropic skill-elvek + skill_template.md.
+- **Best practice elsőként** — Anthropic skill-elvek + skill_template.md + ha van references.
 
 ## 2. Az állomás-túra (a review-ciklus)
 

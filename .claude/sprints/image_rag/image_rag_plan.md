@@ -74,8 +74,15 @@ python -c "import json; d=json.load(open('test_outputs/atg/1_het/2_clean_inputs/
 
 ## Backlog (Block 4b és tovább)
 
-- A maradék ~50 entry meta-bootstrap-ja (gravdahl 17 ábra, hari/nagy 8, wikipedia 3, nagyi 31)
-- `05_figure_integrator` szemantikus retrieval `keywords` + `text_context` alapon
+- ✅ **image_rag_OCR sprint (2026-06-05):** Komparatív OCR kutatás (4 backend × 15 oldal) → **MinerU-first pipeline** döntés. `02_mineru_to_catalog.py` (új standard 02 lépés): MinerU PDF-ekre + python-pptx PPTX-re; gépi caption+text_context+keywords draft; párhuzamos workers (cpu_count//2); `--resume` megszakítás-tűrés; `--backend`/`--device`/`--vram-per-worker` GPU-ra. `02b_figure_enricher` v1.2: csak `visual_content` + keywords finomítás marad Claude-ra. Pipeline v1.6. Részletek: [ocr_lab/decision.md](ocr_lab/decision.md).
+- ✅ **wikipedia (3) + hari (8) meta-bootstrap** kész (`apply_meta_bootstrap_full.py`).
+- ✅ **`gravdahl1999_book.pdf` törölve** a raw_inputs-ból + citations.json kulcs „1" eltávolítva.
+- 🔲 **gravdahl1999_chapter (17 caption-ok)** `visual_content` bootstrap — következő session (`02_mineru_to_catalog` már előállítja a mineru/ outputot)
+- 🔲 **nagyi2013 (31 un-processed)** teljes meta-bootstrap — következő session; `02_mineru_to_catalog` latin-lang MinerU output már rendelkezésre áll
+- 🔲 atg/1_het downstream-spot-check: 03 mindmap-builder MinerU `_content_list.json`-ból kap-e többletet
+- 🔲 OCR-bbox alapú crop-finomítás (Tesseract `image_to_data` vagy MinerU layout-bbox)
+- 🔲 `05_figure_integrator` szemantikus retrieval `keywords` + `text_context` alapon
+- 🔲 Marker / docTR backend pilot (jelen sprintben kihagyva — MinerU már bizonyított)
 
 ## Tanulságok a korábbi (rewind előtti) sprintekből
 

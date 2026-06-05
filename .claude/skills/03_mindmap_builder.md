@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: ??
 status: active
-version: 1.0
-updated: 2026-06-01
-description: Claude elolvassa az összes forrást és fogalmi összefüggések alapján hierarchikus mindmapet generál. A felhasználó revideálja, MSc-ágakat jelöl. Ez a pipeline sarokköve.
+version: 1.3
+updated: 2026-06-05
+description: Claude elolvassa az összes forrást és fogalmi összefüggések alapján hierarchikus mindmapet generál. Ha 02_mineru_to_catalog futott, a strukturált MinerU markdown az elsődleges szövegforrás (raw PDF fallback). A felhasználó revideálja, MSc-ágakat jelöl. Ez a pipeline sarokköve.
 ---
 
 # 03_MINDMAP_BUILDER
@@ -24,28 +24,38 @@ A mindmap az összes downstream output (04–10) vezérfonala.
 
 ## 2. Bemenetek
 
-| Fájl | Honnan | Tartalom |
-|:-----|:-------|:---------|
-| `1_raw_inputs/*.pdf`, `*.pptx` | 01_source_collector | Eredeti forrásanyagok — Claude közvetlenül olvassa |
-| `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Kinyert ábrák metaadatai (L3 hivatkozásokhoz) |
-| `1_raw_inputs/citations.json` | 01_source_collector | Forrás-metaadatok (szerző, év, citációs kulcsok) |
+| Fájl | Honnan | Tartalom | Prioritás |
+|:-----|:-------|:---------|:----------|
+| `2_clean_inputs/<stem>/mineru/<stem>.md` | 02_mineru_to_catalog | **Elsődleges szövegforrás** — heading-strukturált MD, LaTeX formulák, tábla-MD, helyes olvasási sorrend (kéthasábos PDF-ek is) | **L1** |
+| `1_raw_inputs/*.pdf`, `*.pptx` | 01_source_collector | Fallback — ha MinerU markdown nem elérhető, Claude közvetlenül olvassa | L2 |
+| `2_clean_inputs/figure_catalog.json` | 02_mineru_to_catalog | Kinyert ábrák + caption + text_context + keywords (L3 hivatkozásokhoz és Fig.X.Y-hoz) | L1 |
+| `1_raw_inputs/citations.json` | 01_source_collector | Forrás-metaadatok (szerző, év, citációs kulcsok) | L1 |
 
-**Előfeltétel:** `02_image_extraction` sikeresen lefutott (`figure_catalog.json` elérhető); `1_raw_inputs/` nem üres.
+**Előfeltétel:** `02_mineru_to_catalog` sikeresen lefutott (`figure_catalog.json` + `mineru/` mappák elérhetők); `1_raw_inputs/` nem üres.
 
-?? NOTE: A 02 skill csak képeket állít elő — szöveg-szintézist Claude végzi közvetlenül a `1_raw_inputs/` forrásokból.
+**Miért MinerU markdown > raw PDF:**
+- Heading-szintek (`#`, `##`) megmaradnak → az L1/L2 ágak természetes struktúrát kapnak
+- LaTeX formulák (`$...$`, `$$...$$`) már kinyerve → `Eq.X.Y` referenciák pontosan beilleszthetők
+- Táblák Markdown-ban → összehasonlítás-csomópontok azonnal létrehozhatók
+- Kéthasábos PDFs olvasási sorrendben → nem kevertek az ágak
 
 ## 3. Eljárás
 
 ### 3.1. Forrásbeolvasás
 
-Olvasd be az összes `1_raw_inputs/` forrást (PDF, PPTX). Ha PDF-forrás, az oldalszámokat jegyezd fel.
-Ha weblap-PDF, a URL-t jegyezd fel. Cél: **teljes megértés**, nem szemelvényezés.
+**Ha `02_mineru_to_catalog` lefutott (standard pipeline):**
+```
+Elsődleges olvasás: 2_clean_inputs/<stem>/mineru/<stem>.md — minden forrásra
+Egyúttal:           2_clean_inputs/figure_catalog.json (ábrák + caption + text_context)
+                    1_raw_inputs/citations.json (citációs kulcsok)
+```
+A MinerU markdown heading-struktúrája (`#`, `##`) közvetlen forrás az L1/L2 ágakhoz. A `figure_catalog.json` `text_context` mezői az ábra-környezet megértéséhez használhatók.
 
+**Ha MinerU markdown nem elérhető (fallback):**
 ```
-Elolvasandó fájlok: 1_raw_inputs/*.pdf, *.pptx
-Egyúttal: 2_clean_inputs/figure_catalog.json (elérhető ábrák listája)
-           1_raw_inputs/citations.json (citációs kulcsok)
+Olvasd be: 1_raw_inputs/*.pdf, *.pptx (raw, Claude közvetlenül)
 ```
+Ha weblap-PDF, a URL-t jegyezd fel. Cél: **teljes megértés**, nem szemelvényezés.
 
 ### 3.2. Fogalmi szintézis
 
@@ -157,6 +167,7 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 | Mindmap túl mély (L4+) | Túlrészletezés | L3 szintet max. kulcsképletekre korlátozd |
 | L1 ágak forrás-sorrendben | Nem fogalmi szintézis | Reorganizálás fogalmi logika szerint |
 | Figure_catalog üres | MinerU nem futott / nincs PDF | `<!-- FIGURE: -->` placeholder — folytatható |
+| MinerU markdown hiányzik (`<stem>/mineru/`) | `02_mineru_to_catalog` nem futott | Fallback: raw PDF olvasás; figyelj a heading-struktúra elvesztésére |
 
 ## 7. Hivatkozások
 
@@ -172,6 +183,7 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (claude_play 08_mindmap_manager alapján, Claude-natív) |
 | 2026-06-03 | 1.1 | §2 input javítva: `2_clean_inputs/**/*.md` › `1_raw_inputs/` (02 skill csak képet termel, szöveg-szintézis Claude direkt PDF-olvasással); §3.1 + §5 igazítva |
+| 2026-06-05 | 1.3 | MinerU-first pipeline: §2 MinerU `.md` elsődleges szövegforrás (raw PDF fallback); §3.1 kettéválasztva standard/fallback; §6 új hibasor. Gain: heading-struktúra, LaTeX formulák, tábla-MD, kéthasábos olvasási sorrend. |
 | 2026-06-03 | 1.2 | §3.4, §4 bővítve: WIP draft verziók (1_Mindmap_horz.md LR + 1_Mindmap_vert.md TD) wip_outputs/atg/ alatt
 
 

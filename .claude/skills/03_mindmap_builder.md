@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: ??
 status: active
-version: 1.3
+version: 1.4
 updated: 2026-06-05
 description: Claude elolvassa az összes forrást és fogalmi összefüggések alapján hierarchikus mindmapet generál. Ha 02_mineru_to_catalog futott, a strukturált MinerU markdown az elsődleges szövegforrás (raw PDF fallback). A felhasználó revideálja, MSc-ágakat jelöl. Ez a pipeline sarokköve.
 ---
@@ -75,24 +75,59 @@ Formátum: **Mermaid `flowchart LR`**, 3 szint mélyen.
 ```mermaid
 flowchart LR
     ROOT["Gyökérfogalom"]
-    ROOT --> A["L1 Főtéma 1"]
-    ROOT --> B["L1 Főtéma 2"]
-    ROOT --> C["L1 Főtéma 3"]
+    ROOT --> A["1. Főtéma"]
+    ROOT --> B["2. Főtéma"]
+    ROOT --> C["3. Főtéma"]
 
-    A --> A1["L2 Alfogalom 1.1"]
-    A --> A2["L2 Alfogalom 1.2\n(Eq.X.Y, Fig.Z)"]
-    A --> A3["[MSc] L2 MSc szintű"]
+    A --> A1["1.1. Alfogalom"]
+    A --> A2["1.2. Alfogalom"]
+    A --> A3["[MSc] 1.3. MSc szintű alfogalom"]
 
-    B --> B1["L2 Alfogalom 2.1"]
-    ...
+    B --> B1["2.1. Alfogalom"]
 ```
 
+### 3.3.1. Nem renderelt réteg — ábra/képlet/forrás-leképezés
+
+A node-okból kihagyott ábra-, képlet- és forrás-hivatkozások egy **nem renderelt**
+HTML-kommentbe kerülnek a Mermaid-blokk után. Ez a réteg köti össze a node-okat a
+forrásrészletekkel (downstream 04/05/09 használhatja), és a renderelt mindmapet tisztán tartja.
+
+```text
+<!-- ÁBRAHIVATKOZÁSOK (nem renderelt metaadat)
+A1 (1.1): <forrás> Fig.X.Y — rövid leírás
+A3 (1.3): <forrás> Eq.X.Y — rövid leírás
+-->
+```
+
+> 💡 A strukturált, gépileg lekérdezhető változata (node → forrás-chunk index, háttér-RAG) a
+> jövőbeni megfontolások közt: [project_status.md](../project_status.md) „Ötletek".
+
 **Szabályok:**
-- `[MSc]` prefix: Claude javasolja az MSc-szintű csomópontokat (felhasználó véglegesíti)
-- Ábrahivatkozás L3-ban: `Fig.X.Y` formátumban, ha figure_catalog tartalmazza
-- Egyenlet-hivatkozás L3-ban: `Eq.X.Y` ha a forrásban számozott
-- Hosszú szöveg: `\n`-nel tördelj a csomóponton belül
-- Kerüld: `"`, `'`, `(`, `)` speciális karakterek — cseréld szóra
+
+1. **Számozás — minden szám után pont.** L1: `N.` (pl. `1. Főtéma`), L2: `N.M.` (pl. `1.1. Alfogalom`).
+   Konzisztens a downstream 04 `## N.` / `### N.M` fejléc-sémával.
+2. **Ábra és képlet TILOS a renderelt node-ban.** Nincs ábrahivatkozás (`Fig.X.Y`), egyenlet-hivatkozás
+   (`Eq.X.Y`), sem inline képlet-töredék. Ezek a **nem renderelt** kommentblokkba kerülnek (lásd §3.3.1).
+   Indok: a 04_content_synthesizer az ábrát a `figure_catalog.json`-ból, a képletet a MinerU markdownból
+   veszi — a node-ban csak zaj.
+3. **`[MSc]` jelölés egységes.** Pontosan `[MSc]` — szögletes zárójel, pont ezzel a kis-/nagybetűzéssel.
+   Tilos a `MSc`/`MsC`/`Msc` zárójel nélkül és a `(MSc)` kerek zárójel. (A 04 §3.8 szó szerint erre illeszt.)
+4. **Megnevezés igen, citáció nem.** Egy fogalomra/modellre a **nevével** hivatkozz; a hozzá tartozó
+   évszám és szerző-citáció a node-ból elhagyandó — a citáció a Jegyzetben, IEEE-vel jön (08 §8).
+5. **`<br>` csak indokolt esetben.** A renderer többnyire automatikusan tördel; `<br>`-t csak akkor
+   használj, ha valódi logikai tagolást jelöl (fő fogalom + rövid pontosítás). Alapértelmezés: rövid,
+   egysoros címke.
+6. **Idegen szavak óvatosan.** Ahol van bevett magyar megfelelő, azt használd; a meghonosodott vagy
+   lefordíthatatlan szakszavakat tartsd meg eredetiben. Ügyelj a nyíl→szó szivárgásra: a `→`/`->`-ból
+   ne legyen `to`/`hoz` szó a címkében — a kapcsolatot **él** fejezi ki, nem szöveg.
+7. **Egyszerű node-cím.** Egy node = egy fogalom; ne pakold tele jelzővel/képlettel.
+8. **Egygyerekes node megengedett**, ha köztes fogalmi lépcsőként segíti a megértést.
+9. **Szigorú fa — csak szülő→gyermek él.** A mindmap `flowchart LR` **fa**: minden node-nak pontosan
+   egy bejövő éle van (a szülőtől). **Tilos** minden egyéb él: kereszt-él (ágak közti), testvér-él,
+   és bármely él, amely távoli node-okat köt össze vagy egy közös node-ba futtat — ezek átlósan
+   átszelik a diagramot és törik az LR-elrendezést. A nem hierarchikus (ág-ág, fogalmi) kapcsolatokat
+   a nem renderelt kísérőszövegben (§3.3.1) magyarázd, **ne éllel**.
+10. **Speciális karakterek:** kerüld a `"`, `'`, `(`, `)` jeleket a node-ban — cseréld szóra.
 
 ### 3.4. Mentés
 
@@ -153,10 +188,15 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 ## 5. Ellenőrzés
 
 - [ ] Minden L1 ág azonosítható az `1_raw_inputs/` forrásokban?
-- [ ] `[MSc]` jelölések konzisztensek (szülő [MSc] › gyerek is [MSc])?
+- [ ] Minden L1/L2 szám után pont (`5.`, `1.1.`)?
+- [ ] Nincs `Fig.X.Y`, `Eq.X.Y` vagy inline matek a renderelt node-ban (csak a nem renderelt blokkban)?
+- [ ] `[MSc]` egységes (szögletes zárójel, nincs `MsC`/`(MSc)` variáns)? Szülő [MSc] › gyerek is [MSc]?
+- [ ] Indokolatlan idegen szó (van magyar megfelelője) vagy nyíl→szó (`to`/`hoz`) szivárgás a címkékben?
+- [ ] `<br>` csak indokolt logikai tagolásnál?
+- [ ] Szigorú fa: csak szülő→gyermek él (nincs kereszt-/testvér-él, nincs közös node-ba futtatás)?
 - [ ] Mermaid szintaxis hibamentes (idézőjelek, zárójelek kerülve)?
 - [ ] `status: approved` a YAML-ban?
-- [ ] Ábrahivatkozások (`Fig.X.Y`) egyeznek a `figure_catalog.json`-nel?
+- [ ] A nem renderelt ábra/képlet-hivatkozások egyeznek a `figure_catalog.json`-nel?
 
 ## 6. Hibakezelés
 
@@ -168,6 +208,8 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 | L1 ágak forrás-sorrendben | Nem fogalmi szintézis | Reorganizálás fogalmi logika szerint |
 | Figure_catalog üres | MinerU nem futott / nincs PDF | `<!-- FIGURE: -->` placeholder — folytatható |
 | MinerU markdown hiányzik (`<stem>/mineru/`) | `02_mineru_to_catalog` nem futott | Fallback: raw PDF olvasás; figyelj a heading-struktúra elvesztésére |
+| Fig/Eq vagy inline matek a renderelt node-ban | Forrás-zaj a vázlatban | Áthelyezés a nem renderelt blokkba (§3.3.1); a node csak fogalmat tartalmaz |
+| `to`/`hoz` szó a node-címben | `→` nyíl szövegként szivárgott be | A kapcsolatot éllel fejezd ki; a címkéből töröld |
 
 ## 7. Hivatkozások
 
@@ -177,10 +219,17 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 
 ## 8. Visszajelzések
 
+- 💡 **2. sprint — háttér-RAG / láthatatlan metaadat:** a MinerU-ból nyert többletinformáció
+  (`text_context`, `caption`, `keywords`, oldal- és Fig/Eq-azonosítók) node-onként strukturált,
+  nem renderelt blokkban → node→forrás-chunk leképezés, ami egy lekérdezhető retrieval-index
+  alapja lehet (04 szintézis és 09 kérdésbank célzottan a releváns forrásrészre hivatkozhat a
+  teljes PDF újraolvasása helyett). Részletek: [project_status.md](../project_status.md) „Ötletek".
+
 ## 9. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-05 | 1.4 | §3.3 Szabályok újraírva 😎 visszajelzés alapján: minden szám után pont; Fig/Eq/inline matek tilos a renderelt node-ban (→ új §3.3.1 nem renderelt réteg); `[MSc]` egységes forma; modellnév évszám nélkül; `<br>` csak indokolt; idegen szavak óvatosan + nyíl→szó szivárgás tiltva; egyszerű/egygyerekes node OK; szigorú fa — csak szülő→gyermek él (kereszt-/testvér-él, közös node-ba futtatás tiltva). §5 checklist + §6 két hibasor + §8 RAG-ötlet. |
 | 2026-06-01 | 1.0 | Létrehozva (claude_play 08_mindmap_manager alapján, Claude-natív) |
 | 2026-06-03 | 1.1 | §2 input javítva: `2_clean_inputs/**/*.md` › `1_raw_inputs/` (02 skill csak képet termel, szöveg-szintézis Claude direkt PDF-olvasással); §3.1 + §5 igazítva |
 | 2026-06-05 | 1.3 | MinerU-first pipeline: §2 MinerU `.md` elsődleges szövegforrás (raw PDF fallback); §3.1 kettéválasztva standard/fallback; §6 új hibasor. Gain: heading-struktúra, LaTeX formulák, tábla-MD, kéthasábos olvasási sorrend. |

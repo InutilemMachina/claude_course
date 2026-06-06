@@ -57,6 +57,19 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 
 ## Ötletek — jövőbeni megfontolásra (💡)
 
+- 💡 **Mindmap mint retrieval-index — háttér-RAG (2. sprint, `mindmap_rag` branch):** a MinerU-ból
+  már sok strukturált többletinformációt nyerünk (`text_context`, `caption`, `keywords`, oldalszám,
+  Fig/Eq-azonosítók a `figure_catalog.json`-ban). Ötlet két lépcsőben:
+  1. **Láthatatlan metaadat a mindmapben:** a 03 mindmap minden node-jához egy strukturált, *nem
+     renderelt* blokk (a jelenlegi `<!-- ÁBRAHIVATKOZÁSOK -->` gépileg lekérdezhető kiterjesztése —
+     pl. node-id → {forrás, oldal, chunk-id, Fig/Eq, keywords}). A renderelt mindmap tiszta marad,
+     a node-ok mégis horgonyt kapnak a forrásrészletekhez.
+  2. **Háttér-RAG index:** ebből a node→forrás-chunk leképezésből egy lekérdezhető index épül.
+     Haszon: a `04_content_synthesizer` és a `09_question_bank` célzottan a releváns forrás-chunkra
+     hivatkozhat a teljes PDF újraolvasása helyett — gyorsabb, olcsóbb, pontosabb citálás.
+  - **Gyökér-elv:** a mindmap nemcsak vizuális vázlat, hanem a forrásokhoz vezető retrieval-index is.
+  - Kapcsolódó skill-hely: [03_mindmap_builder §3.3.1 + §8](skills/03_mindmap_builder.md).
+
 - 💡 **Automatikus fejezethatár-detektálás kettős tördelésű PDF-eknél — TOC-alapú megközelítés:** a tartalomjegyzék oldalait OCR-ezve közvetlenül megkapjuk a fejezet → könyvoldal-szám leképezést. Ebből a PDF-oldal index és az oldalpáritás (páros/páratlan könyvoldal = bal/jobb fél) pontosan kiszámítható — anélkül, hogy minden oldalt végig kellene szkennelni. Csak 1-2 TOC oldalt kell feldolgozni. Ez a gyökér-megközelítés: a könyv saját struktúráját használjuk a struktúra feltárásához.
 
 

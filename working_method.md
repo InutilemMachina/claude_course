@@ -3,8 +3,8 @@ title: WORKING_METHOD — A pipeline fejlesztésének módszertana
 type: meta
 tags: [meta]
 status: active
-version: 1.0
-updated: 2026-06-03
+version: 1.1
+updated: 2026-06-06
 description: A „módszertanok módszertana" — hogyan fejlesztjük/refaktoráljuk magát a pipeline-t. Kövesd minden review/refaktor session során.
 ---
 
@@ -23,6 +23,11 @@ A már kodifikált elveket nem ismétlem, csak megerősítem (kanonikus hely zá
 - **Egy fájl = egy cél; egy információ egy kanonikus helyen** (Instructions §2).
 - **Interfész-központúság** — minden lépésnek explicit be- és kimenete van.
 - **Cselekedj lokálisan, gondolkodj globálisan**  — Minden lépés kihatással lehet a pipeline más részeire.
+- **Fixture-ből absztrahálj** — a `test_outputs/<tárgy>/` csak fixture; a **termék a skill/script**.
+  Egy konkrét megfigyelésből (egy tananyag hibája/igénye) mindig az **általános erejű szabályt** vond
+  ki, és azt kodifikáld. A domain-specifikum *teszteli* és *kiváltja* a szabályt, de nem szivároghat a
+  kanonikus rétegbe: a skill-példák is absztrakt placeholderrel íródnak (`Főtéma`, `Eq.X.Y`), nem a
+  fixture fogalmaival. (Egy eset → szabály, nem egy eset → toldás.)
 - (Előre fele haladva dolgozunk a tananyag-pipeline-on ezért későbbi lépések lehet, hogy nem lesznek már adekvátak)
 - **NLM-mentesség** — a `claude_play` maradványait felismerjük és irtjuk.
 - **Best practice elsőként** — Anthropic skill-elvek + skill_template.md + ha van references.
@@ -79,4 +84,5 @@ Nyugodt, szisztematikus tempó. Minden állomáson:
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-06 | 1.1 | §1 új vezérelv: „Fixture-ből absztrahálj" — konkrét esetből általános szabályt kodifikálunk; a domain-specifikum nem szivárog a skill/script kanonikus rétegébe. |
 | 2026-06-03 | 1.0 | Létrehozva — a session módszertani inputjaiból |

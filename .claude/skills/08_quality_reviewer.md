@@ -105,6 +105,7 @@ Tartalom: script kimenet + Claude értékelés + döntés + revision note (ha <3
 ## 8. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
+- ⚡ HIBA: a `08_quality_check.py` a citációkat `<sup>[N]</sup>`-ként számolja, de a kanonikus formátum `[N]` (Instructions §8) — a „Kevés citáció" figyelmeztetés false negatív. Számláló bővítendő `\[\d+\]`-re. (project_status B-12)
 
 ## 9. Változásjegyzék
 

@@ -54,6 +54,9 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - 🔲 B-07: `skill_template.md` best-practice felülvizsgálata — felépítés + hol éljen (`.claude/` vs `templates/`)
 - ✅ B-08: 00, 01, 02 skillek tesztelve és sablon-konformra hozva — **kész**
 - 🔲 B-09: `_ieee_renderer` — ismeretlen évnél `é.n..` dupla pont (kozmetikai); a fallback paper-formátum trailing pontját rendezni
+- 🔲 B-10: `05_figure_mapper.py` **inkompatibilis a v4 katalógussal** — a beágyazott `_meta`+`sources` sémát laposként olvassa (`catalog.values()`), nem talál `keywords`-öt, és valójában nem szúr be képet (csak `inserted_after_paragraph`-ot ír). Átírandó: v4 séma bejárása + `<!-- FIGURE: source/fig_id -->` placeholder-feloldás `![]()`-re a jegyzetben. (atg/1_het: a placeholder-feloldást most Claude végezte kézzel a skill §3.3 szerint.)
+- ✅ B-11: `07-1_typesetter.py` Rule H **adatromlást okozott** (en-dash tartomány `1–35`→`1, 35`, `---` HR → `, -`, GFM tábla-szeparátor → `|:, , -|`, kanonikus `💡 Összegzés —` → `Összegzés,`). **Javítva:** Rule H mostantól csak ASCII `--`-t kezel; `–`/`—`, HR-sorok és tábla-sorok (`|`) érintetlenek. — **kész**
+- 🔲 B-12: `08_quality_check.py` citáció-metrika drift — `<sup>[N]</sup>`-t számol, de a kanonikus formátum `[N]` (Instructions §8); a „Kevés citáció" figyelmeztetés false negatív. A számlálót `\[\d+\]`-re (vagy mindkettőre) bővíteni.
 
 ## Ötletek — jövőbeni megfontolásra (💡)
 

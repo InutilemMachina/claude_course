@@ -124,26 +124,31 @@ def rule_h_dash_cleanup(text: str) -> tuple[str, int]:
     header = text[:yaml_end] if yaml_end != -1 else ""
     body = text[yaml_end:] if yaml_end != -1 else text
 
-    # Regex: optional spaces + dash(es) + optional spaces (not inside code fences)
-    # Replace " -- " / " – " / " — " with ", " (drop surrounding spaces)
-    pattern = re.compile(r" *(--|[–—]) *")
+    # Only collapse the ASCII double hyphen "--" (a plain-text/NLM artifact) into a
+    # comma. Real typographic dashes -- en "–" and em "—" -- are legitimate Hungarian
+    # punctuation and numeric-range markers (e.g. "1–35 Hz", "💡 Összegzés — X"), so
+    # Rule H must NOT touch them. Structural lines are skipped wholesale: horizontal
+    # rules ("---") and table rows/separators (any line containing "|"), which are made
+    # of hyphens and would otherwise be shredded.
+    pattern = re.compile(r" *-- *")
+    hr_re = re.compile(r"^[-*_]{3,}$")
 
     def replacer(m):
         nonlocal count
         count += 1
         return ", "
 
-    # Process line by line to skip ``` code fences
+    # Process line by line; skip code fences, headings, HTML comments (<!-- --> contains
+    # "--"), horizontal rules and table rows.
     in_fence = False
     lines = body.split("\n")
     result = []
     for line in lines:
-        if line.strip().startswith("```"):
+        stripped = line.strip()
+        if stripped.startswith("```"):
             in_fence = not in_fence
-        # Skip code fences, headings, and HTML comments (e.g. <!-- Q:N -->).
-        # The <!-- --> comment syntax legitimately contains "--", so Rule H
-        # must NOT touch it (otherwise <!-- Q:1 --> becomes <!, Q:1, >).
-        if in_fence or line.strip().startswith("#") or line.strip().startswith("<!--"):
+        if (in_fence or stripped.startswith("#") or stripped.startswith("<!--")
+                or hr_re.match(stripped) or "|" in line):
             result.append(line)
         else:
             result.append(pattern.sub(replacer, line))

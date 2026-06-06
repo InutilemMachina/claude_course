@@ -83,7 +83,7 @@ Claude ellenőrzi a beillesztett ábrákat:
 ## 8. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
--
+- ⚡ HIBA: a `05_figure_mapper.py` inkompatibilis a v4 `figure_catalog.json`-nal (beágyazott `_meta`+`sources` sémát laposként olvas), és valójában nem szúr be képet — csak `inserted_after_paragraph`-ot ír a katalógusba. A `<!-- FIGURE: source/fig_id -->` placeholder-feloldást (skill §3.3) jelenleg Claude végzi kézzel. Script-átírás: [project_status.md](../project_status.md) B-10.
 
 ## 9. Változásjegyzék
 

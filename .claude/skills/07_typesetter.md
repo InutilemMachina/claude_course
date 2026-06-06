@@ -96,6 +96,8 @@ Claude vizuálisan átnézi a diff-et (git diff):
 ## 8. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
+- ✅ Rule H gyökérhiba javítva: korábban az en-dash tartományt (`1–35`→`1, 35`), a `---` HR-t (`, -`) és a GFM tábla-szeparátort is elrontotta. Mostantól csak ASCII `--`-t cserél vesszőre; `–`/`—`, HR- és tábla-sorok érintetlenek. (project_status B-11)
+- 💬 NOTE: a §3.1 CLI a skillben `--week/--subject`, de a script a `--week-dir <N_het>` formát használja — a skill-szöveg igazítandó.
 
 ## 9. Változásjegyzék
 
@@ -103,3 +105,4 @@ Claude vizuálisan átnézi a diff-et (git diff):
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (mint 06_typesetter) |
 | 2026-06-03 | 1.1 | Átszámozva 06→07 (05 szétválása miatt); script-hivatkozások 07-1/07-2 |
+| 2026-06-06 | 1.2 | `07-1` Rule H gyökérjavítás: csak ASCII `--` kezelése; en/em-dash, HR és tábla-sorok védve (adatromlás megszüntetve) |

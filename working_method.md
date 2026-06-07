@@ -3,8 +3,8 @@ title: WORKING_METHOD — A pipeline fejlesztésének módszertana
 type: meta
 tags: [meta]
 status: active
-version: 1.1
-updated: 2026-06-06
+version: 1.2
+updated: 2026-06-07
 description: A „módszertanok módszertana" — hogyan fejlesztjük/refaktoráljuk magát a pipeline-t. Kövesd minden review/refaktor session során.
 ---
 
@@ -65,12 +65,23 @@ Nyugodt, szisztematikus tempó. Minden állomáson:
 - **Őszinte napló** — a riport pontosan tükrözze a valóságot.
 - **Minden skillnek legyen §Teszt** — fixture → akció → várt kimenet → eval, atg/dft-re.
 - **Mindent a maga idejében** — ami most nem aktuális, jegyezd fel (backlog / nyitott kérdés).
+- **Nincs shortcut — a lépést végig kell futtatni.** Egy pipeline-lépést tilos csendben megkerülni
+  vagy pótmegoldással helyettesíteni (pl. új forrás felvétele a **02-feldolgozás** — képkinyerés +
+  `figure_catalog` — nélkül, vagy valódi forrásábra helyett Mermaid-„helyettesítő", vagy kép nélküli
+  sovány forrás-PDF). A vizuálisan gazdag kimenet **vezérelv** (Instructions §7): a forrás képeinek
+  ténylegesen be kell kerülniük a `2_clean_inputs/`-ba. Ha egy lépés *kényszerből* kimarad (pl. hiányzó
+  conda-env), azt **explicit jelezni** kell 😎-nak (és backlogba tenni) — nem csendben pótolni. A
+  „működik a teszthez" nem cél; a **lépés helyes lefutása** a cél.
 
 ## 5. Munkamenet-szokások
 
 - Bátran kérdezz **tartalmilag is**, ne csak strukturálisan — bármikor.
 - **Globális strukturális kérdés** bármikor felvethető.
 - **Commit** tiszta egységenként, beszédes üzenettel; **push csak kérésre**.
+- **Git-tanító mód (😎 a git-et tanulja):** minden git-művelet előtt/közben a Bash-parancsokat
+  **tanító jelleggel** ki kell írni 😎-nak — a parancs + egy mondat, hogy *mit csinál és miért*
+  (pl. `git switch main` → „átváltunk a fő ágra, ide olvasztjuk be a branchet"). A cél, hogy 😎 a
+  művelet menetét kövesse és tanulja, ne csak az eredményt lássa.
 - Nyitott szálakat ne ejts el → project_status.md (backlog / nyitott kérdés).
 
 ## 6. Hivatkozások
@@ -84,5 +95,7 @@ Nyugodt, szisztematikus tempó. Minden állomáson:
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-07 | 1.3 | §5 új szokás: **Git-tanító mód** — minden git-művelet Bash-parancsait tanító jelleggel (parancs + mit/miért) kiírjuk 😎-nak, mert 😎 a git-et tanulja. |
+| 2026-06-07 | 1.2 | §4 új megállapodás: **„Nincs shortcut — a lépést végig kell futtatni"** (forrás 02-feldolgozása kötelező, valódi ábra > Mermaid-helyettesítő, kényszerű kihagyást explicit jelezni). `quality_review_test` tanulság. |
 | 2026-06-06 | 1.1 | §1 új vezérelv: „Fixture-ből absztrahálj" — konkrét esetből általános szabályt kodifikálunk; a domain-specifikum nem szivárog a skill/script kanonikus rétegébe. |
 | 2026-06-03 | 1.0 | Létrehozva — a session módszertani inputjaiból |

@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.5
-updated: 2026-06-06
+version: 1.6
+updated: 2026-06-07
 description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, az MSc-levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
 ---
 
@@ -203,6 +203,19 @@ vedd (§3.4), a *levezetés szövege* a Te hozzáadott didaktikai értéked.
 A 04 kimenet draft — a 05_figure_integrator (ábra-beillesztés) és 06_summarize_box_injector (összegzők) fogják gazdagítani.
 Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnézni.
 
+### 3.10. Célzott revízió — re-entry a 08-checkpointról
+
+A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi revíziót kérhet
+(a [`08_quality_reviewer`](08_quality_reviewer.md) §3.5 felhasználói csatornáján keresztül),
+és ilyenkor a 04 **újra belép** a már meglévő jegyzeten. Ekkor:
+
+- **Csak az érintett szekció(ka)t** módosítsd — ne generáld újra a teljes jegyzetet (Instructions §9).
+- Tartsd a §3.2 szakasz-sablont (🔭/🎯/🧱 → próza → Mermaid → 💡), a felirat-számozást (§3.3)
+  folytonosan, és a hivatkozás-kulcsokat stabilan (§3.5).
+- **Meglévő forrásból** bővítés: a `2_clean_inputs/<stem>/mineru/<stem>.md`-ből dolgozz.
+  **Új forrás** kell: előbb a 01→02 fut le rá (a revízió `01`-gyel indul), és csak utána a 04.
+- A revízió után a lánc 05/06 (ha új ábra/összegző kell) → 07 → 08 újrafut.
+
 ## 4. Kimenetek
 
 | Fájl | Tartalom |
@@ -246,10 +259,18 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 
 ## 8. Visszajelzések
 
+<!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
+- 💬 NOTE (2026-06-07, `quality_review_test`): a jegyzetekben az ábrák/táblák **kizárólag önálló, számozott felirattal** jelennek meg — a szövegtörzs **nem** hivatkozik rájuk szövegközi módon (nincs „lásd a 3. ábrát", „(2. táblázat)" típusú utalás). A szöveg↔vizuál egyetlen kötése az **előfordulási sorrend**. Lehetséges kihatások:
+  - ✅ **Lehetőség:** mivel nincs mit elcsúsztatni, a felirat-átszámozás determinisztikusan, ref-szinkron nélkül elvégezhető — ezt használja ki a [`07-3_figure_numberer.py`](../../scripts/07-3_figure_numberer.py) (beszúrás/törlés után egyszerűen újraszámoz).
+  - ⚠️ **Didaktikai gyengeség:** hiányzik az explicit szöveg→ábra **horgony** (Mayer kontiguitás/signaling-elv) — az olvasó nem kap utalást, mikor melyik vizuált nézze. A felirat „önálló koherens", de a törzs nem irányítja a tekintetet, és egy ábra logikailag messze kerülhet a vonatkozó bekezdéstől.
+  - ⚡ **Kockázat:** ha később bevezetünk szövegközi ábrahivatkozást (kézzel vagy 04-szabályként), a `07-3` jelenleg **nem** frissíti azokat → felirat és hivatkozás elcsúszhat. A `07-3`-at **a konvenció bevezetése előtt** ki kell egészíteni ref-frissítéssel.
+  - ❔ **Döntendő:** legyen-e 04-konvenció, hogy minden ábrára/táblára essék legalább egy szövegközi utalás a vonatkozó bekezdésben (signaling-előny), elfogadva a `07-3` bővítésének költségét? (Kapcsolódó: [Instructions §7.1](../../Instructions.md), [07_typesetter §3.4](07_typesetter.md).)
+
 ## 9. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-07 | 1.6 | §3.10 **célzott revízió / re-entry**: a 04 a 08-checkpointról (08 §3.5 csatorna) újra beléphet a meglévő jegyzeten — csak az érintett szekciót módosítja, stabil hivatkozás-kulcsokkal; meglévő forrás → 04 közvetlenül, új forrás → 01→02→04. |
 | 2026-06-06 | 1.5 | Új `🎯 Cél` blokk (Bloom-igés tanulási cél) minden `##` fejezet nyitásába, a `🔭` után — a Biggs constructive alignment (08) cél-oldala, a prezi szakasz-nyitó diája újrahasznosítja; §5 checklist. |
 | 2026-06-06 | 1.4 | Címke: `🔭 Epitome` → `🔭 A Nagykép`; §3.3 ábra-/táblázat-/Mermaid-felirat konvenció (számozott, önálló koherens, [Instructions §7.1](../../Instructions.md)); §5 felirat-checklist. |
 | 2026-06-06 | 1.3 | **Didaktikai metaprompt**: §3.2 `🔭 Epitome` (analógiás nagykép, zsargon nélkül) + opcionális `🧱 Előfeltételek` minden `##` fejezet nyitásába (Reigeluth elaboráció, fejezet-szintű explicit Zoom-out); §3.8 worked-example szabály az MSc-levezetésekhez; §5 három új checklist-sor. |

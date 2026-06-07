@@ -8,7 +8,7 @@ exit kóddal jelzi a kritikus hibákat (CI-barát).
 Mit ellenőriz:
   - ## szekciók száma (cél: 5-12)
   - Fejezetenkénti ### alszakaszok (figyelmeztetés >15)
-  - <sup>[N]</sup> citációk száma
+  - IEEE [N] citációk száma (a <sup>[N]</sup> régi jelölést is lefedi)
   - Inline forrásblokk maradék (cél: 0)
   - Dupla <sup>[N]</sup>,<sup>[N]</sup> citáció (cél: 0)
   - Romlott <!, Q:N, > marker (Rule H regresszió-teszt, cél: 0)
@@ -60,7 +60,9 @@ def compute_metrics(text: str) -> dict:
                 ch_sizes[cur] += 1
     max_chapter = max(ch_sizes.items(), key=lambda x: x[1]) if ch_sizes else (None, 0)
 
-    sups = text.count('<sup>')
+    # IEEE [N] citáció: a kanonikus `[N]` (Instructions §8) ÉS a régi `<sup>[N]</sup>`
+    # jelölést is számolja, mert a `\[\d+\]` minta a <sup>…</sup>-on belüli [N]-t is lefedi (B-12).
+    citations = len(re.findall(r'\[\d+\]', text))
     inline_src = sum(1 for l in lines if re.match(r'\s*Felhaszn', l, re.IGNORECASE))
     dup_sup = len(re.findall(r'<sup>\[(\d+)\]</sup>,\s*<sup>\[\1\]</sup>', text))
     broken_marker = text.count('<!, Q:')
@@ -76,7 +78,7 @@ def compute_metrics(text: str) -> dict:
         "h3_subsections": len(h3),
         "max_chapter_name": max_chapter[0],
         "max_chapter_subs": max_chapter[1],
-        "sup_citations": sups,
+        "citations": citations,
         "inline_source_blocks": inline_src,
         "duplicate_citations": dup_sup,
         "broken_markers": broken_marker,
@@ -113,8 +115,8 @@ def evaluate_warnings(m: dict) -> list[str]:
     if m["max_chapter_subs"] > 15:
         warns.append(f"Túlterhelt fejezet: '{m['max_chapter_name']}' "
                      f"({m['max_chapter_subs']} ### alszakasz, ajánlott: ≤15)")
-    if m["sup_citations"] < 10:
-        warns.append(f"Kevés citáció: {m['sup_citations']} (<10)")
+    if m["citations"] < 10:
+        warns.append(f"Kevés citáció: {m['citations']} (<10)")
     return warns
 
 
@@ -142,7 +144,7 @@ def main():
         print(f"  ## szekciók:            {m['h2_sections']}")
         print(f"  ### alszakaszok:        {m['h3_subsections']}")
         print(f"  Legnagyobb fejezet:     '{m['max_chapter_name']}' ({m['max_chapter_subs']} ###)")
-        print(f"  <sup> citációk:         {m['sup_citations']}")
+        print(f"  [N] citációk:           {m['citations']}")
         print(f"  💡 Összegzés (##):      {m['osszegzes_sub_blocks']}")
         print(f"  🗺️ Fejezet összegf. (#):{m['osszegfoglalas_blocks']}")
         print(f"  Képek (![):             {m['images']}")

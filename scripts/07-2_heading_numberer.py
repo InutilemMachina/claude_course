@@ -31,18 +31,19 @@ UNNUMBERED = {
     'tartalomjegyzek',     # ## Tartalomjegyzék (10_notes_collector)
     'tartalom',            # alt short form
     'hivatkozasjegyzek',   # ## Hivatkozásjegyzék (assembler reference list)
+    'megoldokulcs',        # ## 🔑 Megoldókulcs (06 answer-key appendix — függelék, nem fejezet)
+    'fuggelek',            # ## Függelék (általános appendix)
 }
 # QUESTION: hol helyezkednek el ezek egy egyetemi/akademiai jegyzetben? 
 
 def _normalize(s):
-    """Lowercase + strip accents + remove spaces, for comparison."""
+    """Lowercase + strip accents + drop minden nem-alfanumerikus jelet (emoji,
+    írásjel, szóköz), hogy pl. a '🔑 Megoldókulcs' is matcheljen az UNNUMBERED-re."""
     s = s.lower().strip()
-    for a, b in [('a','a'),('a','a'),('e','e'),('e','e'),('i','i'),
-                 ('o','o'),('o','o'),('o','o'),('u','u'),('u','u'),('u','u'),
-                 ('á','a'),('é','e'),('í','i'),('ó','o'),
+    for a, b in [('á','a'),('é','e'),('í','i'),('ó','o'),
                  ('ö','o'),('ő','o'),('ú','u'),('ü','u'),('ű','u')]:
         s = s.replace(a, b)
-    return s.replace(' ', '')
+    return re.sub(r'[^a-z0-9]+', '', s)
 
 def _strip_num(text):
     """Remove leading dotted number or Roman numeral: '1.2. Foo' / 'II. Foo' -> 'Foo'."""

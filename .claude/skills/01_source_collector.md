@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 😎+🤖
 status: active
-version: 1.4
-updated: 2026-06-03
-description: Heti források gyűjtése 1_raw_inputs/-ba egységes névvel, weblapok PDF-ként, eredeti→új név szótárral és citations.json-nal; használd a 00_init után, forrásgyűjtéskor — opcionális Deep Research-csel.
+version: 1.6
+updated: 2026-06-07
+description: Heti források gyűjtése 1_raw_inputs/-ba egységes névvel, weblapok PDF-ként (képekkel!), eredeti→új név szótárral és citations.json-nal; használd a 00_init után, forrásgyűjtéskor — opcionális Deep Research-csel. Több jelölt + 😎-egyeztetés; 😎 saját fájlt is betehet; re-entry új forrásra (§3.8) stabil kulcsokkal.
 ---
 
 # 01_SOURCE_COLLECTOR
@@ -72,22 +72,56 @@ Ha 😎 kéri, Claude `WebSearch`-csel keres:
 2. **Oktatási anyagok** — lecture notes, tutorial, review (didaktikailag hasznos)
 3. **Hazai/intézményi forrás** — ha van, preferált
 
+**Több jelölt + 😎-egyeztetés (kötelező elv):** ne ragadd meg automatikusan az első
+találatot. Gyűjts **több jelöltet**, és tisztázd 😎-val, *mire van valójában szüksége*
+(mélység, BSc/MSc-fókusz, áttekintés vs. mélyfúrás, hazai nyelv). A 😎 dönt — egy
+gyenge/sovány forrás egyoldalú felvétele helyett kérj megerősítést vagy kínálj választást.
+
+**😎 által betett fájl:** a 😎 maga is bedobhat fájlt a `1_raw_inputs/`-ba. Az ilyen
+forrást Claude **retroaktívan** kezeli (átnevezés a 3.2 konvencióra + `citations.json`
+bővítés a következő szabad kulcson, lásd 3.7–3.8).
+
 **Access-detektálás** (tesztelt heurisztika): a forrás-URL-t lekérve, ha
 `status < 400` és `content-type == application/pdf` → **open** → letöltés `1_raw_inputs/`-ba.
 Egyébként → **closed**: listázd a **DOI + URL**-t, és **szólj 😎-nak**, hogy töltse le kézzel (→ 3.7).
 
-### 3.4. Weblap → PDF 🤖
+### 3.4. Weblap → PDF 🤖 — **képekkel együtt** (vizuális gazdagság)
 
-Weblapot **PDF-ként** ments (nem `.url`-ként). Tesztelt mód — Playwright headless print:
+Weblapot **PDF-ként** ments (nem `.url`-ként), és **a képekkel együtt** — szöveg-only mentés
+**tilos**, mert sérti a vizuális gazdagság elvét ([Instructions §7](../../Instructions.md)), és a
+05/02 lépés sem talál belőle ábrát.
 
-```js
-async (page) => {
-  await page.goto(URL, { waitUntil: 'networkidle', timeout: 60000 });
-  await page.pdf({ path: '1_raw_inputs/<szerzo><ev>_webpage.pdf', format: 'A4', printBackground: true });
-}
+**Általános, forrásfüggetlen megoldás — headless Chromium `--print-to-pdf`.** Bármely URL-re
+működik (úgy renderel, ahogy egy böngésző, a képekkel együtt), és **csak egy Chromium-binárist**
+igényel — semmilyen Python-csomagot vagy site-specifikus API-t. Chromium-motor gyakorlatilag
+minden gépen van: **Edge** (Win10/11 beépített), **Chrome**, vagy a projektbe már telepített
+`chrome-headless-shell` (B-15). A böngésző-CLI a kanonikus mód:
+
+```powershell
+# Edge (vagy chrome.exe / chrome-headless-shell.exe — azonos flagek)
+& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" `
+  --headless=new --disable-gpu --no-pdf-header-footer --no-first-run `
+  --user-data-dir="<temp_profil>" --virtual-time-budget=20000 `
+  --print-to-pdf="1_raw_inputs\<szerzo><ev>_webpage.pdf" "<URL>"
 ```
 
-Alternatíva (kézi): [SingleFile](https://github.com/gildas-lormeau/SingleFile) bővítmény Edge/Chrome-ban (önálló HTML/PDF).
+- A `--virtual-time-budget=20000` (≈ a script-világ `waitUntil:'networkidle'` megfelelője) megvárja
+  a lusta/aszinkron tartalom (képek) betöltődését a nyomtatás előtt.
+- Azonos motor scriptből (Playwright/Puppeteer): `page.goto(URL,{waitUntil:'networkidle'})` →
+  `page.pdf({printBackground:true})`. Ugyanaz a Chromium, ha van scripting-runtime.
+
+**Csak ha egyáltalán nincs Chromium-bináris** a gépen:
+1. **Kézi:** [SingleFile](https://github.com/gildas-lormeau/SingleFile) bővítmény Edge/Chrome-ban.
+2. **😎-ra bízás:** kérd meg 😎-t, hogy mentse/töltse fel a fájlt (→ 3.7).
+
+> ⛔ **NEM általános megoldások** — ne ezekre építs:
+> - **Site-specifikus render-endpoint** (pl. Wikipedia `…/api/rest_v1/page/pdf/{Title}`): a legtöbb
+>   oldalon **nincs** ilyen, ezért nem módszer, csak ritka, oldalankénti kényelem.
+> - **Sovány, kép nélküli szöveg-PDF** (pl. a kinyert szöveg `fitz`-be írva): a vizuális gazdagság
+>   elvét sérti (Instructions §7), a 02/05 nem talál belőle ábrát — **tilos**.
+>
+> **Verifikáció (kötelező):** a mentett PDF tartalmazzon képeket (`fitz`: `page.get_images()`
+> összege > 0). Ha 0 kép, a mentés hibás → másik módszer.
 
 ### 3.5. Átnevezés + provenance 🤖
 
@@ -131,6 +165,18 @@ A kész outputba (`## Hivatkozásjegyzék`) csak `author`/`title`/`year`/`venue`
 
 Amit 😎 utólag tölt le (closed access): Claude **átnevezi** a konvencióra,
 és bővíti a `citations.json`-t (`filename` + `original_filename`).
+
+### 3.8. Re-entry — új forrás később a pipeline-ban 😎→🤖
+
+A 01 **nem csak a pipeline elején** futhat: egy későbbi checkpointon (jellemzően a
+[`08_quality_reviewer`](08_quality_reviewer.md) §3.5 csatornáján) a 😎 jelezheti, hogy egy téma
+új forrást igényel. Ekkor a 01 **újra belép**, de inkrementálisan:
+
+- **Új `citations.json`-kulcs** a következő szabad sorszámon — a **meglévő kulcsok soha nem
+  változnak** (a szövegbeli `[N]` hivatkozások stabilak maradnak).
+- Az új forrás végigmegy a szokásos láncon: 01 (elnevezés + citations) → 02 (kinyerés) → 04
+  (integráció **csak az érintett szekcióba**).
+- A `_meta.week` változatlan; a forrás a meglévő heti mappába (`1_raw_inputs/`) kerül.
 
 ## 4. Kimenetek
 
@@ -188,3 +234,5 @@ Fixture-alapú teszt (verifikált mechanizmusokkal):
 | 2026-06-03 | 1.2 | Sablonhoz igazítva: `role`, triggerelő `description`, §5 Teszt, upstream/downstream linkek |
 | 2026-06-03 | 1.3 | Ideális forgatókönyv: naming convention, Deep Research + access-detektálás, weblap→PDF (Playwright, tesztelt), `_source_map.md` provenance, retroaktív kezelés; renderer `report`/`thesis`-re bővítve |
 | 2026-06-03 | 1.4 | Provenance `citations.json`-ba (`original_filename` mező); `_source_map.md` kivezetett |
+| 2026-06-07 | 1.5 | §3.8 **re-entry**: a 01 a pipeline közepén is futhat (08 §3.5 revíziós csatorna „új forrás" ága); inkrementális `citations.json`-bővítés a következő szabad kulcson, meglévő kulcsok stabilak. |
+| 2026-06-07 | 1.6 | §3.3 **több jelölt + 😎-egyeztetés** (ne az első/sovány forrást ragadd meg; tisztázd, mire van szükség; 😎 saját fájlt is betehet); §3.4 **weblap→PDF képekkel** — a *general* megoldás a **headless Chromium `--print-to-pdf`** (csak böngésző-bináris kell: Edge/Chrome/chrome-headless-shell — nincs Python-csomag, nincs site-API); a site-specifikus render-endpoint (Wikipedia REST) és a sovány szöveg-PDF **explicit nem-általánosként** kizárva; kötelező kép-verifikáció. Edge-gel bizonyítva. (`quality_review_test` tanulság.) |

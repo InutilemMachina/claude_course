@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖,😎
 status: active
-version: 1.3
-updated: 2026-06-06
-description: Script-alapú lint + Claude Explore review (6 szempont, köztük Biggs constructive alignment); publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez.
+version: 1.5
+updated: 2026-06-07
+description: Script-alapú lint + Claude Explore review (6 szempont, köztük Biggs constructive alignment); publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez. A 🚦-checkpointon a 😎 célzott revíziót kérhet a Review §6 csatornán (meglévő/új forrás routing).
 ---
 
 # 08_QUALITY_REVIEWER
@@ -34,7 +34,7 @@ publikálható-e, vagy vissza kell küldeni a content synthesizer lépéshez.
 ### 3.1. Automatizált quality check
 
 ```powershell
-python scripts/08_quality_check.py --week N --subject "Jelatvitel"
+python scripts/08_quality_check.py --week-dir test_outputs/<tárgy>/N_het
 ```
 
 Ellenőrzési szempontok:
@@ -70,7 +70,13 @@ Eredmény: **átlag pontszám** (1–5) a **6 szempontból**, szöveges indoklá
 Átlag (6 szempont) ≥ 3.0 → Publikálható → 09_question_bank + 10_presentation_maker + 11_bsc_export
                                             (+ 12_youtube_finder, 13_jupyter_catalogizer opcionális) indul
 Átlag (6 szempont) < 3.0 → Visszaküldés → 04_content_synthesizer kap revision note-ot
+PUBLIKÁLHATÓ, DE 😎 a checkpointon célzott revíziót kér → §3.5 csatorna → 04 (vagy 01) → 07 → 08 újra
 ```
+
+A harmadik ág a gyakori, életszerű eset: a metrikák és az átlag rendben (≥ 3.0), a jegyzet
+elvileg publikálható, **de** a szakértő 😎 a 🚦-checkpointon tartalmi hiányt jelez. Ez **nem**
+„visszaküldés < 3.0 miatt", hanem **célzott, 😎-vezérelt revízió** — a kezelése a §3.5 csatornán
+történik, nem a globális revision note-tal.
 
 ### 3.4. Review mentése
 
@@ -79,6 +85,34 @@ Eredmény: **átlag pontszám** (1–5) a **6 szempontból**, szöveges indoklá
 ```
 
 Tartalom: script kimenet + Claude értékelés + döntés + revision note (ha <3.0).
+
+### 3.5. Felhasználói revíziós csatorna (😎 checkpoint)
+
+A `08_quality_check.py` és a Claude-review a **belső** minőséget méri, de a 🚦-checkpointon a
+szakértő 😎 olyan tartalmi hiányt jelezhet, amit egyetlen automatikus metrika sem fog meg
+(pl. „hiányos egy fogalom kifejtése", „hiányzik egy géptípus"). Ennek **dedikált bemeneti helye**
+a `N_Review.md` `## 6. Felhasználói revíziós kérések (😎)` szekciója:
+
+```markdown
+## 6. Felhasználói revíziós kérések (😎 checkpoint)
+
+| # | 😎 kérés | Forrás-stratégia | 🤖 revision note → cél-lépés | Státusz |
+|---|----------|------------------|------------------------------|---------|
+| R1 | „<a 😎 szó szerinti kérése>" | meglévő | <konkrét, végrehajtható utasítás> → 04 | ⚙️ / ✅ |
+| R2 | „<…>" | új forrás | <…> → 01 → 02 → 04 | ⚙️ / ✅ |
+```
+
+- **A szekció 😎-tulajdonú és „ragadós":** a 08 újrafuttatásakor a 🤖 **nem törli** — csak a
+  `Státusz` oszlopot frissíti (⚙️ → ✅), és új sort csak 😎-kérésre vesz fel.
+- **Forrás-stratégia routing:**
+  - `meglévő` → a kérés a [`04_content_synthesizer`](04_content_synthesizer.md)-be megy közvetlenül
+    (a `2_clean_inputs/` már feldolgozott forrásaiból bővítünk).
+  - `új forrás` → előbb [`01_source_collector`](01_source_collector.md) (új forrás + `citations.json`),
+    majd [`02_mineru_to_catalog`](02_image_extraction.md) (kinyerés), végül `04`.
+- **A 🤖 minden 😎-kérést** önálló, ellenőrizhető revision note-tá fordít (mit, hol, melyik
+  forrásból, milyen vizuállal), és a revízió végrehajtása után a `Státuszt` ✅-re állítja.
+- A célzott revízió után a lánc **07 → 08** újrafut; a `## 1–5` szekciók frissülnek, a `## 6`
+  megmarad a nyomvonal kedvéért.
 
 ## 4. Kimenetek
 
@@ -111,12 +145,14 @@ Tartalom: script kimenet + Claude értékelés + döntés + revision note (ha <3
 ## 8. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
-- ⚡ HIBA: a `08_quality_check.py` a citációkat `<sup>[N]</sup>`-ként számolja, de a kanonikus formátum `[N]` (Instructions §8) — a „Kevés citáció" figyelmeztetés false negatív. Számláló bővítendő `\[\d+\]`-re. (project_status B-12)
+- ✅ B-12 JAVÍTVA (2026-06-07): a `08_quality_check.py` citáció-számlálója `\[\d+\]`-re bővítve — a kanonikus `[N]` (Instructions §8) ÉS a régi `<sup>[N]</sup>` jelölést is lefedi. (atg/1_het: a korábbi „0 citáció" false negatív helyett valós 102.)
 
 ## 9. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-07 | 1.5 | §3.3 harmadik döntési ág (PUBLIKÁLHATÓ + 😎 célzott revízió); új §3.5 **felhasználói revíziós csatorna** — a `N_Review.md` `## 6` szekciója a 😎-kérések dedikált, ragadós bemeneti helye, meglévő/új forrás routinggal (04, ill. 01→02→04). A `quality_review_test` branch teszteli. |
+| 2026-06-07 | 1.4 | §3.1 CLI-parancs javítva a tényleges scriptre (`--week-dir <path>`, korábban hibás `--week N --subject`); B-12 lezárva (citáció-számláló `\[\d+\]`-re bővítve). |
 | 2026-06-06 | 1.3 | **Constructive alignment**: §3.2 új 6. értékelési szempont (Biggs — cél ⇄ tevékenység ⇄ értékelés) mérhető al-kérdésekkel; §3.3 átlag 6 szempontra (küszöb ≥ 3.0 marad). |
 | 2026-06-01 | 1.0 | Létrehozva (mint 07_quality_reviewer) |
 | 2026-06-03 | 1.1 | Átszámozva 07→08; downstream 09–13, script 08_quality_check.py |

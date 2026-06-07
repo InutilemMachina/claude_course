@@ -38,7 +38,7 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`05_figure_integrator`](skills/05_figure_integrator.md) — `05_figure_mapper.py` | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (ábrák) |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`06_summarize_box_injector`](skills/06_summarize_box_injector.md) — összegző dobozok | 🤖 | `4_wip_outputs/N_Jegyzet.md` (összegzők) |
-| `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`07_typesetter`](skills/07_typesetter.md) — `07-1_typesetter.py` + `07-2_heading_numberer.py` | 🐍 | `4_wip_outputs/N_Jegyzet.md` (lint) |
+| `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`07_typesetter`](skills/07_typesetter.md) — `07-1_typesetter.py` + `07-2_heading_numberer.py` + `07-3_figure_numberer.py` | 🐍 | `4_wip_outputs/N_Jegyzet.md` (lint + fejezet/ábra-számozás) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍+🤖 | [`08_quality_reviewer`](skills/08_quality_reviewer.md) — `08_quality_check.py` | 🐍+🤖 🚦😎 | `4_wip_outputs/N_Review.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`09_question_bank`](skills/09_question_bank.md) — mindmap-alapú MCQ | 🤖 | `4_wip_outputs/N_Kerdesbank.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`10_presentation_maker`](skills/10_presentation_maker.md) — Mermaid→PNG (`10-1_mermaid_render.py`) + MARP → PPTX (`10_pptx_gyarto.py`) | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` + `5_clean_outputs/N_Prezentacio.pptx` |
@@ -109,6 +109,10 @@ flowchart TD
 |:-----------|:---------|:----------------|
 | 03 után 🚦 | Mindmap revideálva, [MSc] jelölés kész, struktúra jóváhagyva | 04 content_synthesizer |
 | 08 után 🚦 | Publikálhatóság ≥ 3/5, N_Review.md jóváhagyva | 09 + 10 + 11 (opc. 12, 13) párhuzamosan |
+
+A 08-checkpointon a 😎 a PUBLIKÁLHATÓ döntés ellenére is kérhet **célzott revíziót** (a Review
+`## 6` csatornáján, [08 §3.5](skills/08_quality_reviewer.md)). Forrás-stratégia szerinti routing:
+**meglévő forrás** → vissza 04-hez; **új forrás** → vissza 01 → 02 → 04. A revízió után 07 → 08 újrafut.
 
 ## 4. Vizuális gazdagítás
 

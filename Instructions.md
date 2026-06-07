@@ -142,6 +142,25 @@ Diagram-típus döntési fa:
 
 A két blokk kanonikus formátuma: [.claude/skills/06_summarize_box_injector.md](.claude/skills/06_summarize_box_injector.md) §3.1–3.2.
 
+### 7.1. Ábra- és táblázatfelirat-konvenció
+
+Minden ábra és táblázat **számozott, önálló koherens feliratot** kap. „Önálló koherens" =
+a kép/tábla a feliratával együtt a szövegből kiemelve is megérthető (a felirat nem csak címke,
+hanem rövid, magyarázó mondat).
+
+| Elem | Felirat helye | Séma |
+|------|---------------|------|
+| Ábra (kép) | a kép **alatt** | `i. ábra. Feliratszöveg. [forrás / saját szerk.]` |
+| Saját ábra: Mermaid-diagram, flowchart | a diagram **alatt** | `i. ábra. Feliratszöveg. [saját szerk.]` |
+| Táblázat | a tábla **fölött** | `i. táblázat. Feliratszöveg. [forrás / saját szerk.]` |
+
+- **Számozás:** dokumentumon belül folytonos, az ábrák és a táblázatok **külön** sorozata
+  (`1. ábra`, `2. ábra`, … és `1. táblázat`, `2. táblázat`, …), előfordulási sorrendben.
+- **A beszúrt Mermaid-diagramokat / flowchartokat is számozni kell** — ezek „saját szerkesztésű"
+  ábrák, így saját feliratot kapnak (`[saját szerk.]`).
+- **Forrás:** IEEE-hivatkozással (`[N]`, opc. oldalszám) idegen forrásnál; saját készítésű
+  vizuálnál `[saját szerk.]`.
+
 ## 8. Hivatkozási szabály
 
 - IEEE forrásjegyzék (`## Hivatkozásjegyzék`) kötelező MINDEN wip és clean outputban.

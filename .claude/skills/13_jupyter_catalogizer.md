@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 😎+🤖
 status: planned
-version: 1.0
-updated: 2026-06-03
-description: A publikálható jegyzet/prezentáció kijelölt ábráihoz/koncepcióihoz Jupyter notebookokat rendel és csatolmányként regisztrálja; használd a 08_quality_reviewer PUBLIKÁLHATÓ döntése után, opcionális gazdagító lépésként.
+version: 1.1
+updated: 2026-06-06
+description: A publikálható jegyzet/prezentáció kijelölt ábráihoz/koncepcióihoz kész, animált Jupyter notebookokat rendel Predict–Observe–Explain (POE) struktúrával (nem programozást tanít), és csatolmányként regisztrálja; használd a 08_quality_reviewer PUBLIKÁLHATÓ döntése után, opcionális gazdagító lépésként. Didaktikai metaprompt előtöltve; regiszter-mechanika backlog.
 ---
 
 # 13_JUPYTER_CATALOGIZER
@@ -17,9 +17,16 @@ description: A publikálható jegyzet/prezentáció kijelölt ábráihoz/koncepc
 
 ## 1. Cél
 
-Egy mondat: Még nem tudom pontosan, de valami olyasmire gondoltam, hogy bizonyos ábrákat koncepciókat kijelölök a tananyagban, amihez majd külön jupyter notebook-okat generálunk. Ennek a skillnek a célja az lenne, hogy regisztrálja azt retrospektív a tananyagban (jegyzet/előadás), mint egy csatolmányt 💻 és egy külön fájlban táblázatként. Mivel a jupyter notebook-ok hosszú távon bővülnek, ezért még ki kell találni, hogy hogyan nevezzük a fájlt és hova kössük.
+A 😎 által kijelölt ábrákhoz/koncepciókhoz **kész, animált** Jupyter notebookot rendel, köré
+**Predict–Observe–Explain (POE)** tanulási struktúrát épít, és a jegyzetben/előadásban
+csatolmányként (**📎🧪**) jelöli. A projekt **nem programozást tanít** — a notebook kész animáció,
+amelyet a hallgató paraméterez; ezért a klasszikus „Socratic Coding / skeleton code" helyett a
+POE-minta illik. A notebookok hosszú távon bővülnek, ezért **külön regiszterben** tartjuk
+nyilván — a regiszter-mechanika (fájlnév, csatolás) még **nyitott** (backlog).
 
-**Input:** <fő bemenet egy sorban> · **Output:** <fő kimenet egy sorban>
+**Ez a verzió a didaktikai metapromptot tölti elő; a `status: planned` marad.**
+
+**Input:** publikálható `N_Jegyzet.md` (+ `N_Prezentacio.md`) · **Output:** horgonyzott POE-feladat + (később) regiszter-bejegyzés
 
 ## 2. Bemenetek
 
@@ -32,22 +39,40 @@ Egy mondat: Még nem tudom pontosan, de valami olyasmire gondoltam, hogy bizonyo
 
 ## 3. Eljárás
 
-Töltsd ki a `role`-nak megfelelő ágat; a másikat töröld.
+### 3.1. Didaktikai metaprompt (🤖 — előtöltve)
 
-### 3.1. Ha 🐍 script-lépés
+**Olvasandó bemenet:** a publikálható `N_Jegyzet.md` és a 😎 által kijelölt ábra/koncepció.
 
-```powershell
-python scripts/NN_xxx.py --subject "<tantárgy>" --week N
+**POE-minta (Predict–Observe–Explain)** — a kész, animált notebookhoz 3-cellás szerkezet:
+
+1. **Predict (markdown jóslat-cella):** mérnöki kérdés, amelyre a hallgató az animáció előtt
+   *megjósolja* a választ (pl. „Mit gondol, mi történik a szállítási nyomással, ha a szivattyú
+   fordulatszámát növeljük?"). Ez a *generation effect*-et mozgósítja.
+2. **Observe (futtatható animációs cella):** a kész animáció, amelynek paramétereit a hallgató
+   állíthatja. **Magyarázat-visszatartás:** a paramétert ő mozgatja, de a *miértet* nem kapja
+   készen.
+3. **Explain (markdown reflexió-cella):** a hallgató saját szavaival megmagyarázza a jóslata és
+   a megfigyelt viselkedés eltérését.
+
+**Rugalmas horgonyzás:** a 😎 kijelölés dönti el, hogy a notebook **szakasz-** (a releváns `##`
+`💡 Összegzés` után) vagy **fejezet-szinten** (a `🗺️` után) kerül be.
+
+**Kimenet formátuma (csatolmány-jelölés a jegyzetben):**
+
+```markdown
+> 📎🧪 **Interaktív notebook — {koncepció}** [link]
+> **Jóslat:** {mérnöki kérdés az animáció előtt}
+> **Állítható:** {a hallgató által változtatható paraméter(ek)}
+> **Magyarázd meg:** {mit kell a megfigyelés után reflektálnia}
 ```
 
-A parancsnak **léteznie kell és lefutnia** (ne fantom-script). Írd le, mit csinál és mely flag-ekkel.
+**Checkpoint (😎):** a notebook kiválasztása/elkészítése és a horgony helye 😎 jóváhagyással.
 
-### 3.2. Ha 🤖 Claude-lépés
+### 3.2. Regiszter-mechanika — NYITOTT (backlog)
 
-- **Olvasandó bemenet:** mely fájl(oka)t olvassa be Claude.
-- **Feladat:** mit tegyen, lépésről lépésre (döntési pontok, pl. MSc-jelölés).
-- **Kimenet formátuma:** a pontos struktúra/sablon, amit elő kell állítania.
-- **Checkpoint (😎):** ha emberi jóváhagyás kell a továbblépéshez.
+A notebookok **külön regiszterben** (táblázatos fájl) való nyilvántartása, a fájlnév-konvenció
+és a csatolmány stabil hivatkozása még tervezés alatt → [project_status.md](../project_status.md).
+Ez a skill addig csak a fenti didaktikai metapromptot szolgáltatja.
 
 ## 4. Kimenetek
 
@@ -86,11 +111,11 @@ Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12]
 
 ## 9. Visszajelzések 😎+🤖
 
-<!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések.
-     Lezárt tétel → Változásjegyzékbe, törlés innen. -->
+- 💬 A didaktikai metaprompt (§3.1, POE) előtöltve. A **regiszter-mechanika nyitott** (§3.2, backlog).
 
 ## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-06 | 1.1 | §1 + §3.1 didaktikai metaprompt előtöltve (POE 3-cella: Predict–Observe–Explain, magyarázat-visszatartás, rugalmas horgony) — a Socratic Coding helyett, mert a projekt nem tanít programozást; §3.2 regiszter-mechanika backlogba. `status: planned` marad. |
 | YYYY-MM-DD | 1.0 | Létrehozva |

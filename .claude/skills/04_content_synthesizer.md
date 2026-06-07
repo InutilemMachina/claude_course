@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.2
-updated: 2026-06-05
-description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
+version: 1.5
+updated: 2026-06-06
+description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, az MSc-levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
 ---
 
 # 04_CONTENT_SYNTHESIZER
@@ -51,9 +51,28 @@ L3   → #### (opcionális, csak ha nagyon indokolt)
 ```markdown
 ## N. Fejezet neve
 
+> 🔭 **A Nagykép — N. Fejezet neve**
+>
+> [3-4 mondatos „nagykép" (Epitome) EGYETLEN `>` sorban (ne tördeld kézzel): a fejezet magját egy hétköznapi, kézzelfogható analógiával bemutató bekezdés. **Zsargon nélkül** — ez a fejezet-szintű Zoom-out. A blockquote-formátum részletei: [06_summarize_box_injector](06_summarize_box_injector.md) §3.3.]
+
+> 🎯 **Cél:** [egyetlen, **Bloom-igével** megfogalmazott tanulási cél a szakaszra (pl. „Különböztesd meg…", „Vezesd le…", „Hasonlítsd össze…"). Ez adja a constructive alignment (08) cél-oldalát, és a prezi szakasz-nyitó diája is ezt használja újra.]
+
+[Csak ha a fejezet új alapfogalmat igényel — Előfeltételek blokk:]
+
+> 🧱 **Előfeltételek**
+>
+> - **Fogalom1** — nulla-előtudás szintű definíció.
+>
+> - **Fogalom2** — … (annyi fogalom, amennyi a fejezet megértéséhez nélkülözhetetlen; nem fixen 3, nem kötelező)
+
 [Bevezető mondat: mi ez, miért fontos — 1-2 mondat.]
 
 ### N.1 Alfejezet neve
+
+**Szakasz-nyitó csoport:** a `🔭 A Nagykép`, `🎯 Cél` és (ha van) `🧱 Előfeltételek` blokkok
+**közvetlenül egymást követik** (külön blockquote-ok, `>` üres sorral elválasztva, közéjük próza
+nélkül) — ahogy a szakasz végén az `❔ Ellenőrizd magad` és `💡 Összegzés` is egymást követi.
+A bevezető próza a csoport **után** kezdődik.
 
 [Szöveges kifejtés, forrás-hivatkozásokkal. [1], [2] stb.]
 
@@ -87,6 +106,14 @@ A `💡 Összegzés` (minden `##` alfejezet végén) és a `🗺️ Fejezet öss
   - Időbeli lefolyás → `sequenceDiagram`
 - Ha `figure_catalog.json` tartalmaz releváns ábrát: `<!-- FIGURE: {fig_id} -- {leírás} -->` placeholder beillesztése
 - Ha nincs ábra: a placeholder elegendő — a 05_figure_integrator fogja kezelni
+
+**Felirat-konvenció (kanonikus: [Instructions §7.1](../../Instructions.md)):**
+
+- **Ábra (kép):** felirat a kép **alatt** — `*i. ábra. Önálló koherens feliratmondat. [forrás / saját szerk.]*`
+- **Mermaid-diagram / flowchart:** ez is számozott ábra (**saját szerk.**) — a diagram **alatt**: `*i. ábra. Mit mutat a diagram, egész mondatban. [saját szerk.]*`
+- **Táblázat:** felirat a tábla **fölött** — `*i. táblázat. Önálló koherens feliratmondat. [forrás / saját szerk.]*`
+- Számozás dokumentumon belül folytonos, ábra/táblázat **külön** sorozat, előfordulási sorrendben.
+- A felirat **önállóan koherens**: a vizuál + felirat a szövegből kiemelve is megálljon.
 
 ### 3.4. Formulák és táblák — MinerU-ból, ne kézzel
 
@@ -160,6 +187,13 @@ Ha a mindmapben `[MSc]` jelölésű csomópont van:
 - A szövegben: `<!-- MSc -->` kommentblokk nyitja, `<!-- /MSc -->` zárja
 - A 11_bsc_export skill ezeket kiszűri a BSc-verzióból
 
+**Worked example az MSc-levezetéseknél (worked-example effect):** ahol egy MSc-blokk
+képletet *vezet le* (pl. Greitzer-egyenletek, Moore–Greitzer, B-paraméter), ne csak a
+végeredményt közöld — add meg a **lépésről lépésre kidolgozott levezetést** (kiindulás →
+köztes lépések → eredmény), a jelölések magyarázatával. Alacsony előtudásnál a kidolgozott
+példa többet ér, mint az önálló feladatmegoldás. A LaTeX-et továbbra is a MinerU `.md`-ből
+vedd (§3.4), a *levezetés szövege* a Te hozzáadott didaktikai értéked.
+
 ### 3.9. Mentés és checkpoint
 
 ```
@@ -178,6 +212,11 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 ## 5. Ellenőrzés
 
 - [ ] Minden L1 mindmap-ág `##` fejezetként szerepel?
+- [ ] `🔭 A Nagykép` blokk minden `##` fejezet nyitásánál (analógia, zsargon nélkül)?
+- [ ] `🎯 Cél` blokk (Bloom-igés) minden `##` fejezet nyitásánál, a `🔭` után?
+- [ ] Ábra-/táblázat-/Mermaid-feliratok a §3.3 séma szerint (számozott, önálló koherens)?
+- [ ] `🧱 Előfeltételek` blokk ott, ahol a fejezet új alapfogalmat igényel?
+- [ ] MSc-levezetések worked example (lépésről lépésre) formában?
 - [ ] Minden `##` fejezetnél van Mermaid diagram?
 - [ ] `💡 Összegzés` blokk minden `##` alfejezet végén?
 - [ ] `🗺️ Fejezet összegfoglalása` blokk minden `#` fejezet zárásánál? (→ 06_summarize_box_injector)
@@ -211,6 +250,9 @@ Nincs kötelező emberi checkpoint a 04 után, de a szerzőnek ajánlott átnéz
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-06 | 1.5 | Új `🎯 Cél` blokk (Bloom-igés tanulási cél) minden `##` fejezet nyitásába, a `🔭` után — a Biggs constructive alignment (08) cél-oldala, a prezi szakasz-nyitó diája újrahasznosítja; §5 checklist. |
+| 2026-06-06 | 1.4 | Címke: `🔭 Epitome` → `🔭 A Nagykép`; §3.3 ábra-/táblázat-/Mermaid-felirat konvenció (számozott, önálló koherens, [Instructions §7.1](../../Instructions.md)); §5 felirat-checklist. |
+| 2026-06-06 | 1.3 | **Didaktikai metaprompt**: §3.2 `🔭 Epitome` (analógiás nagykép, zsargon nélkül) + opcionális `🧱 Előfeltételek` minden `##` fejezet nyitásába (Reigeluth elaboráció, fejezet-szintű explicit Zoom-out); §3.8 worked-example szabály az MSc-levezetésekhez; §5 három új checklist-sor. |
 | 2026-06-01 | 1.0 | Létrehozva (NLM 04+05 kiváltása, Claude-natív) |
 | 2026-06-05 | 1.2 | MinerU-first: §2 MinerU `.md` elsődleges szövegforrás; §3.4 új szekció (formulák+táblák MinerU-ból, ne kézzel); §3.5–3.9 átszámozva; §6 két új hibasor. |
 | 2026-06-03 | 1.1 | Sablon-sor: `📦 Összegző` → `💡 Összegzés` (`##` alfejezet végén); `🗺️ Fejezet összegfoglalása` placeholder a `#` fejezet zárásánál — kanonikus formátum a 06 skillben |

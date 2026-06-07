@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖,😎
 status: planned
-version: 1.0
-updated: 2026-06-03
-description: A publikálható jegyzet/prezentáció kijelölt koncepcióihoz Youtube videókat/shortsokat rendel és csatolmányként regisztrálja; használd a 08_quality_reviewer PUBLIKÁLHATÓ döntése után, opcionális gazdagító lépésként.
+version: 1.1
+updated: 2026-06-06
+description: A publikálható jegyzet/prezentáció kijelölt koncepcióihoz Youtube videókat/shortsokat rendel kontextuális horgonnyal + „Nézd és elemezd" feladattal (Mayer CTML + retrieval), és csatolmányként regisztrálja; használd a 08_quality_reviewer PUBLIKÁLHATÓ döntése után, opcionális gazdagító lépésként. Didaktikai metaprompt előtöltve; regiszter-mechanika backlog.
 ---
 
 # 12_YOUTUBE_FINDER
@@ -17,9 +17,14 @@ description: A publikálható jegyzet/prezentáció kijelölt koncepcióihoz You
 
 ## 1. Cél
 
-Egy mondat: Még nem tudom pontosan, de valami olyasmire gondoltam, hogy bizonyos koncepciókat kijelölök a tananyagban, amihez majd külön Youtube shorts-okat vagy Youtube videókat keresünk, továbbá regisztrálja azt retrospektív a tananyagban (jegyzet/előadás), mint egy csatolmányt 📽 és egy külön fájlban táblázatként. Mivel a videók listája később változhat (bővül, szűkül), így ki kell találni, hogy hogyan regisztráljuk azokat.
+A 😎 által kijelölt koncepciókhoz kontextuálisan **horgonyzott** YouTube-videót/shortot rendel,
+köré tanulási feladatot épít (Mayer CTML + retrieval practice), és a jegyzetben/előadásban
+csatolmányként (**📎▶**) jelöli. A videók listája később bővül/szűkül, ezért **külön regiszterben**
+tartjuk nyilván — a regiszter-mechanika (fájlnév, csatolmány-szintaxis) még **nyitott** (backlog).
 
-**Input:** <fő bemenet egy sorban> · **Output:** <fő kimenet egy sorban>
+**Ez a verzió a didaktikai metapromptot tölti elő; a `status: planned` marad.**
+
+**Input:** publikálható `N_Jegyzet.md` (+ `N_Prezentacio.md`) · **Output:** horgonyzott videó-feladat + (később) regiszter-bejegyzés
 
 ## 2. Bemenetek
 
@@ -32,22 +37,40 @@ Egy mondat: Még nem tudom pontosan, de valami olyasmire gondoltam, hogy bizonyo
 
 ## 3. Eljárás
 
-Töltsd ki a `role`-nak megfelelő ágat; a másikat töröld.
+### 3.1. Didaktikai metaprompt (🤖 — előtöltve)
 
-### 3.1. Ha 🐍 script-lépés
+**Olvasandó bemenet:** a publikálható `N_Jegyzet.md` és a 😎 által kijelölt koncepció(k).
 
-```powershell
-python scripts/NN_xxx.py --subject "<tantárgy>" --week N
+**Feladat lépésről lépésre:**
+
+1. **Rugalmas horgonyzás:** a 😎 kijelölés dönti el, hogy a videó **szakasz-** (a releváns `##`
+   `💡 Összegzés` után) vagy **fejezet-szinten** (a `🗺️` után) kerül-e be. Definiáld pontosan,
+   melyik bekezdés/blokk után jelenjen meg — ne csak „valahova" javasolj.
+2. **Videó-keresési specifikáció:** adj meg egy pontos **search query**-t és egy **3-pontos
+   kritériumrendszert** a beillesztendő videóra (pl. „max 5 perc; animáció, amely a tömegáram
+   fluktuációját mutatja; kerüli a komplex képleteket").
+3. **„Nézd és elemezd" feladat (retrieval + CTML):** a videó alá 2 irányított kérdés, amelyek
+   válasza **kizárólag a videó vizuális eleméből** olvasható ki (ne legyen a jegyzetből
+   visszamondható). Adj **time-stamp**-et a megfigyelési pontra (pl. „2:30-nál figyeld a
+   tömegáram előjelét") — ez a *segmenting* elv videóra vetítve.
+
+**Kimenet formátuma (csatolmány-jelölés a jegyzetben):**
+
+```markdown
+> 📎▶ **Videó — {koncepció}** [link]
+> Keresés: `{search query}` · Kritérium: {1}; {2}; {3}
+> **Nézd és elemezd** ({mm:ss}-nél):
+> 1. {kérdés — csak a videóból válaszolható}
+> 2. {kérdés}
 ```
 
-A parancsnak **léteznie kell és lefutnia** (ne fantom-script). Írd le, mit csinál és mely flag-ekkel.
+**Checkpoint (😎):** a konkrét videó kiválasztása és a horgony helye 😎 jóváhagyással.
 
-### 3.2. Ha 🤖 Claude-lépés
+### 3.2. Regiszter-mechanika — NYITOTT (backlog)
 
-- **Olvasandó bemenet:** mely fájl(oka)t olvassa be Claude.
-- **Feladat:** mit tegyen, lépésről lépésre (döntési pontok, pl. MSc-jelölés).
-- **Kimenet formátuma:** a pontos struktúra/sablon, amit elő kell állítania.
-- **Checkpoint (😎):** ha emberi jóváhagyás kell a továbblépéshez.
+A videók **külön regiszterben** (táblázatos fájl) való nyilvántartása, a csatolmány stabil
+hivatkozása és a bővülés/szűkülés kezelése még tervezés alatt → [project_status.md](../project_status.md).
+Ez a skill addig csak a fenti didaktikai metapromptot szolgáltatja.
 
 ## 4. Kimenetek
 
@@ -86,11 +109,11 @@ Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12]
 
 ## 9. Visszajelzések 😎+🤖
 
-<!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések.
-     Lezárt tétel → Változásjegyzékbe, törlés innen. -->
+- 💬 A didaktikai metaprompt (§3.1) előtöltve. A **regiszter-mechanika nyitott** (§3.2, backlog).
 
 ## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-06 | 1.1 | §1 + §3.1 didaktikai metaprompt előtöltve (rugalmas horgony, keresési spec, „Nézd és elemezd" CTML + time-stamp); §3.2 regiszter-mechanika backlogba. `status: planned` marad. |
 | YYYY-MM-DD | 1.0 | Létrehozva |

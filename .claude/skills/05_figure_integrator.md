@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖+🐍
 status: active
-version: 1.1
-updated: 2026-06-03
-description: figure_catalog alapján ábrák beillesztése a jegyzet megfelelő fejezet-szakaszaiba.
+version: 1.2
+updated: 2026-06-06
+description: figure_catalog alapján ábrák beillesztése a jegyzet megfelelő fejezet-szakaszaiba; számozott, önálló koherens felirat a kép alatt (Instructions §7.1).
 ---
 
 # 05_FIGURE_INTEGRATOR
@@ -43,10 +43,15 @@ python scripts/05_figure_mapper.py --week N --subject "Jelatvitel"
 
 ### 3.2. Ábrabeillesztés formátuma
 
+A felirat a kép **alatt**, számozott, önálló koherens mondat (kanonikus: [Instructions §7.1](../../Instructions.md)):
+
 ```markdown
-![{caption}]({filename})
-*{id} — {caption}* (Forrás: {source}, {page}. o.)
+![{rövid alt}]({filename})
+*{i}. ábra. Önálló koherens feliratmondat. [Forrás: {[N]}, {page}. o. / saját szerk.]*
 ```
+
+- `{i}` = az ábrák dokumentumon belüli folytonos sorszáma (a Mermaid-diagramok is e sorozat részei).
+- A felirat egész mondat legyen, ne csak címke — a kép + felirat a szövegből kiemelve is megálljon.
 
 ### 3.3. Manuális finomhangolás
 
@@ -90,4 +95,5 @@ Claude ellenőrzi a beillesztett ábrákat:
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (mint 05_visual_enricher) |
+| 2026-06-06 | 1.2 | §3.2 felirat-formátum a kanonikus sémára: `i. ábra. Önálló koherens mondat. [forrás / saját szerk.]` a kép alatt (Instructions §7.1); folytonos ábraszámozás (Mermaid is). |
 | 2026-06-03 | 1.1 | Szétválasztva: összegző dobozok → 06_summarize_box_injector; átnevezés figure_integrator-ra; TODO lezárva |

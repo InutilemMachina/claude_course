@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 2.0
-updated: 2026-06-03
-description: Minden `##` alfejezet végére `💡 Összegzés`, minden `#` fejezet zárásánál `🗺️ Fejezet összegfoglalása` blokk in-place beszúrása.
+version: 2.2
+updated: 2026-06-06
+description: Minden `##` alfejezet végére `💡 Összegzés`, minden `#` fejezet zárásánál `🗺️ Fejezet összegfoglalása`, minden `##` fejezet zárásánál `❔ Ellenőrizd magad` retrieval-kérdés (válaszok a `🔑 Megoldókulcs` szekcióban) in-place beszúrása.
 ---
 
 # 06_SUMMARIZE_BOX_INJECTOR
@@ -18,6 +18,7 @@ Az ábrákkal gazdagított jegyzetbe kétszintű összegzést illeszt:
 
 - **Mikroszint** — minden `##` szintű alfejezet végére `💡 Összegzés` blokk.
 - **Makroszint** — minden `#` szintű fejezet zárásánál (a `## Hivatkozásjegyzék` előtt) `🗺️ Fejezet összegfoglalása` blokk.
+- **Retrieval** — minden `##` fejezet zárásánál `❔ Ellenőrizd magad` kérdés-blokk a `💡` elé; a válaszok elkülönítve a `## 🔑 Megoldókulcs` szekcióban (dokumentum vége).
 
 Az ábrabeillesztés külön, megelőző lépés: [05_figure_integrator](05_figure_integrator.md).
 
@@ -62,18 +63,58 @@ A `#` szintű fejezet utolsó `##` alfejezete (és annak `💡 Összegzés` blok
 > **Kapcsolódás:** [hová vezet tovább — következő fejezet/hét, vagy a tárgy egészében hol helyezkedik el]
 ```
 
-### 3.3. Tartalmi szabályok
+### 3.3. `❔ Ellenőrizd magad` + `🔑 Megoldókulcs` — retrieval practice
+
+**Kérdés-blokk** minden `##` fejezet zárásánál, közvetlenül a fejezet `💡 Összegzés` blokkja
+**elé** (a tanuló előbb előhív, csak utána látja a konszolidált összegzést):
+
+```markdown
+> ❔ **Ellenőrizd magad — N. Fejezet neve**
+>
+> 1. [Előhívásra kényszerítő kérdés — emlékezetből, nem visszaolvasással.]
+>
+> 2. [Akár több kérdés a fejezet kulcsfogalmaira / képleteire.]
+```
+
+⚠️ **Formátum-szabály (07 typesetter Rule D kompatibilitás):** a blockquote-on belül **minden
+tartalmi sort `>` üres sor válasszon el** — a számozott kérdéseket és a `🧱 Előfeltételek`
+bulletjeit is. Ha két `>` tartalmi sor `>` üres sor nélkül követi egymást, a 07-1_typesetter
+valódi (nem `>`-prefixű) üres sort szúr közéjük, ami a blokkot külön blockquote-okra darabolja.
+A folyó prózát (pl. `🔭 A Nagykép`) egyetlen `>` sorba írd, ne tördeld kézzel.
+
+A **válasz itt nem jelenik meg.** A válaszok elkülönítve, a dokumentum végén (a
+`## Hivatkozásjegyzék` **elé**) gyűlnek össze egyetlen szekcióban, fejezetenként, a
+kérdés-számozáshoz igazítva:
+
+```markdown
+## 🔑 Megoldókulcs
+
+**1. Fejezet neve**
+1. [Válasz az 1. kérdésre — tömör, de teljes.]
+2. [Válasz a 2. kérdésre.]
+
+**2. Fejezet neve**
+1. …
+```
+
+Így a kérdés és a válasz térben elkülönül → a retrieval practice megmarad (nincs spoiler az
+olvasás közben). A kérdés→válasz párosítás a fejezetnév + sorszám alapján egyértelmű.
+
+### 3.4. Tartalmi szabályok
 
 - **`💡 Összegzés`** csak az adott `##` alfejezet tartalmát tükrözze — ne vezessen be új fogalmat.
 - **`🗺️ Fejezet összegfoglalása`** a `#` alá tartozó `##` alfejezeteket integrálja egyetlen narratívába; mutasson rá a fejezet belső ívére, ne csak ismételje a `💡` blokkokat.
 - **Kulcsgondolat / Fő üzenet:** mondatok, nem felsorolás.
 - **Kulcsfogalmak:** alfejezetben 3–6, fejezetszinten az ívet visszaadó bullet-lista.
 - **Képletek:** csak ténylegesen szereplő `(Eq.X.Y)` jelölésű képletek, rövid megnevezéssel.
-- A `## Hivatkozásjegyzék` és a `## Tartalomjegyzék` blokkokba **nem** kerül `💡 Összegzés`.
+- A `## Hivatkozásjegyzék`, `## Tartalomjegyzék` és `## 🔑 Megoldókulcs` blokkokba **nem** kerül `💡 Összegzés`, `🗺️` vagy `❔` blokk.
+- **`❔ Ellenőrizd magad`:** előhívásra kényszerítő kérdés (emlékezetből), nem visszaolvasásra; a válasz kizárólag a `🔑 Megoldókulcs`-ban. A kérdések a fejezet kulcsfogalmait / képleteit célozzák.
 
-### 3.4. Idempotencia
+### 3.5. Idempotencia
 
-A lépés ismételhető: ha már létezik `💡 Összegzés` vagy `🗺️ Fejezet összegfoglalása` blokk az adott heading alatt, azt felülírja (nem duplikálja).
+A lépés ismételhető: ha már létezik `💡 Összegzés`, `🗺️ Fejezet összegfoglalása` vagy
+`❔ Ellenőrizd magad` blokk az adott heading alatt — vagy `## 🔑 Megoldókulcs` szekció a
+dokumentumban —, azt felülírja (nem duplikálja).
 
 ## 4. Kimenetek
 
@@ -85,9 +126,12 @@ A lépés ismételhető: ha már létezik `💡 Összegzés` vagy `🗺️ Fejez
 
 - [ ] `💡 Összegzés` blokk minden `##` alfejezet végén (a `## Hivatkozásjegyzék` és `## Tartalomjegyzék` kivételével)
 - [ ] `🗺️ Fejezet összegfoglalása` blokk minden `#` fejezet zárásánál
+- [ ] `❔ Ellenőrizd magad` kérdés-blokk minden `##` fejezet zárásánál, a `💡` elé
+- [ ] `## 🔑 Megoldókulcs` szekció a dokumentum végén, a `## Hivatkozásjegyzék` elé, fejezetenként
+- [ ] A `🔑`-ban minden `❔` kérdéshez van válasz (fejezetnév + sorszám egyezik); a kérdés-blokk válasz nélküli
 - [ ] A blokkok csak az adott szakaszban szereplő fogalmakra / képletekre hivatkoznak
-- [ ] A `> 💡` és `> 🗺️` blockquote formátum egységes
-- [ ] Nincs duplikáció (idempotencia, §3.4)
+- [ ] A `> 💡`, `> 🗺️`, `> ❔` blockquote formátum egységes
+- [ ] Nincs duplikáció (idempotencia, §3.5)
 
 ## 6. Hibakezelés
 
@@ -96,7 +140,10 @@ A lépés ismételhető: ha már létezik `💡 Összegzés` vagy `🗺️ Fejez
 | `💡 Összegzés` hiányzik egy `##` alfejezetnél | `##` heading elmaradt a szintézisben | 04 kimenetet javítani, majd újrafuttatni |
 | `🗺️` blokk a `## Hivatkozásjegyzék` után került | Heading-felismerés nem szűrte ki | A Hivatkozásjegyzék elé mozgatni; szűrőfeltétel pontosítása |
 | Blokk új, szakaszon kívüli fogalmat tartalmaz | Claude túláltalánosított | Tartalom szűkítése a szakasz fogalmaira |
-| Blokk duplikáltan jelenik meg | Idempotencia-szabály (§3.4) megsérült | `N_Jegyzet.md` visszaállítás git-ből + újrafuttatás |
+| Blokk duplikáltan jelenik meg | Idempotencia-szabály (§3.5) megsérült | `N_Jegyzet.md` visszaállítás git-ből + újrafuttatás |
+| `❔` kérdés a választ is tartalmazza | Spoiler — a válasz a kérdés-blokkban maradt | Válasz áthelyezése a `🔑 Megoldókulcs`-ba; a `❔` csak kérdés |
+| `🔑 Megoldókulcs` hiányzik / nem párosítható | Szekció kimaradt vagy a számozás csúszott | Szekció pótlása a `## Hivatkozásjegyzék` elé; fejezetnév + sorszám szinkron a `❔` blokkokkal |
+| `❔` / `🧱` blokk a 07 typesetter után külön blockquote-okra esett | A listaelemek `>` üres sor nélkül követték egymást (Rule D valódi üres sort szúrt be) | Minden `>` tartalmi sort `>` üres sorral elválasztani (§3.3 formátum-szabály); a `🔑` szekció normál markdown, ezt nem érinti |
 | Régi `📦 Összegző` blokkok maradtak vissza | Korábbi (v1.x) kimenet | Manuális csere `💡 Összegzés` / `🗺️ Fejezet összegfoglalása`-ra a §3.1–3.2 sablon szerint |
 
 ## 7. Hivatkozások
@@ -114,5 +161,7 @@ A lépés ismételhető: ha már létezik `💡 Összegzés` vagy `🗺️ Fejez
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-06 | 2.2 | Címke-emoji: `❓` → `❔ Ellenőrizd magad` (Instructions §4.1 KÉRDÉS-jelölés). |
+| 2026-06-06 | 2.1 | **Retrieval practice**: új `❔ Ellenőrizd magad` kérdés-blokk minden `##` fejezet zárásánál a `💡` elé, és elkülönített `## 🔑 Megoldókulcs` szekció a dokumentum végén (spoiler-mentes előhívás, Learning Scientists). §3.3 új; §3.4/3.5 átszámozva; idempotencia, ellenőrzés, hibakezelés kiterjesztve. |
 | 2026-06-03 | 1.0 | Létrehozva (05_visual_enricher összegző-doboz részéből kiválasztva) |
 | 2026-06-03 | 2.0 | `📦 Összegző` (egyetlen `##`-szintű doboz) helyett kétszintű séma: `💡 Összegzés` minden `##` alfejezet végén, `🗺️ Fejezet összegfoglalása` minden `#` fejezet zárásánál; idempotencia-szabály (§3.4) |

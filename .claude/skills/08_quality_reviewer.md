@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖,😎
 status: active
-version: 1.2
-updated: 2026-06-03
-description: Script-alapú lint + Claude Explore review; publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez.
+version: 1.3
+updated: 2026-06-06
+description: Script-alapú lint + Claude Explore review (6 szempont, köztük Biggs constructive alignment); publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez.
 ---
 
 # 08_QUALITY_REVIEWER
@@ -55,15 +55,21 @@ Claude értékeli az alábbi 5 szempont szerint (1–5 skálán):
 | **Koherencia** | Fejezetek logikusan következnek egymásból? |
 | **Forrásintegráció** | Hivatkozások beépítve, nem csak felsorolva? |
 | **Olvashatóság** | Tipográfia, tagolás, összegzők rendben? |
+| **Konstruktív illeszkedés** (Biggs) | Cél ⇄ tevékenység ⇄ értékelés egy vonalban? |
 
-Eredmény: **átlag pontszám** (1–5), szöveges indoklással.
+A **Konstruktív illeszkedés** mérhető al-kérdései:
+- Van-e minden `##` fejezethez azonosítható, Bloom-szintű tanulási cél (a `🎯 Cél` blokk, 04 §3.2)?
+- A `❔ Ellenőrizd magad` kérdések és a 09 kérdésbank lefedik-e a fejezet céljait?
+- Az MSc-célok valóban magasabb Bloom-szintűek (Elemzés/Alkotás), mint a BSc-éi (Emlékezés/Megértés)?
+
+Eredmény: **átlag pontszám** (1–5) a **6 szempontból**, szöveges indoklással.
 
 ### 3.3. Döntési logika
 
 ```
-Átlag ≥ 3.0 → Publikálható → 09_question_bank + 10_presentation_maker + 11_bsc_export
-                              (+ 12_youtube_finder, 13_jupyter_catalogizer opcionális) indul
-Átlag < 3.0 → Visszaküldés → 04_content_synthesizer kap revision note-ot
+Átlag (6 szempont) ≥ 3.0 → Publikálható → 09_question_bank + 10_presentation_maker + 11_bsc_export
+                                            (+ 12_youtube_finder, 13_jupyter_catalogizer opcionális) indul
+Átlag (6 szempont) < 3.0 → Visszaküldés → 04_content_synthesizer kap revision note-ot
 ```
 
 ### 3.4. Review mentése
@@ -111,6 +117,7 @@ Tartalom: script kimenet + Claude értékelés + döntés + revision note (ha <3
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-06 | 1.3 | **Constructive alignment**: §3.2 új 6. értékelési szempont (Biggs — cél ⇄ tevékenység ⇄ értékelés) mérhető al-kérdésekkel; §3.3 átlag 6 szempontra (küszöb ≥ 3.0 marad). |
 | 2026-06-01 | 1.0 | Létrehozva (mint 07_quality_reviewer) |
 | 2026-06-03 | 1.1 | Átszámozva 07→08; downstream 09–13, script 08_quality_check.py |
 | 2026-06-03 | 1.2 | §3.1 összegző-doboz check átírva a kétszintű sémára (`💡 Összegzés` per `##`, `🗺️ Fejezet összegfoglalása` per `#`) |

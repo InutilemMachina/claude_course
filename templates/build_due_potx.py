@@ -3,7 +3,7 @@ build_due_potx.py
 =================
 Proper PowerPoint template (.potx) a DUE vizuális nyelvből.
 
-Kimenet: templates/due_presentation_master.potx
+Kimenet: templates/due_presentation_default_master.potx
 - 12 named layout a New Slide panelben
 - Minden layout tartalmazza a teljes DUE chrome-ot (navy sáv, logo, footer)
 - Placeholder-ek: title, body (h1/h2/h3 szintek), dt, ftr, sldNum
@@ -39,7 +39,7 @@ NS_R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 
 MEDIA_SRC = Path("templates/due_unpacked/ppt/media")
 OUT_DIR   = Path("templates/_potx_build")
-FINAL_OUT = Path("templates/due_presentation_master.potx")
+FINAL_OUT = Path("templates/due_presentation_default_master.potx")
 
 # ---------------------------------------------------------------------------
 # XML segédfüggvények
@@ -255,27 +255,29 @@ def subtitle_ph(id_=14, x=720000, y=4140000, cx=10752119, cy=338554):
 
 
 def body_ph(id_=14, x=432000, y=1296000, cx=11328119, cy=4977573, idx=1,
-            h1_sz=1500, h2_sz=1400, h3_sz=1300, hint="Szöveg beírása"):
-    """Body placeholder h1/h2/h3 szintekkel, orange marker stílussal."""
+            h1_sz=1800, h2_sz=1700, h3_sz=1600, hint="Szöveg beírása"):
+    """Body placeholder h1/h2/h3 szintekkel. Aptos font; lvl1 bullet nélkül (próza),
+    lvl2/lvl3 halvány –/· az allistákhoz."""
     ph  = f'<p:ph type="body" idx="{idx}"/>'
     cNvSpPr = '<p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>'
 
     def lvl(n, sz, margin, indent, buChar):
         m_attr = f' marL="{margin}" indent="{indent}"' if margin else ''
+        bu = f'<a:buChar char="{buChar}"/>' if buChar else '<a:buNone/>'
         return f"""<a:lvl{n}pPr algn="l" defTabSz="180000"{m_attr}>
         <a:spcBef><a:spcPts val="300"/></a:spcBef>
         <a:spcAft><a:spcPts val="100"/></a:spcAft>
-        <a:buChar char="{buChar}"/>
+        {bu}
         <a:defRPr lang="hu-HU" sz="{sz}" b="0" dirty="0">
           {solidFill(C_DARK)}
-          <a:latin typeface="Calibri"/>
+          <a:latin typeface="Aptos"/>
         </a:defRPr>
       </a:lvl{n}pPr>"""
 
     txb = f"""<p:txBody>
   <a:bodyPr wrap="square" numCol="1"><a:noAutofit/></a:bodyPr>
   <a:lstStyle>
-    {lvl(1, h1_sz, 0, 0, "▶")}
+    {lvl(1, h1_sz, 0, 0, None)}
     {lvl(2, h2_sz, 342900, -342900, "–")}
     {lvl(3, h3_sz, 685800, -342900, "·")}
   </a:lstStyle>
@@ -560,7 +562,7 @@ def build_layout_02_szakasz():
 
 
 def build_content_layout(name, layout_idx, hint_title, hint_body,
-                         h1_sz=1500, h2_sz=1400, h3_sz=1300):
+                         h1_sz=1800, h2_sz=1700, h3_sz=1600):
     """Általános content layout: chrome + title ph + body ph + footer ph-ok."""
     chrome = content_chrome("rId2")
     title  = title_ph(13, 432000, 342556, 10248119, 430887, hint=hint_title)
@@ -817,27 +819,27 @@ def build_slide_master():
     </p:titleStyle>
     <p:bodyStyle>
       <a:lvl1pPr algn="l" defTabSz="457200">
-        <a:defRPr sz="1500">
+        <a:defRPr sz="1800">
           <a:solidFill><a:srgbClr val="212121"/></a:solidFill>
-          <a:latin typeface="Calibri"/>
+          <a:latin typeface="Aptos"/>
         </a:defRPr>
       </a:lvl1pPr>
       <a:lvl2pPr marL="342900" indent="-342900" algn="l">
-        <a:defRPr sz="1400">
+        <a:defRPr sz="1700">
           <a:solidFill><a:srgbClr val="212121"/></a:solidFill>
-          <a:latin typeface="Calibri"/>
+          <a:latin typeface="Aptos"/>
         </a:defRPr>
       </a:lvl2pPr>
       <a:lvl3pPr marL="685800" indent="-342900" algn="l">
-        <a:defRPr sz="1300">
+        <a:defRPr sz="1600">
           <a:solidFill><a:srgbClr val="212121"/></a:solidFill>
-          <a:latin typeface="Calibri"/>
+          <a:latin typeface="Aptos"/>
         </a:defRPr>
       </a:lvl3pPr>
     </p:bodyStyle>
     <p:otherStyle>
       <a:defRPr lang="hu-HU">
-        <a:latin typeface="Calibri"/>
+        <a:latin typeface="Aptos"/>
       </a:defRPr>
     </p:otherStyle>
   </p:txStyles>
@@ -971,7 +973,7 @@ def build_theme():
         <a:cs typeface=""/>
       </a:majorFont>
       <a:minorFont>
-        <a:latin typeface="Calibri"/>
+        <a:latin typeface="Aptos"/>
         <a:ea typeface=""/>
         <a:cs typeface=""/>
       </a:minorFont>
@@ -1209,7 +1211,7 @@ def main():
             "DUE H3 Alszakasz", 6,
             "1.1.1. Alszakasz neve",
             "    · Részlet A\n    · Részlet B\n    · Részlet C",
-            h1_sz=1400, h2_sz=1350, h3_sz=1300)),
+            h1_sz=1700, h2_sz=1650, h3_sz=1600)),
         ("slideLayout7",  build_layout_07_kep_szoveg),
         ("slideLayout8",  build_layout_08_abra),
         ("slideLayout9",  build_layout_09_tablazat),

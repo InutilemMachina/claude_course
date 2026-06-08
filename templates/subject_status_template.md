@@ -43,7 +43,7 @@ A projekt-szintű `project_status.md` tantárgy-szintű megfelelője.
 - **Nyelv:** magyar szöveg, kétnyelvű terminológia (pl. „termogram / thermogram")
 - **Terminológia-egységesítés** (a [`07 typesetter`]({{ROOT_REL}}/.claude/skills/07_typesetter.md) használja):
 - **Jegyzet sablon:** [`due_jegyzet_template.docx`]({{ROOT_REL}}/templates/due_jegyzet_template.docx)
-- **Prezentáció sablon:** [`due_prenetation_template.pptx`]({{ROOT_REL}}/templates/due_prenetation_template.pptx)
+- **Prezentáció sablonok (2 variáns):** [`due_presentation_default_master.potx`]({{ROOT_REL}}/templates/due_presentation_default_master.potx) (default) · [`due_presentation_mindmap_master.potx`]({{ROOT_REL}}/templates/due_presentation_mindmap_master.potx) (mindmap). Kitöltési minta: [`due_prenetation_template.pptx`]({{ROOT_REL}}/templates/due_prenetation_template.pptx)
 - **Kérdésbank:** feleletválasztós A/B/C/D, SZINT 2–5
 
 <!-- MINTA-HATÁR: a 00_init innentől NEM másol az instancekba — ez csak a sablon dokumentációja. -->

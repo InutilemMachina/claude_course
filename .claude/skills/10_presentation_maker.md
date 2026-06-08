@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖+🐍
 status: active
-version: 1.4
-updated: 2026-06-06
-description: Approved mindmap és végleges jegyzet alapján MARP prezentáció és PPTX. Kötött dia-architektúra (Cím → Áttekintés → szakaszonként Nyitó/belső/Záró → Végső → Hivatkozásjegyzék); kötött `>` keret-blokk-rend (🧭/🔭/🎯/💡/🗺️) a jegyzet újrahasznosításával; belső diák tiszta tananyag; előrenderelt Mermaid-algráf-PNG-k (10-1_mermaid_render.py); kétoszlopos layout; beszédes diák; számozott feliratok.
+version: 1.8
+updated: 2026-06-08
+description: Approved mindmap és végleges jegyzet alapján MARP prezentáció és PPTX, KÉT variánsban (default fejléc-breadcrumb / mindmap oldalsáv-TOC) ugyanabból a navigációs modellből (_nav_util.py). Kötött dia-architektúra (Cím → Áttekintés → szakaszonként Nyitó/belső/Záró → Végső → Hivatkozásjegyzék); kötött `>` keret-blokk-rend (🧭/🔭/🎯/💡/🗺️) a jegyzet újrahasznosításával; belső diák tiszta tananyag; navigáció = SZÖVEG (TOC/breadcrumb), tartalmi diagramok = előrenderelt Mermaid-PNG (10-1); .potx idx-szerződés (idx0/idx1/idx5); kétoszlopos layout; beszédes diák; számozott feliratok.
 ---
 
 # 10_PRESENTATION_MAKER
@@ -28,9 +28,37 @@ majd `10_pptx_gyarto.py`-val PPTX-re konvertálja.
 | `3_mindmap/mindmap.md` | 03_mindmap_builder | Approved mindmap, navigátor diához |
 | `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Ábrák diákba illesztéséhez |
 
+A `3_mindmap/mindmap.md`-t a [`_nav_util.py`](../../scripts/_nav_util.py) parse-olja
+**navigációs modellé** (ROOT → szakaszok → alszakaszok, `[MSc]` taggel) — ebből áll elő
+mindkét variáns tájékozódása (breadcrumb / TOC), nem renderelt képből.
+
 **Előfeltétel:** `08_quality_reviewer` döntése `PUBLIKÁLHATÓ`; MARP CLI telepítve.
 
 ## 3. Eljárás
+
+### 3.0. Variáns-modell — default / mindmap
+
+A prezentáció **két, párhuzamos kivitelben** készül, ugyanabból a navigációs modellből
+(a `mindmap.md` fa + „hol vagyok"):
+
+| Variáns | Tájékozódás | Sablon | MARP rendition | PPTX |
+|:--------|:------------|:-------|:---------------|:-----|
+| **default** | (akár többsoros) **fejléc-breadcrumb**, nincs oldalsáv | `due_presentation_default_master.potx` | `N_Prezentacio_default.md` | `N_Prezentacio.pptx` |
+| **mindmap** | jobb oldali **sorszámozott TOC** (szöveg), aktuális kiemelve | `due_presentation_mindmap_master.potx` | `N_Prezentacio_mindmap.md` | `N_Prezentacio_mindmap.pptx` |
+
+**Egy authored forrás, két rendition.** A 🤖 EGY MARP forrást ír (`N_Prezentacio.md`); a
+navigációs helyeket a meglévő `_prezi_assets/(navigator|secN).png` keret-dia-képek jelölik.
+A két rendition ebből **gépileg** áll elő: [`10-2_nav_inject.py`](../../scripts/10-2_nav_inject.py)
+(MARP) és [`10_pptx_gyarto.py --variant`](../../scripts/10_pptx_gyarto.py) (PPTX), mindkettő a
+`_nav_util.py` modelljét hívva.
+
+**Stabil potx↔python szerződés:** a kitöltés kizárólag **placeholder-idx** alapú —
+`idx0`=cím, `idx1`=body, `idx2`=kép, `idx3`=felirat, `idx5`=`mindmap_body` (TOC oldalsáv).
+A két `.potx` ezt már expozeálja; a generátor a layoutot **logikai szerep** szerint választja
+(COVER/SECTION/TOC/H1–H3/KEP/ABRA/TABLA/IROD), így a `MM`/`Mindmap` névkülönbség rejtve marad.
+
+> 💬 NOTE: A `default` az alapértelmezett kimenet (visszafelé kompatibilis). A 🤖 **kérdezze meg
+> a 😎-t**, kell-e a `mindmap` variáns is — ha igen, `--variant both`.
 
 ### 3.1. MARP Markdown generálása
 
@@ -40,14 +68,18 @@ Claude generálja a `N_Prezentacio.md`-t az alábbi szabályok szerint:
 
 ```
 1.  Címdia
-2.  Áttekintés (kétoszlop):  bal: > 🗺️ A Nagykép (fejezet)  | jobb: navigator.png (csak szakaszok)
+2.  Áttekintés (kétoszlop):  bal: > 🗺️ A Nagykép (fejezet)  | jobb: NAV-hely (navigator.png)
     minden szakaszhoz (1..N):
-      ├─ Szakasz-NYITÓ (kétoszlop): bal: keret-blokkok (lásd lent) | jobb: secK.png algráf
+      ├─ Szakasz-NYITÓ (kétoszlop): bal: keret-blokkok (lásd lent) | jobb: NAV-hely (secK.png)
       ├─ belső tartalmi dia/diák   : TISZTA tananyag, keret-blokk nélkül (legfeljebb 💡)
-      └─ Szakasz-ZÁRÓ (kétoszlop)  : bal: keret-blokkok (reflexió)   | jobb: secK.png algráf
-N+.  Végső összegző (kétoszlop): bal: > 🗺️ Fejezet összegfoglalása | jobb: navigator.png
+      └─ Szakasz-ZÁRÓ (kétoszlop)  : bal: keret-blokkok (reflexió)   | jobb: NAV-hely (secK.png)
+N+.  Végső összegző (kétoszlop): bal: > 🗺️ Fejezet összegfoglalása | jobb: NAV-hely (navigator.png)
 utolsó. Hivatkozásjegyzék
 ```
+
+**NAV-hely:** a keret-diák jobb oszlopában a navigációt a `_prezi_assets/(navigator|secN).png`
+képhivatkozás **jelöli** — a render ezt **szöveggé** cseréli (mindmap → TOC; default → breadcrumb).
+A 🤖 a forrásban a szokott módon írja a navigator/secK képet; a `10-2`/`10_pptx_gyarto` cseréli.
 
 **A kiemelt `>` blokkok szigorú rendje (CSAK keret-diákon):** a `>`-vel kezdődő blokkok kizárólag
 az Áttekintő, a szakasz-nyitó/záró és a végső diákon jelennek meg, az alábbi **kötött sorrendben**.
@@ -73,15 +105,37 @@ diákon számozott, önálló koherens felirat — valódi ábra **alatt** (`*i.
 **fölött** (`*i. táblázat. …*`). A keret-diákon ismétlődő szakasz-algráf rövid, szám nélküli
 leíró felirattal szerepel (pl. „A 3. szakasz felépítése. [saját szerk.]").
 
-### 3.1a. Mermaid → PNG előrenderelés (`10-1_mermaid_render.py`)
+### 3.1a-bis. Navigáció vs. tartalmi diagram — kötelező megkülönböztetés
 
-A MARP **nem** rendereli a Mermaidot natívan (kódként jelenne meg a PPTX-ben), ezért a prezi
-diagramjait előre PNG-vé alakítjuk. **Algráf-bontás:** a navigátort szakaszonkénti algráfokra
-bontjuk — `navigator.mmd` (csak `ROOT → N1..N` szakaszok) az áttekintőre/végsőre, és `secK.mmd`
-(`Nk → Nk1..Nkm`) minden szakasz nyitó/záró diájára.
+- **Navigáció = SZÖVEG.** A keret-diák jobb oldali tájékozódását (TOC / breadcrumb) a
+  navigációs modellből renderelt szöveg adja (`10-2` / `10_pptx_gyarto`), **nem** kép.
+  A forrásban a `navigator`/`secN` képhivatkozás csak jelölő — a render lecseréli.
+- **Tartalmi diagram = PNG.** A **jegyzetből vett valódi** folyamatábrákat a **belső
+  tartalmi diákon** továbbra is Mermaid→PNG-ként ágyazzuk be (`10-1`, lásd §3.1a). Ezeknek
+  saját, beszédes fájlnevük van (NEM `navigator`/`secN`), így a navigáció-csere nem érinti őket.
+
+### 3.1a-ter. Képek FIT módban (levágás nélkül)
+
+A `ph.insert_picture()` python-pptx-ben **fill/crop** módban működik — a képet a placeholder
+arányához igazítja és **levágja** a széleit. **Ez tilos.**
+
+A generátor ezért `insert_img_fit(slide, ph, img_path, md_dir)` segédfüggvényt alkalmaz:
+1. Pillow-val beolvassa a kép tényleges pixel-méreteit.
+2. `scale = min(ph_w/img_w, ph_h/img_h)` — arányőrző scale (letterbox, nem crop).
+3. `slide.shapes.add_picture(path, left, top, new_w, new_h)` — szabad shape-ként, a placeholder
+   koordinátái közé centrálva.
+
+**Elv: a kép SOHA nem vágódik le; a placeholder a maximális kiterjedést definiálja.**
+Ha Pillow nem elérhető (`pip install Pillow`), a függvény fill/crop fallbackre vált (figyelmeztetéssel).
+
+### 3.1a. Tartalmi Mermaid-diagram → PNG előrenderelés (`10-1_mermaid_render.py`)
+
+A MARP **nem** rendereli a Mermaidot natívan (kódként jelenne meg a PPTX-ben), ezért a belső
+diák **jegyzetből vett** diagramjait előre PNG-vé alakítjuk. (A navigáció ettől független:
+azt szöveggé rendereljük, lásd §3.0 / §3.1a-bis — nem készül `navigator.mmd`/`secN.mmd` PNG.)
 
 **Munkamenet:**
-1. Írd meg a `.mmd` fájlokat a `4_wip_outputs/_prezi_assets/` mappába (`navigator.mmd`, `sec1.mmd`, …) a `3_mindmap/mindmap.md` részfái alapján.
+1. Írd meg a tartalmi `.mmd` fájlokat a `4_wip_outputs/_prezi_assets/` mappába (beszédes névvel, pl. `surge_ciklus.mmd`) a jegyzet diagramjai alapján.
 2. Renderelés PNG-be:
 
 ```powershell
@@ -103,6 +157,13 @@ A keret-diák `>` blokkjai **a jegyzet meglévő elemeit hasznosítják újra** 
 a `🔭 A Nagykép`, `🎯 Cél` (04), a `💡 Összegzés` és a `🗺️ Fejezet összegfoglalása` (06) blokkok
 szövegét told a megfelelő keret-diára a §3.1 táblázat kötött rendje szerint. A belső tartalmi
 diák ettől mentesek (tiszta tananyag). Így a prezi és a jegyzet egyetlen forrásból konzisztens.
+
+### 3.1c-bis. Egy alszakasz / dia — tilos az összevonás
+
+- Minden dia **EGY alszakaszt** tárgyal; TILOS a tartomány-összevonás a címben (pl. „2.1–2.3", „5.1–5.5"). Minden alszakasznak saját diája van.
+- Ha egy alszakasz content-igényes (sok kép/sok szöveg), több részre bomlik, a címben jelölve: „3.1. … **(1/2)**", „3.1. … **(2/2)**" (dia-ismétlés ugyanazzal az alszakaszcímmel, sorszámozott rész-jelöléssel). A navigáció (TOC/breadcrumb) szempontjából mindkét rész ugyanahhoz a csomóponthoz tartozik.
+- A szakasz-NYITÓ diák a keret-blokkokat (🧭/🔭/🎯) viszik, és a generátor a **DUE Szakaszfejléc** (mindmap variánsban **DUE Mindmap Szakaszfejléc**) mintára képezi őket.
+- A mindmap variánsban a TOC-oldalsáv MINDEN dián megjelenik (a képes/táblázatos diákon is).
 
 ### 3.1c. Beszédes diák (felolvasható)
 
@@ -129,18 +190,37 @@ irányadó esetek:
   a dia **az ábráról szól** — minimális body-szöveg, a vizuális elem és a felirat viszi az
   üzenetet (Mayer *multimédia + contiguity*: a magyarázat az ábrarész mellett).
 
-### 3.2. PPTX generálás
+### 3.2. Renditionök és PPTX generálás
 
 ```powershell
-# 1) diagramok PNG-be (ha még nem futott)
+# 1) tartalmi diagramok PNG-be (ha van .mmd; navigáció NEM ide tartozik)
 python scripts/10-1_mermaid_render.py --week-dir <tárgy>/<N_het>
-# 2) PPTX
-python scripts/10_pptx_gyarto.py --week N --subject "Jelatvitel"
+# 2) látható MARP renditionök (default + mindmap)
+python scripts/10-2_nav_inject.py --week-dir <tárgy>/<N_het> --variant both
+# 3) PPTX (alap: default; --variant both mindkettőt)
+python scripts/10_pptx_gyarto.py --week-dir <tárgy>/<N_het> --variant both
 ```
 
-- Előbb a Mermaid-algráfok renderelése (§3.1a), utána a MARP CLI konvertál: `marp N_Prezentacio.md --pptx`
-- Output: `5_clean_outputs/N_Prezentacio.pptx`
-- Ellenőrzés: slide count, képek beágyazva
+- A `10_pptx_gyarto.py` a `.potx` layoutjait használja **python-pptx**-szel (nem MARP CLI):
+  a stílus a sablonból örökl, a script csak a placeholdereket (idx) tölti.
+- Sablonválasztás variáns szerint: `default` → `due_presentation_default_master.potx`;
+  `mindmap` → `due_presentation_mindmap_master.potx`. (`--template` felülírja.)
+- Output: `5_clean_outputs/N_Prezentacio.pptx` (default) [+ `N_Prezentacio_mindmap.pptx`].
+- Ellenőrzés: slide count; mindmap variánsban az `idx5` TOC kitöltve a content/keret diákon
+  (ábra/tábla kivételével); default variánsban a content diák címe többsoros breadcrumb.
+
+```powershell
+# a .potx mesterek módosítása után (font/bullet/sidebar):
+python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
+```
+
+> 💬 NOTE: A LaTeX képletek **natív PowerPoint-egyenletté** (OMML) alakulnak a
+> [`_omml.py`](../../scripts/_omml.py)-val: `$...$` **szövegközi** (a mondatban folyik),
+> `$$...$$` **saját-soros** középre zárt block. A lánc LaTeX→MathML (`latex2mathml`)→OMML
+> (Office `MML2OMML.XSL`, lxml XSLT). Így nem kép, hanem szerkeszthető egyenlet. A markdown-
+> táblák valódi PPTX-táblák; a body font **Aptos ~18pt**, a display-címek **Garamond**.
+> *(Telepítés: `pip install latex2mathml`; az XSLT a telepített Office-ból jön. Fallback: ha a
+> lánc nem elérhető, a `$`-jeles szöveg marad.)*
 
 ### 3.3. Manuális ellenőrzés
 
@@ -163,24 +243,33 @@ python scripts/10_pptx_gyarto.py --week N --subject "Jelatvitel"
 - [ ] Dia-architektúra a §3.1 szerint: Cím → Áttekintés → szakaszonként (Nyitó → belső → Záró) → Végső → Hivatkozásjegyzék
 - [ ] A `>` keret-blokkok **csak** a keret-diákon, a §3.1 táblázat **kötött sorrendjében** (🧭→🔭→🎯 nyitó; 🔭→💡 záró)
 - [ ] A belső tartalmi diák tiszta tananyag, keret-blokk nélkül (legfeljebb egy `> 💡`)
-- [ ] Minden dia rendelkezik vizuális elemmel; **nincs nyers Mermaid-kód** (minden diagram előrenderelt PNG)
-- [ ] A keret-diák jobb oldalán a megfelelő algráf (`navigator.png` / `secK.png`)
+- [ ] **Navigáció = szöveg:** a keret-diák jobb oldala NAV-hely (`navigator`/`secN` jelölő), amit a render TOC/breadcrumb szöveggé cserél — **nem** marad navigációs PNG a kész deckben
+- [ ] **Tartalmi diagram = PNG:** a belső diák jegyzetből vett diagramjai előrenderelt PNG-k (beszédes névvel); **nincs nyers Mermaid-kód**
+- [ ] **mindmap variáns:** az `idx5` TOC minden content/keret dián kitöltve (ábra/tábla diák kivételével), az aktuális csomópont kiemelve
+- [ ] **default variáns:** a content diák címe (idx0) többsoros breadcrumb (szakasz-útvonal)
 - [ ] A `🔭/🎯/💡/🗺️` blokkok a jegyzetből újrahasznosítva (nem újraírva); a záró 💡 reflexió, nem ismétlés
 - [ ] Belső diák: szillogizmus-ív (premissza→konklúzió), Bloom-igék a body-ban, beszédes/felolvasható (§3.1c)
 - [ ] Feliratok a séma szerint (valódi ábra alatt / tábla fölött, számozott, önálló koherens)
 - [ ] PPTX megnyitható; LaTeX képletek rendereltek
+- [ ] Egy alszakasz / dia; nincs „N.M–N.K" összevont cím; a többrészes diák címében (k/n) jelölés
+- [ ] A szakasz-nyitók a Szakaszfejléc mintával készülnek (szám + cím + leírás)
+- [ ] A body font Aptos ~18pt; a prózán nincs ▶ bullet; a táblák valódi PPTX-táblák; a képletek natív OMML-egyenletek (nem kép)
+- [ ] A képes/ábrás diákon a kép **levágás nélkül** jelenik meg (FIT mód, §3.1a-ter) — a placeholder határolja, de nem vágja
+- [ ] mindmap variánsban a TOC-oldalsáv minden dián jelen van (képes/táblázatos diákon is)
 
 ## 6. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
-| Mermaid kódként jelenik meg a dián (nem ábra) | MARP nem rendereli a Mermaidot natívan | `10-1_mermaid_render.py` futtatása, `![](_prezi_assets/…png)` beágyazás (§3.1a) |
-| `10-1_mermaid_render.py` némán hibázik / nincs PNG | A puppeteer-config útja egyszeres `\`-sel (érvénytelen JSON), vagy hiányzó chromium, vagy a sandbox blokkolja a böngészőt | Forward-slash `executablePath`; `chrome-headless-shell` telepítése; a futtatást sandbox nélkül (B-15 előfeltételek) |
-| MARP `Parse error` Mermaid blokknál | Speciális karakter a mindmapben | Mindmap-ben: `"`, `'`, `()` cseréje |
-| Kétoszlopos dia nem tördel | Hiányzó `style:` a frontmatterben vagy rossz `<div class="columns">` | A frontmatter `style:` blokk és a `<div>` szerkezet ellenőrzése (§3.1) |
-| PPTX képek hiányoznak | Relatív útvonal a MARP-ban | Abszolút útvonalak vagy `--allow-local-files` flag |
-| Túl sok szöveg egy dián | Claude nem tartotta a 5-bullet szabályt | Manuálisan rövidíteni vagy diát kettéosztani |
-| `marp: command not found` | MARP CLI nincs telepítve | `npm install -g @marp-team/marp-cli` |
+| A mindmap variánsban üres az oldalsáv (nincs TOC) | Hiányzó/rossz `mindmap.md`, vagy nem a `mindmap` variáns fut | `--mindmap <path>` ellenőrzése; `--variant mindmap`/`both`; a `_nav_util.parse_mindmap` a `mindmap.md` első ```mermaid``` blokkját várja |
+| A TOC/breadcrumb rossz csomópontot emel ki | A dia címének vezető száma nem oldható fel a fában, vagy a `secN` kép száma téves | A dia címe `N.` / `N.M.` számmal kezdődjön, vagy a NAV-kép `secN` száma egyezzen a szakasszal |
+| Navigációs PNG marad a kész deckben | A nav-kép neve nem `navigator`/`secN` mintájú | A navigációs képet `_prezi_assets/(navigator|secN).png` névvel jelöld; a tartalmi ábrák kapjanak más nevet |
+| Tartalmi Mermaid kódként jelenik meg | MARP nem rendereli natívan | `10-1_mermaid_render.py` futtatása, `![](_prezi_assets/…png)` beágyazás (§3.1a) |
+| `10-1_mermaid_render.py` némán hibázik / nincs PNG | puppeteer-config útja egyszeres `\`-sel, hiányzó chromium, vagy a sandbox blokkol | Forward-slash `executablePath`; `chrome-headless-shell` telepítése; futtatás sandbox nélkül (B-15) |
+| Rossz layout / hiányzó placeholder | A `.potx` layout-neve nem egyezik a szerep-táblával, vagy hiányzó idx | `LAYOUTS` tábla és a `.potx` layout-nevek egyeztetése; a kitöltés idx-hiánytűrő (csendben kimarad) |
+| Kétoszlopos MARP dia nem tördel (rendition) | Hiányzó `style:` vagy rossz `<div class="columns">` | A frontmatter `style:` blokk és a `<div>` szerkezet ellenőrzése (§3.1) |
+| PPTX kép hiányzik | Rossz relatív útvonal a MARP-ban | A `md_dir`-hez képest oldódik fel; abszolút vagy helyes relatív út |
+| Ábra-placeholder **levágja** a kép széleit | `ph.insert_picture()` fill/crop mód | `insert_img_fit()` alkalmaz — ha mégis vágás látszik: Pillow telepítve? (`pip install Pillow`); fallback a fill módra vált (§3.1a-ter) |
 
 ## 7. Hivatkozások
 
@@ -196,6 +285,10 @@ python scripts/10_pptx_gyarto.py --week N --subject "Jelatvitel"
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-06-08 | 1.8 | **Képek FIT módban** (§3.1a-ter): `ph.insert_picture()` fill/crop cserélve `insert_img_fit()` (Pillow letterbox-scale + `add_picture`, soha nem vágja a képet); §5/§6 frissítve. |
+| 2026-06-07 | 1.7 | 😎 vizuális revízió: **natív OMML-egyenletek** (`_omml.py`: inline `$...$` + block `$$...$$`, LaTeX→MathML→OMML) a kép-alapú képlet helyett — szövegközi és saját-soros egyenletek a helyükön; render_content **W=0 placeholder-bug** javítva (mind a 4 xfrm-dimenzió kiírva); markdown lista-jelölők/emfázis a body-ban tisztítva; `.potx` mesterek átnevezve (`due_presentation_default_master` / `…mindmap_master`). |
+| 2026-06-07 | 1.6 | 😎 minőségi revízió: egy-alszakasz/dia (tilos összevonás) + (k/n) többrészes; szakasz-nyitók Szakaszfejléc-mintával; .potx mesterek: Garamond cím + **Aptos 18pt** body, ▶ bullet eltávolítva, mindmap-oldalsáv minden layouton (7/8/9 is); valódi PPTX-táblák; LaTeX→PNG képlet (_latex_png.py, matplotlib mathtext). |
+| 2026-06-07 | 1.5 | 😎 visszajelzés: **két variáns** (default fejléc-breadcrumb / mindmap oldalsáv-TOC) közös **navigációs modellből** ([`_nav_util.py`](../../scripts/_nav_util.py)). §3.0 variáns-modell + **stabil potx↔python idx-szerződés** (idx0/idx1/idx5) + logikai szerep→layout leképezés; §3.1a-bis **navigáció=szöveg / tartalmi diagram=PNG** megkülönböztetés; a navigációt a `(navigator|secN).png` jelölő helyettesíti (nincs navigációs Mermaid-PNG). Új [`10-2_nav_inject.py`](../../scripts/10-2_nav_inject.py) (MARP renditionök); `10_pptx_gyarto.py` `--variant {default,mindmap,both}`, `.potx`-natív python-pptx. §3.2/§5/§6 frissítve. |
 | 2026-06-06 | 1.4 | 😎 visszajelzés: **kötött dia-architektúra** (szakasz-nyitó/záró keret + tiszta belső diák) és **kötött `>` keret-blokk-rend** (🧭→🔭→🎯 / 🔭→💡), a jegyzet `🔭/🎯/💡/🗺️` blokkjainak újrahasznosításával; §3.1a **működő Mermaid→PNG render** (`10-1_mermaid_render.py`, chrome-headless-shell, B-15 megoldva), szakaszonkénti algráf-bontás; §3.2 kétlépcsős build; §5/§6 frissítve. |
 | 2026-06-06 | 1.3 | 😎 visszajelzés: **kétoszlopos** layout (`<div class="columns">` + `style:`); §3.1a **Mermaid→PNG előrenderelés** (MARP nem rendereli natívan, B-15); §3.1b jegyzet-blokkok a prezin (`🔭 A Nagykép`, `💡`, `🗺️`); §3.1c **beszédes, felolvasható** diák; felirat-konvenció (Instructions §7.1); §3.3/§5/§6 frissítve. |
 | 2026-06-06 | 1.2 | **Didaktikai metaprompt**: §3.1 arisztotelészi szillogizmus-váz (premissza→konklúzió) a body-ban; Bloom-igék a body-ban (cím marad a hierarchiából); rugalmas tömörség a merev 5/10 helyett (normál / forgatókönyv / ábra-dia, Mayer CTML signaling–segmenting–contiguity); §5 négy új checklist-sor. |

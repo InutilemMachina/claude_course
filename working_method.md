@@ -17,7 +17,7 @@ Ezt a fájlt követem minden átnézési/refaktor session során.
 
 A már kodifikált elveket nem ismétlem, csak megerősítem (kanonikus hely zárójelben):
 
-- **A kevesebb néha több** — soft-cap, ne bokrosodjon; helyi javítás > új fájl (Instructions §10).
+- **A kevesebb néha több** — általában hard-cap, néha soft-cap: ne bokrosodjon; helyi javítás > új fájl (Instructions §10).
 - **Cél-orientált** - a beszélgetések a célra tartsanak, ne a bokrosodás irányába.
 - **Tisztaság és egyértelműség** — rövid, világos, szabványos (Instructions §2).
 - **Egy fájl = egy cél; egy információ egy kanonikus helyen** (Instructions §2).
@@ -28,9 +28,14 @@ A már kodifikált elveket nem ismétlem, csak megerősítem (kanonikus hely zá
   ki, és azt kodifikáld. A domain-specifikum *teszteli* és *kiváltja* a szabályt, de nem szivároghat a
   kanonikus rétegbe: a skill-példák is absztrakt placeholderrel íródnak (`Főtéma`, `Eq.X.Y`), nem a
   fixture fogalmaival. (Egy eset → szabály, nem egy eset → toldás.)
-- (Előre fele haladva dolgozunk a tananyag-pipeline-on ezért későbbi lépések lehet, hogy nem lesznek már adekvátak)
-- **NLM-mentesség** — a `claude_play` maradványait felismerjük és irtjuk.
+- **Kerüljük a terv bokrosítását**, minden hozzáadott fájl és logikai kapu erősen indokolt esetben lehetséges, a user-t erre figyelmeztetni kell. 
+- Előre fele haladva dolgozunk a tananyag-pipeline-on, ezért:
+  - későbbi lépések lehet, hogy nem lesznek már adekvátak
+  - vagy korábbi lépésekeket is javítunk
+így **fontos, hogy re-usable és világos absztrahált megoldásokat találjunk**
 - **Best practice elsőként** — Anthropic skill-elvek + skill_template.md + ha van references.
+- **NLM-mentesség** — a `claude_play` maradványait felismerjük és irtjuk.
+- **A feladathoz illő Claude agent-ek** - terveidbe vedd bele, hogy milyen szintű agent-ekre van szükség milyen feladatokhoz, hogy a tokenekkel takarékoskodjunk. A kognitív feladatok erősebb agent-eket kívánnak, míg egyszerűbb feladatok olcsóbb modelleket.
 
 ## 2. Az állomás-túra (a review-ciklus)
 

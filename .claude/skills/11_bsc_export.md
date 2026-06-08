@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖->🐍
 status: active
-version: 1.1
-updated: 2026-06-03
-description: MSc tartalom kiszűrése és pandoc segítségével DUE arculatú DOCX fájlok generálása BSc és teljes verzióban.
+version: 1.2
+updated: 2026-06-07
+description: MSc tartalom kiszűrése és pandoc segítségével DUE arculatú DOCX fájlok generálása BSc és teljes verzióban. A LaTeX képletek NATÍV Word-egyenletként (OMML / Cambria Math, nem kép) — a 10 lépés `_omml.py` elvével konzisztens.
 ---
 
 # 11_BSC_EXPORT
@@ -59,6 +59,20 @@ python scripts/11-2_pandoc_export.py --input "4_wip_outputs/N_Jegyzet_bsc_filter
     --week N --subject "Jelatvitel"
 ```
 
+### 3.3a. Natív egyenletek (OMML / Cambria Math) — kötelező elv
+
+A LaTeX képletek a DOCX-ben **natív, szerkeszthető Word-egyenletek** legyenek (Office Math /
+Cambria Math), **SOHA nem kép**. Ez a 10 lépés [`_omml.py`](../../scripts/_omml.py) elvével
+egységes — a WordprocessingML a `m:oMath`-ot közvetlenül a bekezdésbe ágyazza, így a `$...$`
+**szövegközi**, a `$$...$$` **saját-soros** egyenletként folyik.
+
+- **Pandoc:** a `docx` író a `$...$`/`$$...$$`-t **alapból natív OMML-egyenletté** konvertálja —
+  ne add meg a `--webtex` flaget (az **képet** csinál) és kerüld a `--mathml`-t is (a docx-nál
+  az OMML a natív). Egyszerűen hagyd a pandoc-ot a forrásbeli `$...$` jelöléssel dolgozni.
+- **Egy forrás-konvenció** (`$...$` / `$$...$$` a jegyzetben) → PPTX (10, `_omml.py`) és DOCX (11,
+  pandoc) is natív Cambria Math. Ha a pandoc-lánc valamiért nem ad OMML-t, a `_omml.py`
+  `tex_to_omath()` közvetlenül is használható a DOCX-bekezdésbe injektálva.
+
 ### 3.4. Átmeneti fájl törlése
 
 ```powershell
@@ -69,7 +83,7 @@ Remove-Item "4_wip_outputs/N_Jegyzet_bsc_filtered.md"
 
 - Mindkét DOCX megnyitható Wordben
 - Arculati sablon stílusok érvényesülnek (fejléc, betűtípus)
-- LaTeX képletek konvertálódtak (Office Math vagy ábra)
+- LaTeX képletek **natív Word-egyenletként** (Office Math / Cambria Math, **NEM kép**) — kattintva szerkeszthetők
 - BSc verzióban nincs `[MSc]` szöveg
 
 ## 4. Kimenetek
@@ -92,7 +106,8 @@ Remove-Item "4_wip_outputs/N_Jegyzet_bsc_filtered.md"
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
 | `pandoc: command not found` | Pandoc nincs telepítve | `winget install JohnMacFarlane.Pandoc` |
-| LaTeX képletek nem renderelnek | pandoc nem talál math renderer | `--mathml` vagy `--webtex` flag |
+| Képletek **képként** jelennek meg a DOCX-ben | `--webtex`/`--mathjax` flag (képet/HTML-t csinál) | A flag elhagyása — a `docx` író alapból **natív OMML**-t ad; szükség esetén `_omml.py tex_to_omath()` (§3.3a) |
+| Képletek nyers `$...$`-ként maradnak | a forrás nem `$`-jelölést használ, vagy a math kiterjesztés ki van kapcsolva | A jegyzetben `$...$`/`$$...$$` jelölés; pandoc `+tex_math_dollars` (alap) |
 | Sablon stílusok hiányoznak | Template path hibás | Abszolút útvonal megadása |
 | BSc-ben maradó MSc tartalom | Regex nem match-el a blokk határon | `11-1_bsc_filter.py` regex-et debug-olni |
 | Képek hiányoznak a DOCX-ben | Relatív útvonal a Markdown-ban | `--resource-path` flag pandocnak |
@@ -113,3 +128,4 @@ Remove-Item "4_wip_outputs/N_Jegyzet_bsc_filtered.md"
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (mint 10_bsc_export) |
 | 2026-06-03 | 1.1 | Átszámozva 10→11; scriptek 11-1/11-2 |
+| 2026-06-07 | 1.2 | §3.3a **natív egyenlet-elv** (OMML / Cambria Math, nem kép) — a 10 `_omml.py`-vel egységes; pandoc alap-OMML (ne `--webtex`); §3.5/§6 frissítve. Forrás-konvenció: `$...$`/`$$...$$` → PPTX+DOCX natív Cambria Math. |

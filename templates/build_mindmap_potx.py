@@ -10,7 +10,7 @@ col_separator. A sidebar az adott dia helyét mutatja a fejezet-hierarchiában.
 A bizonyított assemble_potx() pipeline-t használja (build_due_potx.py),
 így minden tanulság beépül (type=blank, fld id, theme2, webext rels, lxml).
 
-Kimenet: templates/due_mindmap_master.potx
+Kimenet: templates/due_presentation_mindmap_master.potx
 Generálás: python templates/build_mindmap_potx.py
 """
 
@@ -53,7 +53,7 @@ MAIN_H = 4977573
 C_MM_ORANGE = "D4622A"    # sorszám prefix
 C_MM_DARK   = "1A1A2E"    # szöveg
 
-FINAL_OUT = Path("templates/due_mindmap_master.potx")
+FINAL_OUT = Path("templates/due_presentation_mindmap_master.potx")
 BASE_PPTX = Path("templates/due_refactored.pptx")
 
 
@@ -205,6 +205,96 @@ def build_mm_section_layout():
 
 
 # ---------------------------------------------------------------------------
+# Kép/Ábra/Táblázat layoutok MINDMAP sidebar-ral (a tartalom MAIN_W-re szűkítve)
+# A layout-NEVEK változatlanok ("DUE Kép+Szöveg" stb.) — a generátor szerep→layout
+# táblája így nem igényel módosítást; csak az idx5 sidebar jelenik meg rajtuk.
+# ---------------------------------------------------------------------------
+
+_LOCKED = '<p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>'
+
+
+def _mm_pic_ph(id_, name, idx, x, y, cx, cy, hint):
+    return f"""
+<p:sp>
+  <p:nvSpPr><p:cNvPr id="{id_}" name="{name}"/>{_LOCKED}<p:nvPr><p:ph type="pic" idx="{idx}"/></p:nvPr></p:nvSpPr>
+  <p:spPr><a:xfrm><a:off x="{x}" y="{y}"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm>
+    <a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val="E8EDF2"/></a:solidFill></p:spPr>
+  <p:txBody><a:bodyPr anchor="ctr"/><a:lstStyle/>
+    <a:p><a:pPr algn="ctr"/><a:r><a:rPr lang="hu-HU" sz="1200" dirty="0">{solidFill(C_GRAY)}</a:rPr><a:t>{hint}</a:t></a:r></a:p>
+  </p:txBody>
+</p:sp>"""
+
+
+def build_mm_abra():
+    """DUE Ábra mindmap sidebar-ral — a kép MAIN_W-re szűkítve."""
+    chrome  = content_chrome("rId2")
+    title   = title_ph(13, MAIN_X, 342556, MAIN_W, 430887, hint="Ábra")
+    img     = _mm_pic_ph(14, "figure_image", 1, MAIN_X, 1296000, MAIN_W, 4410000, "[Ábra beillesztése]")
+    fig_sep = cxnsp(22, "figure_separator", MAIN_X, 5742000, MAIN_W, 0)
+    cap_txb = bp.simple_txbody("1. ábra: Felirat szövege", sz=1100, color=C_GRAY, typeface="Aptos", anchor="t")
+    cap_sp  = sp(16, "figure_caption", MAIN_X, 5814000, MAIN_W, 338554, noFill(), "", cap_txb)
+    mm      = mindmap_chrome()
+    footers = footer_phs(17)
+    shapes = chrome + title + img + fig_sep + cap_sp + mm + footers
+    xml = layout_xml("DUE Ábra", "blank", shapes)
+    rels = layout_rels([("rId2", "image2.png")], master_idx=1)
+    return xml, rels
+
+
+def build_mm_tablazat():
+    """DUE Táblázat mindmap sidebar-ral — a tábla MAIN_W-re szűkítve."""
+    chrome = content_chrome("rId2")
+    title  = title_ph(13, MAIN_X, 342556, MAIN_W, 430887, hint="Táblázat")
+    tbl_title_txb = f"""<p:txBody>
+  <a:bodyPr wrap="square" anchor="t"><a:spAutoFit/></a:bodyPr>
+  <a:lstStyle><a:lvl1pPr algn="l"><a:defRPr lang="hu-HU" sz="1100" b="1" i="1" dirty="0">{solidFill(C_ORANGE)}<a:latin typeface="Aptos"/></a:defRPr></a:lvl1pPr></a:lstStyle>
+  <a:p><a:r><a:rPr lang="hu-HU" dirty="0"/><a:t>1. táblázat: Felirat szövege</a:t></a:r></a:p>
+</p:txBody>"""
+    tbl_title_sp = f"""
+<p:sp><p:nvSpPr><p:cNvPr id="14" name="table_title"/>{_LOCKED}<p:nvPr><p:ph idx="1"/></p:nvPr></p:nvSpPr>
+  <p:spPr><a:xfrm><a:off x="{MAIN_X}" y="1296000"/><a:ext cx="{MAIN_W}" cy="338554"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom>{noFill()}</p:spPr>
+  {tbl_title_txb}</p:sp>"""
+    title_sep = cxnsp(22, "table_title_separator", MAIN_X, 1656000, MAIN_W, 0)
+    tbl_sp = f"""
+<p:sp><p:nvSpPr><p:cNvPr id="16" name="data_table"/>{_LOCKED}<p:nvPr><p:ph type="tbl" idx="2"/></p:nvPr></p:nvSpPr>
+  <p:spPr><a:xfrm><a:off x="{MAIN_X}" y="1728000"/><a:ext cx="{MAIN_W}" cy="4554000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val="E8EDF2"/></a:solidFill></p:spPr>
+  <p:txBody><a:bodyPr anchor="ctr"/><a:lstStyle/><a:p><a:pPr algn="ctr"/><a:r><a:rPr lang="hu-HU" sz="1200" dirty="0">{solidFill(C_GRAY)}</a:rPr><a:t>[Táblázat beillesztése]</a:t></a:r></a:p></p:txBody></p:sp>"""
+    mm = mindmap_chrome()
+    footers = footer_phs(17)
+    shapes = chrome + title + tbl_title_sp + title_sep + tbl_sp + mm + footers
+    xml = layout_xml("DUE Táblázat", "blank", shapes)
+    rels = layout_rels([("rId2", "image2.png")], master_idx=1)
+    return xml, rels
+
+
+def build_mm_kep_szoveg():
+    """DUE Kép+Szöveg mindmap sidebar-ral — bal body + jobb kép a MAIN_W-be sűrítve."""
+    chrome = content_chrome("rId2")
+    title  = title_ph(13, MAIN_X, 342556, MAIN_W, 430887, hint="Kép és szöveg")
+    LB_X, LB_W = MAIN_X, 3750000
+    VS_X = LB_X + LB_W + 138000          # függőleges elválasztó
+    RI_X = VS_X + 150000                 # jobb kép kezdete
+    RI_W = (MAIN_X + MAIN_W) - RI_X      # a content jobb széléig
+    left_txb = f"""<p:txBody><a:bodyPr wrap="square"><a:noAutofit/></a:bodyPr>
+  <a:lstStyle><a:lvl1pPr algn="l"><a:defRPr lang="hu-HU" sz="1600" dirty="0">{solidFill(bp.C_DARK)}<a:latin typeface="Aptos"/></a:defRPr></a:lvl1pPr></a:lstStyle>
+  <a:p><a:r><a:rPr lang="hu-HU" dirty="0"/><a:t>Szöveg beírása</a:t></a:r></a:p></p:txBody>"""
+    left_sp = f"""
+<p:sp><p:nvSpPr><p:cNvPr id="14" name="col_left_body"/>{_LOCKED}<p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr>
+  <p:spPr><a:xfrm><a:off x="{LB_X}" y="1296000"/><a:ext cx="{LB_W}" cy="4986000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom>{noFill()}</p:spPr>
+  {left_txb}</p:sp>"""
+    vsep = cxnsp(23, "col_separator_inner", VS_X, 1296000, 0, 4986000, line_w=9525, color=C_FOOTLINE)
+    img_sp = _mm_pic_ph(15, "col_right_image", 2, RI_X, 1296000, RI_W, 3739500, "[Kép beillesztése]")
+    cap_txb = bp.simple_txbody("1. ábra: Felirat", sz=1100, color=C_GRAY, typeface="Aptos", anchor="t")
+    cap_sp = sp(16, "figure_caption", RI_X, 5107500, RI_W, 338554, noFill(), "", cap_txb, ph_xml='<p:ph idx="3"/>')
+    mm = mindmap_chrome()
+    footers = footer_phs(17)
+    shapes = chrome + title + left_sp + vsep + img_sp + cap_sp + mm + footers
+    xml = layout_xml("DUE Kép+Szöveg", "blank", shapes)
+    rels = layout_rels([("rId2", "image2.png")], master_idx=1)
+    return xml, rels
+
+
+# ---------------------------------------------------------------------------
 # Build
 # ---------------------------------------------------------------------------
 
@@ -228,12 +318,10 @@ def main():
             "DUE MM H3 Alszakasz", "1.1.1. Alszakasz neve",
             "    · Részlet A\n    · Részlet B",
             h1_sz=1400, h2_sz=1350, h3_sz=1300)),
-        # 7. Kép+Szöveg (sima — a kép foglalja a jobb oldalt, nincs külön mindmap)
-        ("slideLayout7", bp.build_layout_07_kep_szoveg),
-        # 8. Ábra (sima — teljes szélességű ábra)
-        ("slideLayout8", bp.build_layout_08_abra),
-        # 9. Táblázat (sima)
-        ("slideLayout9", bp.build_layout_09_tablazat),
+        # 7-9. Kép+Szöveg / Ábra / Táblázat — MINDMAP sidebar-ral (idx5), MAIN_W tartalom
+        ("slideLayout7", build_mm_kep_szoveg),
+        ("slideLayout8", build_mm_abra),
+        ("slideLayout9", build_mm_tablazat),
         # 10. Irodalomjegyzék mindmap-pal
         ("slideLayout10", lambda: build_mm_content_layout(
             "DUE MM Irodalomjegyzék", "Irodalomjegyzék",

@@ -47,7 +47,7 @@ _Státuszok: ❌ TODO · ⚙️ folyamatban · ✅ kész_
 ## 5. Stílusirányelvek
 - Nyelv: magyar szöveg, kétnyelvű terminológia (pl. "termogram / thermogram")
 - Jegyzet sablon: `templates/due_jegyzet_template.docx`
-- Prezentáció sablon: `templates/due_prenetation_template.pptx`
+- Prezentáció sablonok (2 variáns): `templates/due_presentation_default_master.potx` (default) · `templates/due_presentation_mindmap_master.potx` (mindmap). Kitöltési minta: `templates/due_prenetation_template.pptx`
 - Kérdésbank: feleletválasztós A/B/C/D, SZINT:2-5
 
 ## 6. NLM notebook konfiguráció

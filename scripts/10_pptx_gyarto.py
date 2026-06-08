@@ -1,487 +1,659 @@
 """
-10_pptx_gyarto.py -- Marp Markdown → PPTX converter
-Converts a Marp-formatted Markdown file to a PowerPoint presentation.
+10_pptx_gyarto.py — MARP Markdown → PPTX (két variáns: default / mindmap)
+
+A .potx layoutjait használja — nincs kézi stílusdefiníció a scriptben.
+Stílus (font, szín, chrome, logo, footer) a .potx-ből örökl; a script csak a
+layout-kiválasztást és a placeholder-feltöltést végzi. A potx↔python szerződés
+kizárólag placeholder-idx alapú: idx0=cím, idx1=body, idx2=kép, idx3=felirat,
+idx5=mindmap_body.
+
+Variánsok (azonos navigációs modellből, lásd _nav_util.py):
+  - default : a tájékozódást a (többsoros) fejléc-breadcrumb adja; nincs oldalsáv.
+              Sablon: due_presentation_default_master.potx
+  - mindmap : a tájékozódást a jobb oldali sorszámozott TOC (idx5) adja.
+              Sablon: due_presentation_mindmap_master.potx
+
+A navigáció mindig SZÖVEG. A meglévő _prezi_assets/(navigator|secN).png képek =
+navigációs helyek → a PPTX-ben elhagyjuk (helyettük idx5 TOC / idx0 breadcrumb).
+Minden más kép tartalmi ábra → marad. A jegyzetből vett valódi diagramok PNG-k.
 
 Usage:
-    python scripts/10_pptx_gyarto.py <marp_md_file> [--template <template.pptx>] [--output <out.pptx>]
-
-If --template is not provided (or file missing), uses a built-in default style.
-
-NOTE (pipeline): du_template.pptx is the intended template. If missing,
-this script generates a functionally equivalent default-styled deck.
+    python scripts/10_pptx_gyarto.py --week-dir test_outputs/<tárgy>/N_het [--variant both]
+    python scripts/10_pptx_gyarto.py <md> [--output <pptx>] [--variant mindmap]
 """
 
 import argparse
-import re
+import io
 import os
+import re
 import sys
+import zipfile
 from pathlib import Path
 
 try:
     from pptx import Presentation
-    from pptx.util import Inches, Pt, Emu
+    from pptx.util import Emu, Pt
     from pptx.dml.color import RGBColor
-    from pptx.enum.text import PP_ALIGN
-    from pptx.util import Inches, Pt
 except ImportError:
-    sys.exit("python-pptx not installed. Run: pip install python-pptx --break-system-packages")
+    sys.exit("python-pptx not installed.  pip install python-pptx")
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import _nav_util as nav  # noqa: E402
+import _omml  # noqa: E402  — natív OMML egyenletek (inline + block)
+
+# ── Sablonok variánsonként ─────────────────────────────────────────────────────
+
+POTX_BY_VARIANT = {
+    "default": Path("templates/due_presentation_default_master.potx"),
+    "mindmap": Path("templates/due_presentation_mindmap_master.potx"),
+}
+DEFAULT_POTX = POTX_BY_VARIANT["default"]
+
+# Logikai szerep → layout-név, variánsonként (a MM/Mindmap névkülönbség elrejtve).
+LAYOUTS = {
+    "default": {
+        "COVER": "DUE Cím", "SECTION": "DUE Szakaszfejléc", "TOC": "DUE Tartalom (TOC)",
+        "H1": "DUE H1 Fejezet", "H2": "DUE H2 Szakasz", "H3": "DUE H3 Alszakasz",
+        "KEP": "DUE Kép+Szöveg", "ABRA": "DUE Ábra", "TABLA": "DUE Táblázat",
+        "IROD": "DUE Irodalomjegyzék", "URES": "DUE Üres tartalom",
+        "VALTOZAS": "DUE Változásjegyzék",
+    },
+    "mindmap": {
+        "COVER": "DUE Cím", "SECTION": "DUE Mindmap Szakaszfejléc", "TOC": "DUE MM Tartalom (TOC)",
+        "H1": "DUE MM H1 Fejezet", "H2": "DUE MM H2 Szakasz", "H3": "DUE MM H3 Alszakasz",
+        "KEP": "DUE Kép+Szöveg", "ABRA": "DUE Ábra", "TABLA": "DUE Táblázat",
+        "IROD": "DUE MM Irodalomjegyzék", "URES": "DUE MM Üres tartalom",
+        "VALTOZAS": "DUE Változásjegyzék",
+    },
+}
 
 
-# ---------------------------------------------------------------------------
-# Slide dimensions: 16:9 widescreen
-# ---------------------------------------------------------------------------
-SLIDE_W = Inches(13.33)
-SLIDE_H = Inches(7.5)
+# ── .potx betöltés ────────────────────────────────────────────────────────────
 
-# Colours (neutral academic theme)
-C_TITLE_BG  = RGBColor(0x1F, 0x49, 0x7D)   # dark blue
-C_WHITE     = RGBColor(0xFF, 0xFF, 0xFF)
-C_BLACK     = RGBColor(0x1A, 0x1A, 0x1A)
-C_ACCENT    = RGBColor(0x2E, 0x75, 0xB6)   # medium blue
-C_LIGHT_BG  = RGBColor(0xF2, 0xF2, 0xF2)   # light grey
-C_MSC_BG    = RGBColor(0xFF, 0xF0, 0xD0)   # warm amber for MSc slides
-
-
-def parse_marp(md_text: str) -> list[dict]:
-    """
-    Parse Marp Markdown into a list of slide dicts.
-    Each dict: {title, subtitle, body, is_msc, is_cover}
-    """
-    # Strip YAML frontmatter
-    md_text = re.sub(r'^---\n.*?---\n', '', md_text, count=1, flags=re.DOTALL)
-
-    # Split on --- slide separators
-    raw_slides = re.split(r'\n---\n', md_text)
-
-    slides = []
-    for raw in raw_slides:
-        raw = raw.strip()
-        if not raw:
-            continue
-
-        is_msc = bool(re.search(r'<!-- MSc -->', raw))
-        # Strip MSc comments
-        raw = re.sub(r'<!-- /?MSc -->', '', raw).strip()
-
-        lines = raw.split('\n')
-        title = ''
-        subtitle = ''
-        body_lines = []
-        skip_next = False
-
-        for i, line in enumerate(lines):
-            if skip_next:
-                skip_next = False
-                continue
-            if re.match(r'^# ', line):
-                title = line[2:].strip()
-                # Next line may be subtitle (###)
-                if i + 1 < len(lines) and re.match(r'^### ', lines[i+1]):
-                    subtitle = lines[i+1][4:].strip()
-                    skip_next = True
-            elif re.match(r'^## ', line):
-                title = line[3:].strip()
-            elif re.match(r'^### ', line):
-                subtitle = line[4:].strip()
-            else:
-                body_lines.append(line)
-
-        body = '\n'.join(body_lines).strip()
-        slides.append({
-            'title': title,
-            'subtitle': subtitle,
-            'body': body,
-            'is_msc': is_msc,
-            'is_cover': bool(not subtitle and re.match(r'^# ', raw.split('\n')[0])) if lines else False,
-        })
-    return slides
+def load_potx(path: str | Path) -> Presentation:
+    """Megnyitja a .potx-t Presentation()-ként, a content-type in-memory patchelésével.
+    python-pptx nem fogadja el a template content-type-ot, ezért szükséges."""
+    CT_POTX = b"presentationml.template.main+xml"
+    CT_PPTX = b"presentationml.presentation.main+xml"
+    data = Path(path).read_bytes()
+    buf = io.BytesIO()
+    with zipfile.ZipFile(io.BytesIO(data)) as zin, \
+         zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            c = zin.read(item.filename)
+            if item.filename == "[Content_Types].xml":
+                c = c.replace(CT_POTX, CT_PPTX)
+            zout.writestr(item, c)
+    buf.seek(0)
+    return Presentation(buf)
 
 
-def add_textbox(slide, left, top, width, height, text, font_size=Pt(18),
-                bold=False, color=None, align=PP_ALIGN.LEFT, word_wrap=True):
-    txBox = slide.shapes.add_textbox(left, top, width, height)
-    tf = txBox.text_frame
-    tf.word_wrap = word_wrap
-    p = tf.paragraphs[0]
-    p.alignment = align
-    run = p.add_run()
-    run.text = text
-    run.font.size = font_size
-    run.font.bold = bold
-    if color:
-        run.font.color.rgb = color
-    return txBox
+# ── Layout lookup ─────────────────────────────────────────────────────────────
+
+def get_layout(prs: Presentation, name: str, fallback: str | None = None):
+    for ly in prs.slide_layouts:
+        if ly.name == name:
+            return ly
+    if fallback:
+        print(f"  ⚠️  Layout nem található: {name!r} — fallback: {fallback!r}")
+        return get_layout(prs, fallback)
+    print(f"  ⚠️  Layout nem található: {name!r} — első layout")
+    return prs.slide_layouts[0]
 
 
-def fill_shape(shape, color: RGBColor):
-    from pptx.util import Pt
-    from pptx.dml.color import RGBColor
-    shape.fill.solid()
-    shape.fill.fore_color.rgb = color
+def role_layout(prs: Presentation, variant: str, role: str):
+    """Szerep → layout a variáns táblájából; fallback a variáns saját H2-jére
+    (így a mindmap variáns soha nem ejti el a sávot egy sima H2-re)."""
+    table = LAYOUTS[variant]
+    return get_layout(prs, table.get(role, table["H2"]), fallback=table["H2"])
 
 
-def parse_body_segments(body_text: str) -> list[dict]:
-    """
-    Split body text into segments: text, image, or table.
-    Returns list of {'type': str, 'content': str | list}.
-    """
-    segments = []
-    current_text = []
-
-    def flush_text():
-        t = '\n'.join(current_text).strip()
-        if t:
-            segments.append({'type': 'text', 'content': t})
-        current_text.clear()
-
-    lines = body_text.split('\n')
-    i = 0
-    while i < len(lines):
-        line = lines[i]
-
-        # Image: ![alt](path)
-        img_m = re.match(r'^\s*!\[([^\]]*)\]\(([^)]+)\)\s*$', line)
-        if img_m:
-            flush_text()
-            segments.append({'type': 'image',
-                             'alt': img_m.group(1),
-                             'path': img_m.group(2)})
-            i += 1
-            continue
-
-        # GFM table: line starts with |
-        if re.match(r'^\s*\|', line):
-            flush_text()
-            table_lines = []
-            while i < len(lines) and re.match(r'^\s*\|', lines[i]):
-                table_lines.append(lines[i])
-                i += 1
-            segments.append({'type': 'table', 'content': table_lines})
-            continue
-
-        current_text.append(line)
-        i += 1
-
-    flush_text()
-    return segments
+def slide_phs(slide) -> dict:
+    return {ph.placeholder_format.idx: ph for ph in slide.placeholders}
 
 
-def parse_gfm_table(table_lines: list[str]) -> tuple[list[str], list[list[str]]]:
-    """Parse GFM table lines into (headers, rows). Skips separator row."""
-    headers = []
-    rows = []
-    for line in table_lines:
-        if re.match(r'^\s*\|[-: |]+\|\s*$', line):
-            continue  # separator
-        cells = [c.strip() for c in re.split(r'(?<!\\)\|', line) if c.strip() != '']
-        if not headers:
-            headers = cells
-        else:
-            rows.append(cells)
-    return headers, rows
+# ── Szöveg-tisztítás ──────────────────────────────────────────────────────────
+
+def clean(text: str) -> str:
+    """HTML, markdown, LaTeX, kép-szintaxis, blockquote eltávolítása."""
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
+    text = re.sub(r"<[^>]+>", "", text)
+    text = re.sub(r"\$\$(.+?)\$\$", r"[\1]", text, flags=re.DOTALL)
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
+    text = re.sub(r"\*(.+?)\*", r"\1", text)
+    text = re.sub(r"`(.+?)`", r"\1", text)
+    text = re.sub(r"^\|\s*[-: |]+\|\s*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^>\s*", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^!\[[^\]]*\]\([^)]+\)", "", text, flags=re.MULTILINE)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
 
 
-def add_pptx_table(slide, left, top, width, height,
-                   headers: list[str], rows: list[list[str]],
-                   font_size=Pt(13), header_color=None, text_color=None):
-    """Add a python-pptx table to a slide."""
-    from pptx.util import Pt
-    from pptx.dml.color import RGBColor
+# ── Placeholder feltöltés ─────────────────────────────────────────────────────
 
-    if header_color is None:
-        header_color = RGBColor(0x1F, 0x49, 0x7D)
-    if text_color is None:
-        text_color = RGBColor(0x1A, 0x1A, 0x1A)
-
-    n_rows = len(rows) + 1  # +1 for header
-    n_cols = max(len(headers), max((len(r) for r in rows), default=0))
-    if n_rows < 1 or n_cols < 1:
+def set_tf(ph, text: str):
+    """Body placeholder feltöltése soronként; indentáció → level 0/1/2
+    (a .potx bullet-stílusai érvényesülnek)."""
+    tf = ph.text_frame
+    tf.clear()
+    lines = [l for l in text.split("\n") if l.strip()]
+    if not lines:
         return
-
-    # Clamp height so table fits
-    row_h = min(height // n_rows, Inches(0.45))
-
-    tbl = slide.shapes.add_table(n_rows, n_cols, left, top, width, row_h * n_rows).table
-
-    def set_cell(tbl, row_idx, col_idx, text, bold=False, fg=None, bg=None):
-        cell = tbl.cell(row_idx, col_idx)
-        cell.text = text
-        p = cell.text_frame.paragraphs[0]
-        if p.runs:
-            run = p.runs[0]
-        else:
-            run = p.add_run()
-            run.text = text
-        run.font.size = font_size
-        run.font.bold = bold
-        if fg:
-            run.font.color.rgb = fg
-        if bg:
-            cell.fill.solid()
-            cell.fill.fore_color.rgb = bg
-
-    # Header row
-    for c, hdr in enumerate(headers[:n_cols]):
-        set_cell(tbl, 0, c, hdr, bold=True,
-                 fg=RGBColor(0xFF, 0xFF, 0xFF), bg=header_color)
-
-    # Data rows
-    for r, row in enumerate(rows):
-        for c in range(n_cols):
-            val = row[c] if c < len(row) else ''
-            set_cell(tbl, r + 1, c, val, fg=text_color)
-
-    return tbl
+    for i, line in enumerate(lines):
+        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        p.text = re.sub(r"^\s*[-*•]\s+", "", line).strip()   # md lista-jelölő le
+        p.level = _level(line)
 
 
-def add_slide_image(slide, left, top, width, height, img_path: str, alt: str,
-                    md_dir: str | None = None):
-    """Add a picture to a slide. img_path may be relative to md_dir."""
-    from pptx.util import Pt
+def _level(line: str) -> int:
+    indent = len(line) - len(line.lstrip())
+    return 2 if indent >= 4 else (1 if indent >= 2 else 0)
+
+
+def set_title(ph, text: str):
+    """Cím placeholder — többsoros (breadcrumb) támogatással, szint nélkül."""
+    tf = ph.text_frame
+    tf.clear()
+    lines = text.split("\n") if text else [""]
+    tf.paragraphs[0].text = lines[0]
+    for line in lines[1:]:
+        p = tf.add_paragraph()
+        p.text = line
+
+
+def insert_img_fit(slide, ph, img_path: str, md_dir: str | None):
+    """Kép FIT módban a placeholder területére — arány megtartva, levágás nélkül.
+    A képet szabad shape-ként illeszti a placeholder koordinátái közé, középre igazítva.
+    ph.insert_picture() SZÁNDÉKOSAN KERÜLENDŐ: az fill/crop módban vágja a képet."""
     path = Path(img_path)
     if not path.is_absolute() and md_dir:
         path = Path(md_dir) / path
     if not path.exists():
-        print(f"  ⚠️  Kép nem található, kihagyva: {path}")
-        return None
+        print(f"  ⚠️  Kép nem található: {path}")
+        return
     try:
-        pic = slide.shapes.add_picture(str(path), left, top, width, height)
-        return pic
+        ph_l, ph_t, ph_w, ph_h = ph.left, ph.top, ph.width, ph.height
+        try:
+            from PIL import Image as _PIL
+            with _PIL.open(str(path)) as _img:
+                img_w, img_h = _img.size
+        except Exception:
+            # Pillow nem elérhető: közvetlen fill-be esünk vissza
+            ph.insert_picture(str(path))
+            return
+        # Scale to fit (letterbox — nincs vágás)
+        scale = min(ph_w / img_w, ph_h / img_h)
+        new_w = int(img_w * scale)
+        new_h = int(img_h * scale)
+        # Középre a placeholder területén belül
+        left = ph_l + (ph_w - new_w) // 2
+        top  = ph_t + (ph_h - new_h) // 2
+        slide.shapes.add_picture(str(path), left, top, new_w, new_h)
     except Exception as e:
-        print(f"  ⚠️  Kép betöltési hiba ({path}): {e}")
+        print(f"  ⚠️  Kép hiba ({path.name}): {e}")
+
+
+def set_ph_text(ph, text: str):
+    try:
+        ph.text = text
+    except Exception:
+        try:
+            ph.text_frame.paragraphs[0].text = text
+        except Exception:
+            pass
+
+
+# ── MARP parse ────────────────────────────────────────────────────────────────
+
+def parse_marp(md_text: str) -> list[dict]:
+    """MARP Markdown → slide dict lista: {title, subtitle, body, is_cover}."""
+    md_text = re.sub(r"^---\n.*?---\n", "", md_text, count=1, flags=re.DOTALL)
+    slides = []
+    for raw in re.split(r"\n---\n", md_text):
+        raw = raw.strip()
+        if not raw:
+            continue
+        lines = raw.split("\n")
+        title, subtitle, body_lines, skip = "", "", [], False
+        for i, line in enumerate(lines):
+            if skip:
+                skip = False
+                continue
+            if re.match(r"^# ", line):
+                title = line[2:].strip()
+                if i + 1 < len(lines) and re.match(r"^## ", lines[i + 1]):
+                    subtitle = lines[i + 1][3:].strip()
+                    skip = True
+            elif re.match(r"^## ", line):
+                title = line[3:].strip()
+            else:
+                body_lines.append(line)
+        body = re.sub(r"<!--.*?-->", "", "\n".join(body_lines), flags=re.DOTALL).strip()
+        if not (title or subtitle or body):
+            continue   # üres-blokk gárda
+        slides.append({"title": title, "subtitle": subtitle, "body": body,
+                       "is_cover": bool(subtitle)})
+    return slides
+
+
+def parse_columns(body: str):
+    """Kétoszlopos MARP div → (left_raw, right_img, right_cap, right_raw) | None.
+    A bal/jobb szöveget NEM tisztítja — a szegmentálás a nyers szövegen dolgozik."""
+    if '<div class="columns">' not in body:
         return None
+    divs = re.findall(r"<div>(.*?)</div>", body, re.DOTALL)
+    if len(divs) < 2:
+        return None
+    left_raw, right_raw = divs[0], divs[1]
+    img_m = re.search(r"!\[[^\]]*\]\(([^)]+)\)", right_raw)
+    cap_m = re.search(r'<span[^>]*class="cap"[^>]*>(.*?)</span>', right_raw, re.DOTALL)
+    right_text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", right_raw)
+    right_text = re.sub(r'<span[^>]*class="cap"[^>]*>.*?</span>', "", right_text, flags=re.DOTALL)
+    return (
+        left_raw,
+        img_m.group(1) if img_m else None,
+        clean(cap_m.group(1)) if cap_m else "",
+        right_text,
+    )
 
 
-def build_presentation(slides_data: list[dict], template_path: str | None,
-                       md_dir: str | None = None) -> Presentation:
-    if template_path and os.path.exists(template_path):
-        prs = Presentation(template_path)
-        print(f"Template betöltve: {template_path}")
-    else:
-        prs = Presentation()
-        prs.slide_width  = SLIDE_W
-        prs.slide_height = SLIDE_H
-        if template_path:
-            print(f"⚠️  Helyettesítés: {template_path!r} nem található -- "
-                  "du_template.pptx hiányában default stílust használok. "
-                  "Dokumentáció: kepek_workflow.md §7 Teszt helyettesítés.")
+# ── Routing-segédek ───────────────────────────────────────────────────────────
 
-    blank_layout = prs.slide_layouts[6]  # blank
+def hlevel_role(title: str) -> str:
+    """Cím vezető száma → H1/H2/H3 ('2'→H1, '2.1'→H2, '2.1.1'→H3)."""
+    num = nav.number_from_title(title)
+    if not num:
+        return "H2"
+    return {0: "H1", 1: "H2", 2: "H3"}.get(num.count("."), "H2")
 
-    for idx, sd in enumerate(slides_data):
-        slide = prs.slides.add_slide(blank_layout)
-        w, h = prs.slide_width, prs.slide_height
-        m = Inches(0.4)   # margin
 
-        # Background colour
-        bg_color = C_MSC_BG if sd['is_msc'] else (C_TITLE_BG if idx == 0 else C_WHITE)
-        bg = slide.shapes.add_shape(
-            1,  # MSO_SHAPE_TYPE.RECTANGLE
-            0, 0, w, h
-        )
-        fill_shape(bg, bg_color)
-        bg.line.fill.background()
+def resolve_current(title: str, nav_img: str | None, root) -> str | None:
+    """Aktuális csomópont id-je: nav-képből (secN) vagy a cím számából."""
+    if root is None:
+        return None
+    if nav_img:
+        sec = nav.section_from_nav_image(nav_img)          # 'navigator'→None, secN→'N'
+        node = nav.node_for_number(root, sec) if sec else None
+        return node.id if node else None
+    node = nav.node_for_number(root, nav.number_from_title(title))
+    return node.id if node else None
 
-        text_color = C_WHITE if (idx == 0 and not sd['is_msc']) else C_BLACK
 
-        # Title bar (coloured strip at top for non-cover slides)
-        if idx > 0:
-            bar = slide.shapes.add_shape(1, 0, 0, w, Inches(1.1))
-            fill_shape(bar, C_TITLE_BG)
-            bar.line.fill.background()
+def parse_gfm_table(table_lines):
+    """GFM tábla-sorok → (headers, rows); a szeparátor-sort kihagyja."""
+    headers, rows = [], []
+    for line in table_lines:
+        if re.match(r"^\s*\|[-: |]+\|\s*$", line):
+            continue
+        cells = [clean(c) for c in re.split(r"(?<!\\)\|", line) if c.strip() != ""]
+        if not headers:
+            headers = cells
+        elif cells:
+            rows.append(cells)
+    return headers, rows
 
-        # Title
-        if sd['title']:
-            title_top = Inches(0.15) if idx == 0 else Inches(0.1)
-            title_h   = Inches(1.0)
-            add_textbox(
-                slide, m, title_top, w - 2*m, title_h,
-                sd['title'],
-                font_size=Pt(32) if idx == 0 else Pt(26),
-                bold=True,
-                color=C_WHITE,
-                align=PP_ALIGN.CENTER if idx == 0 else PP_ALIGN.LEFT,
-            )
 
-        # Subtitle (cover slide)
-        if sd['subtitle'] and idx == 0:
-            add_textbox(
-                slide, m, Inches(1.4), w - 2*m, Inches(0.6),
-                sd['subtitle'],
-                font_size=Pt(20), bold=False,
-                color=C_WHITE, align=PP_ALIGN.CENTER,
-            )
+def add_pptx_table(slide, left, top, width, height, headers, rows):
+    """Valódi PPTX-tábla beszúrása (DUE navy fejléc, Aptos)."""
+    n_rows = len(rows) + 1
+    n_cols = max(len(headers), max((len(r) for r in rows), default=0))
+    if n_rows < 1 or n_cols < 1:
+        return None
+    row_h = min(int(height // n_rows), int(Emu(411480)))   # ≤ ~0.45"
+    tbl = slide.shapes.add_table(n_rows, n_cols, left, top, width, row_h * n_rows).table
+    NAVY, WHITE, DARK = RGBColor(0x0D, 0x1B, 0x3E), RGBColor(0xFF, 0xFF, 0xFF), RGBColor(0x21, 0x21, 0x21)
 
-        # MSc badge
-        if sd['is_msc']:
-            badge = slide.shapes.add_shape(1, w - Inches(1.8), Inches(0.05), Inches(1.7), Inches(0.45))
-            fill_shape(badge, RGBColor(0xD0, 0x70, 0x00))
-            badge.line.fill.background()
-            add_textbox(slide, w - Inches(1.8), Inches(0.06), Inches(1.7), Inches(0.4),
-                        "MSc", font_size=Pt(14), bold=True, color=C_WHITE, align=PP_ALIGN.CENTER)
+    def setc(r, c, text, bold=False, fg=None, bg=None):
+        cell = tbl.cell(r, c)
+        cell.text = text
+        p = cell.text_frame.paragraphs[0]
+        run = p.runs[0] if p.runs else p.add_run()
+        if not run.text:
+            run.text = text
+        run.font.size = Pt(12)
+        run.font.bold = bold
+        run.font.name = "Aptos"
+        if fg:
+            run.font.color.rgb = fg
+        if bg:
+            cell.fill.solid(); cell.fill.fore_color.rgb = bg
 
-        # Body
-        if sd['body']:
-            body_top = Inches(1.25) if idx > 0 else Inches(2.1)
-            body_h   = h - body_top - Inches(0.3)
+    for c, h in enumerate(headers[:n_cols]):
+        setc(0, c, h, bold=True, fg=WHITE, bg=NAVY)
+    for r, row in enumerate(rows):
+        for c in range(n_cols):
+            setc(r + 1, c, row[c] if c < len(row) else "", fg=DARK)
+    return tbl
 
-            # Pre-clean: code fences + HTML comments
-            body_text = sd['body']
-            body_text = re.sub(r'```[^\n]*\n', '', body_text)
-            body_text = re.sub(r'```', '', body_text)
-            body_text = re.sub(r'<!--.*?-->', '', body_text, flags=re.DOTALL)
-            body_text = body_text.strip()
 
-            # Parse into segments (text / image / table)
-            segments = parse_body_segments(body_text)
+# ── Képlet → PNG (conda base python: matplotlib mathtext) ─────────────────────
 
-            # Simple layout: divide body_h equally among segments
-            n_seg = len(segments)
-            seg_h = body_h // n_seg if n_seg else body_h
-            cur_top = body_top
+# ── Szöveg-kitöltés natív egyenletekkel (inline $...$ + block $$...$$) ─────────
 
-            for seg in segments:
-                if seg['type'] == 'image':
-                    # Leave room for alt-text caption below image
-                    img_h = int(seg_h * 0.85)
-                    add_slide_image(
-                        slide, m, cur_top, w - 2*m, img_h,
-                        seg['path'], seg.get('alt', ''),
-                        md_dir=md_dir,
-                    )
-                    # Alt text below image (small)
-                    if seg.get('alt'):
-                        cap_top = cur_top + img_h
-                        add_textbox(
-                            slide, m, cap_top, w - 2*m, seg_h - img_h,
-                            seg['alt'], font_size=Pt(11),
-                            color=C_ACCENT, align=PP_ALIGN.CENTER,
-                        )
+def _clean_md(t: str) -> str:
+    """Inline markdown-emfázis levétele (a `$...$` math érintetlen)."""
+    t = re.sub(r"\*\*(.+?)\*\*", r"\1", t)
+    t = re.sub(r"(?<!\*)\*(?!\*)(.+?)\*", r"\1", t)
+    t = re.sub(r"`(.+?)`", r"\1", t)
+    return t
 
-                elif seg['type'] == 'table':
-                    headers, rows = parse_gfm_table(seg['content'])
-                    if headers:
-                        add_pptx_table(
-                            slide, m, cur_top, w - 2*m, seg_h,
-                            headers, rows,
-                            font_size=Pt(12),
-                            text_color=text_color,
-                        )
 
-                else:  # text
-                    t = seg['content'].strip()
-                    if t:
-                        n_chars = len(t)
-                        fsize = Pt(13) if n_chars > 600 else Pt(15) if n_chars > 300 else Pt(17)
-                        add_textbox(
-                            slide, m, cur_top, w - 2*m, seg_h,
-                            t, font_size=fsize, color=text_color,
-                        )
+_BLOCK_EQ = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
 
-                cur_top += seg_h
 
-        # Page number (not on cover)
-        if idx > 0:
-            add_textbox(
-                slide, w - Inches(1.2), h - Inches(0.35), Inches(1.0), Inches(0.3),
-                str(idx),
-                font_size=Pt(11), color=C_ACCENT, align=PP_ALIGN.RIGHT,
-            )
+def fill_text_frame(tf, raw_text: str):
+    """A text-frame feltöltése bekezdésekként, NATÍV OMML-egyenletekkel:
+    `$$...$$` (akár többsoros) → középre zárt block; `$...$` → szövegközi;
+    egyébként sima (markdown-tisztított) szöveg. OMML hiányában a $-szöveg marad."""
+    tf.clear()
+    parts = _BLOCK_EQ.split(raw_text)        # páratlan indexek = block-képletek
+    for i, part in enumerate(parts):
+        if i % 2 == 1:                       # block egyenlet
+            tex = " ".join(part.split())
+            xml = _omml.block_paragraph_xml(tex)
+            _omml.append_paragraph(tf, xml or _omml.plain_paragraph_xml(tex))
+            continue
+        for line in part.split("\n"):        # szöveg-blokk → sorok
+            if not line.strip():
+                continue
+            lvl = _level(line)
+            body = re.sub(r"^\s*>\s?", "", line)              # blockquote
+            body = re.sub(r"^\s*[-*•]\s+", "", body)          # lista-jelölő
+            body = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", body)  # kép-szintaxis
+            body = re.sub(r"<[^>]+>", "", body)               # HTML tag
+            body = _clean_md(body).strip()                    # bold/italic/code
+            if not body:
+                continue
+            if _omml.has_inline(body):
+                xml = _omml.inline_paragraph_xml(body, lvl)
+                if xml:
+                    _omml.append_paragraph(tf, xml); continue
+            _omml.append_paragraph(tf, _omml.plain_paragraph_xml(body, lvl))
+    _omml.drop_leading_empty(tf)
+
+
+# ── Tartalom-kitöltés: szöveg+egyenlet a placeholderbe, tábla külön shape-ként ─
+
+def _split_tables(raw_text: str):
+    """Sorrendtartó bontás: ('text', str) és ('table', lines) blokkok."""
+    blocks = []
+    cur = []
+    for line in raw_text.split("\n"):
+        if re.match(r"^\s*\|", line):
+            if cur:
+                blocks.append(("text", "\n".join(cur))); cur = []
+            if blocks and blocks[-1][0] == "table":
+                blocks[-1][1].append(line)
+            else:
+                blocks.append(["table", [line]])
+        else:
+            cur.append(line)
+    if cur:
+        blocks.append(("text", "\n".join(cur)))
+    return blocks
+
+
+def render_content(slide, d, idx, raw_text, md_dir, formula_dir=None):
+    """Az idx placeholderbe a próza + natív egyenletek (folyó szöveg); a markdown-
+    táblák valódi PPTX-táblaként a régió alsó részébe kerülnek."""
+    if idx not in d or not raw_text:
+        return
+    ph = d[idx]
+    blocks = _split_tables(raw_text)
+    tables = [b[1] for b in blocks if b[0] == "table"]
+
+    if not tables:                                  # nincs tábla → minden folyó szöveg
+        fill_text_frame(ph.text_frame, raw_text)
+        return
+
+    try:
+        L, T, W, H = ph.left, ph.top, ph.width, ph.height
+    except Exception:
+        fill_text_frame(ph.text_frame, raw_text)
+        return
+
+    prose = "\n".join(b[1] for b in blocks if b[0] == "text" and b[1].strip()).strip()
+    has_prose = bool(prose)
+    text_h = int(H * 0.40) if has_prose else 0
+    fill_text_frame(ph.text_frame, prose)
+    if has_prose:
+        try:                       # MIND a 4 dimenziót kiírjuk (különben W→0)
+            ph.left, ph.top, ph.width, ph.height = L, T, W, text_h
+        except Exception:
+            pass
+    gap = int(Emu(91440))
+    vy = T + (text_h + gap if has_prose else 0)
+    vh = int((H - (vy - T)) // max(1, len(tables)))
+    for tbl in tables:
+        headers, rows = parse_gfm_table(tbl)
+        if headers:
+            add_pptx_table(slide, L, vy, W, vh, headers, rows)
+        vy += vh
+
+
+# ── Dia-építők (variáns-tudatos) ──────────────────────────────────────────────
+
+def _fill_title(d, sd, variant, root, current_id):
+    """Default variánsban a többsoros breadcrumb CSAK alszakasz-diákon (N.M cím);
+    a szakasz-zárók, áttekintő stb. megtartják a literál címüket."""
+    if 0 not in d:
+        return
+    if variant == "default" and root is not None and current_id:
+        node = nav.find_node(root, current_id)
+        if node and node.num and "." in node.num:    # csak valódi alszakasz
+            bc = nav.render_breadcrumb(root, current_id)
+            if bc:
+                set_title(d[0], bc)
+                return
+    set_title(d[0], sd["title"])
+
+
+def _fill_sidebar(d, variant, root, current_id):
+    if variant == "mindmap" and root is not None and 5 in d:
+        set_tf(d[5], nav.render_toc(root, current_id))
+
+
+def add_cover(prs, sd, variant):
+    slide = prs.slides.add_slide(role_layout(prs, variant, "COVER"))
+    d = slide_phs(slide)
+    if 0 in d:
+        set_title(d[0], sd["title"])
+    if 1 in d and sd["subtitle"]:
+        set_ph_text(d[1], sd["subtitle"])
+    return "COVER"
+
+
+def add_body(prs, sd, raw_body, role, variant, root, current_id, md_dir, formula_dir):
+    slide = prs.slides.add_slide(role_layout(prs, variant, role))
+    d = slide_phs(slide)
+    _fill_title(d, sd, variant, root, current_id)
+    render_content(slide, d, 1, raw_body, md_dir, formula_dir)
+    _fill_sidebar(d, variant, root, current_id)
+    return role
+
+
+def add_kep_szoveg(prs, sd, left_raw, right_img, right_cap, md_dir, formula_dir,
+                   variant, root, current_id):
+    slide = prs.slides.add_slide(role_layout(prs, variant, "KEP"))
+    d = slide_phs(slide)
+    _fill_title(d, sd, variant, root, current_id)
+    render_content(slide, d, 1, left_raw, md_dir, formula_dir)
+    if 2 in d and right_img:
+        insert_img_fit(slide, d[2], right_img, md_dir)
+    if 3 in d and right_cap:
+        set_ph_text(d[3], right_cap)
+    _fill_sidebar(d, variant, root, current_id)
+    return "KEP"
+
+
+def add_section(prs, sd, desc_raw, variant, root, current_id, md_dir, formula_dir):
+    """Szakasz-nyitó a Szakaszfejléc mintával: szám (idx1) + cím (idx0) + leírás (idx2)."""
+    slide = prs.slides.add_slide(role_layout(prs, variant, "SECTION"))
+    d = slide_phs(slide)
+    title = sd["title"]
+    num = nav.number_from_title(title) or ""
+    title_text = re.sub(r"^\s*\d+\.\s*", "", title)
+    if 0 in d:
+        set_title(d[0], title_text)
+    if 1 in d:
+        set_ph_text(d[1], num)
+    render_content(slide, d, 2, desc_raw, md_dir, formula_dir)
+    _fill_sidebar(d, variant, root, current_id)
+    return "SECTION"
+
+
+def add_toc_overview(prs, sd, variant, root):
+    """Default Áttekintés: a teljes hierarchikus TOC a body-ban (TOC layout)."""
+    slide = prs.slides.add_slide(role_layout(prs, variant, "TOC"))
+    d = slide_phs(slide)
+    if 0 in d:
+        set_title(d[0], sd["title"])
+    if 1 in d and root is not None:
+        set_tf(d[1], nav.render_toc(root, None))
+    _fill_sidebar(d, variant, root, None)
+    return "TOC"
+
+
+# ── Fő builder ───────────────────────────────────────────────────────────────
+
+def build_presentation(slides_data, potx_path, md_dir=None, *,
+                       variant="default", mindmap_path=None):
+    potx_path = Path(potx_path)
+    if not potx_path.exists():
+        sys.exit(f"Template nem található: {potx_path}")
+
+    prs = load_potx(potx_path)
+    md_dir = str(md_dir) if md_dir else None
+    formula_dir = (str(Path(md_dir) / "_prezi_assets" / "_formulas")
+                   if md_dir else "_formulas")
+    root = (nav.parse_mindmap(mindmap_path)
+            if mindmap_path and Path(mindmap_path).exists() else None)
+    if root is None and variant == "mindmap":
+        print("  ⚠️  Nincs mindmap.md — a mindmap variáns TOC nélkül készül.")
+    print(f"Template: {potx_path.name}  ({len(prs.slide_layouts)} layout)  variáns={variant}")
+
+    for i, sd in enumerate(slides_data):
+        title, body = sd["title"], sd["body"]
+        low = title.lower()
+        cols = parse_columns(body) if '<div class="columns">' in body else None
+        num = nav.number_from_title(title)
+        is_top = bool(num) and "." not in num
+        is_closer = ("összegzés" in low) or ("összefoglal" in low)
+
+        if sd["is_cover"]:
+            used = add_cover(prs, sd, variant)
+
+        elif "hivatkozásjegyzék" in low or "irodalom" in low:
+            used = add_body(prs, sd, body, "IROD", variant, root, None, md_dir, formula_dir)
+
+        elif "áttekintés" in low:
+            left_raw = cols[0] if cols else body
+            if variant == "default":
+                used = add_toc_overview(prs, sd, variant, root)
+            else:
+                used = add_body(prs, sd, left_raw, "TOC", variant, root, None, md_dir, formula_dir)
+
+        elif is_top and not is_closer:
+            # szakasz-NYITÓ → Szakaszfejléc minta
+            cur = resolve_current(title, None, root)
+            left_raw = cols[0] if cols else body
+            used = add_section(prs, sd, left_raw, variant, root, cur, md_dir, formula_dir)
+
+        elif cols:
+            left_raw, right_img, right_cap, right_raw = cols
+            if right_img and nav.is_nav_image(right_img):
+                # navigációs kép → elhagyjuk; a navigáció idx5/idx0 felé megy
+                cur = resolve_current(title, right_img, root)
+                used = add_body(prs, sd, left_raw, hlevel_role(title), variant, root, cur, md_dir, formula_dir)
+            elif right_img:
+                cur = resolve_current(title, None, root)
+                used = add_kep_szoveg(prs, sd, left_raw, right_img, right_cap,
+                                      md_dir, formula_dir, variant, root, cur)
+            else:
+                cur = resolve_current(title, None, root)
+                combined = (left_raw + "\n\n" + right_raw).strip()
+                used = add_body(prs, sd, combined, hlevel_role(title), variant, root, cur, md_dir, formula_dir)
+
+        else:
+            cur = resolve_current(title, None, root)
+            used = add_body(prs, sd, body, hlevel_role(title), variant, root, cur, md_dir, formula_dir)
+
+        print(f"  [{i+1:2d}] {used:8s} ← {title[:42]}")
 
     return prs
 
 
-def _detect_week_number(week_dir: Path) -> int:
-    """'1_het' → 1, '12_het' → 12"""
-    import re
-    m = re.match(r'^(\d+)_het$', week_dir.name)
+# ── CLI ───────────────────────────────────────────────────────────────────────
+
+def _detect_week(week_dir: Path) -> int:
+    m = re.match(r"^(\d+)_het$", week_dir.name)
     if m:
         return int(m.group(1))
-    raise ValueError(f"Nem tudja meghatározni a hét számát: {week_dir.name!r}. "
-                     "Elvárt formátum: N_het (pl. 1_het, 12_het).")
+    raise ValueError(f"Nem tudja meghatározni a hét számát: {week_dir.name!r}")
+
+
+def _out_for(base: Path, variant: str) -> Path:
+    """default → base; mindmap → base_mindmap.pptx"""
+    if variant == "default":
+        return base
+    return base.with_name(f"{base.stem}_{variant}{base.suffix}")
+
+
+def run_one(md_path: Path, out_base: Path, template, mindmap_path, variant: str):
+    md_text = md_path.read_text(encoding="utf-8")
+    slides_data = parse_marp(md_text)
+    potx = template or POTX_BY_VARIANT[variant]
+    out_path = _out_for(out_base, variant)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    print(f"Feldolgozva: {len(slides_data)} dia  ←  {md_path}")
+    prs = build_presentation(slides_data, potx, md_dir=md_path.parent,
+                             variant=variant, mindmap_path=mindmap_path)
+    prs.save(str(out_path))
+    print(f"Mentve: {out_path}\n")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Marp MD → DUE PPTX (pipeline 12. lépés)',
-        formatter_class=argparse.RawTextHelpFormatter,
-        epilog=(
-            "Pipeline-módban:\n"
-            "  python 12_pptx_gyarto.py --week-dir test_outputs/meta_file_updates_test/1_het\n"
-            "  Input:  4_wip_outputs/N_Prezentacio.md\n"
-            "  Output: 5_clean_outputs/N_Prezentacio.pptx\n\n"
-            "Közvetlen módban:\n"
-            "  python 12_pptx_gyarto.py 1_Prezentacio.md --output out.pptx"
-        )
-    )
-    parser.add_argument('input', nargs='?', default=None,
-                        help='Marp Markdown fájl (.md) — elhagyható ha --week-dir megadva')
-    parser.add_argument('--week-dir', default=None,
-                        help='Pipeline hét-mappa (pl. test_outputs/<Tantargy>/N_het)')
-    parser.add_argument('--template', default=None,
-                        help='PPTX template elérési útja (default: templates/due_refactored.pptx)')
-    parser.add_argument('--output', default=None,
-                        help='Kimeneti .pptx fájl (elhagyható ha --week-dir megadva)')
-    parser.add_argument('--pdf', action='store_true',
-                        help='PDF másolat is generálódjon (PowerPoint COM, Windows only)')
+        description="MARP MD → DUE PPTX (default / mindmap variáns)")
+    parser.add_argument("input", nargs="?", default=None,
+                        help="MARP .md fájl — elhagyható ha --week-dir megadva")
+    parser.add_argument("--week-dir", default=None,
+                        help="Pipeline hét-mappa (pl. test_outputs/<tantárgy>/N_het)")
+    parser.add_argument("--variant", choices=["default", "mindmap", "both"],
+                        default="default", help="Prezentáció-variáns (alap: default)")
+    parser.add_argument("--template", default=None,
+                        help="POTX template felülírás (alap: variáns szerint)")
+    parser.add_argument("--mindmap", default=None,
+                        help="mindmap.md útvonal (alap: <week>/3_mindmap/mindmap.md)")
+    parser.add_argument("--output", default=None,
+                        help="Kimeneti .pptx alap (elhagyható ha --week-dir megadva)")
     args = parser.parse_args()
-
-    # -- Útvonalak meghatározása --
-    default_template = Path('templates/due_refactored.pptx')
 
     if args.week_dir:
         week_dir = Path(args.week_dir)
         if not week_dir.is_dir():
-            sys.exit(f"Nem található hét-mappa: {week_dir}")
-        n = _detect_week_number(week_dir)
-        md_path  = week_dir / '4_wip_outputs' / f'{n}_Prezentacio.md'
-        out_path = week_dir / '5_clean_outputs' / f'{n}_Prezentacio.pptx'
-        if args.input:
-            md_path = Path(args.input)
+            sys.exit(f"Nem található: {week_dir}")
+        n = _detect_week(week_dir)
+        md_path = week_dir / "4_wip_outputs" / f"{n}_Prezentacio.md"
+        out_base = week_dir / "5_clean_outputs" / f"{n}_Prezentacio.pptx"
+        mindmap_path = args.mindmap or str(week_dir / "3_mindmap" / "mindmap.md")
         if args.output:
-            out_path = Path(args.output)
+            out_base = Path(args.output)
     elif args.input:
-        md_path  = Path(args.input)
-        out_path = Path(args.output) if args.output else md_path.with_suffix('.pptx')
+        md_path = Path(args.input)
+        out_base = Path(args.output) if args.output else md_path.with_suffix(".pptx")
+        mindmap_path = args.mindmap
     else:
         parser.error("Kötelező: --week-dir VAGY positional input (md fájl)")
 
     if not md_path.exists():
         sys.exit(f"Nem található: {md_path}")
 
-    template_path = args.template or str(default_template)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    with open(md_path, encoding='utf-8') as f:
-        md_text = f.read()
-
-    slides_data = parse_marp(md_text)
-    print(f"Feldolgozva: {len(slides_data)} dia <- {md_path}")
-
-    prs = build_presentation(slides_data, template_path, md_dir=str(md_path.parent))
-    prs.save(out_path)
-    print(f"Mentve: {out_path}")
-
-    if args.pdf:
-        _pptx_to_pdf(out_path)
+    template = Path(args.template) if args.template else None
+    variants = ["default", "mindmap"] if args.variant == "both" else [args.variant]
+    for v in variants:
+        run_one(md_path, out_base, template, mindmap_path, v)
 
 
-def _pptx_to_pdf(pptx_path: Path):
-    """PPTX → PDF via PowerPoint COM (Windows only)."""
-    pdf_path = pptx_path.with_suffix('.pdf')
-    try:
-        import win32com.client
-        ppt = win32com.client.Dispatch("PowerPoint.Application")
-        prs = ppt.Presentations.Open(str(pptx_path.resolve()), True, False, False)
-        prs.SaveAs(str(pdf_path.resolve()), 32)  # 32 = ppSaveAsPDF
-        prs.Close()
-        ppt.Quit()
-        print(f"PDF: {pdf_path}")
-    except ImportError:
-        print("  WARN  pywin32 nem elérhető -- PDF kihagyva (pip install pywin32)")
-    except Exception as e:
-        print(f"  WARN  PDF generálás sikertelen: {e}")
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

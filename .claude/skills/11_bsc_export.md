@@ -44,20 +44,20 @@ python scripts/11-1_bsc_filter.py --week N --subject "Jelatvitel"
 ### 3.2. Pandoc DOCX export — teljes verzió
 
 ```powershell
-python scripts/11-2_pandoc_export.py --input "4_wip_outputs/N_Jegyzet.md" `
-    --output "5_clean_outputs/N_Jegyzet.docx" `
-    --template "templates/due_jegyzet_template.docx" `
-    --week N --subject "Jelatvitel"
+python scripts/11-2_pandoc_export.py --week-dir "test_outputs/<tárgy>/N_het"
 ```
 
 ### 3.3. Pandoc DOCX export — BSc verzió
 
 ```powershell
-python scripts/11-2_pandoc_export.py --input "4_wip_outputs/N_Jegyzet_bsc_filtered.md" `
-    --output "5_clean_outputs/N_Jegyzet_bsc.docx" `
-    --template "templates/due_jegyzet_template.docx" `
-    --week N --subject "Jelatvitel"
+python scripts/11-2_pandoc_export.py --week-dir "test_outputs/<tárgy>/N_het" --bsc
 ```
+
+**Automatikus lépések a scriptben:**
+- `--toc` (tartalomjegyzék, mélység=3) alapból bekapcsolt; kikapcs.: `--no-toc`
+- Mermaid-blokkok PNG-vé renderelése (mmdc; ugyanaz a Chromium-infrastruktúra mint 10-1); kikapcs.: `--no-mermaid`
+- Template: `templates/due_jegyzet_template.docx`; hiánykor figyelmeztetés + alapstílus
+- A script kiírja a template teljes elérési útját (`Template: ...`)
 
 ### 3.3a. Natív egyenletek (OMML / Cambria Math) — kötelező elv
 
@@ -106,6 +106,8 @@ Remove-Item "4_wip_outputs/N_Jegyzet_bsc_filtered.md"
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
 | `pandoc: command not found` | Pandoc nincs telepítve | `winget install JohnMacFarlane.Pandoc` |
+| Tartalomjegyzék hiányzik | `--no-toc` flag, vagy régi scriptverzió | Ne add meg a `--no-toc` flagot |
+| Mermaid-blokkok kódként jelennek meg | mmdc / node nem elérhető | `WARN mermaid-cli / node nem elérhető` üzenet: `10-1_mermaid_render.py` env-setupja szükséges (project_status B-15) |
 | Képletek **képként** jelennek meg a DOCX-ben | `--webtex`/`--mathjax` flag (képet/HTML-t csinál) | A flag elhagyása — a `docx` író alapból **natív OMML**-t ad; szükség esetén `_omml.py tex_to_omath()` (§3.3a) |
 | Képletek nyers `$...$`-ként maradnak | a forrás nem `$`-jelölést használ, vagy a math kiterjesztés ki van kapcsolva | A jegyzetben `$...$`/`$$...$$` jelölés; pandoc `+tex_math_dollars` (alap) |
 | Sablon stílusok hiányoznak | Template path hibás | Abszolút útvonal megadása |

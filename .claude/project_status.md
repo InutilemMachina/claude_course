@@ -51,6 +51,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - ✅ B-04: `00_init_course.py` tesztelve (`3_mindmap/` + subject_status generálás) — **kész**
 - ⚙️ B-05: Jupyter szemléltetés — `13_jupyter_catalogizer` v1.1: **didaktikai metaprompt előtöltve** (POE 3-cella, magyarázat-visszatartás, rugalmas horgony). Hátravan: **regiszter-mechanika** (külön táblázatos regiszter, fájlnév-konvenció, csatolmány stabil hivatkozása). `status: planned` marad.
 - ⚙️ B-06: YouTube/médialink — `12_youtube_finder` v1.1: **didaktikai metaprompt előtöltve** (rugalmas horgony, keresési spec, „Nézd és elemezd" CTML + time-stamp). Hátravan: **regiszter-mechanika** (külön táblázatos regiszter, csatolmány-szintaxis, a videólista bővülés/szűkülés kezelése). `status: planned` marad.
+  - **Skill-elvárás (2026-06-08):** ideálisan minden bekezdéshez (értsd: minden `###` alfejezet szövegbekezdéséhez) legalább egy videó találandó. A skill ne csak egyetlen kiemelt bekezdést keressen, hanem végigmenjen a teljes fejezeten és minden bekezdéshez jelöljön ki jelöltet — még ha végül nem mindegyikhez lesz releváns találat.
 - 🔲 B-07: `skill_template.md` best-practice felülvizsgálata — felépítés + hol éljen (`.claude/` vs `templates/`)
 - ✅ B-08: 00, 01, 02 skillek tesztelve és sablon-konformra hozva — **kész**
 - 🔲 B-09: `_ieee_renderer` — ismeretlen évnél `é.n..` dupla pont (kozmetikai); a fallback paper-formátum trailing pontját rendezni
@@ -70,6 +71,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
   hallgatók alacsony belépő szintje miatt benne KELL lennie. Kérdés: az `[MSc]` szétválás már
   **wip-szinten** (04/06) történjen-e, vagy maradjon export-szintű szűrés (11). Kapcsolódik:
   10 navigáció `[MSc]` jelölés (most megjelenik), 11_bsc_export szűrő. Eldöntendő.
+  - **Strukturális következmény (2026-06-08):** a BSc-exportot (11_bsc_export) **korábbra kell helyezni a pipeline-ban**, mert jelenleg a prezentációk (`1_Prezentacio.pptx`, `1_Prezentacio_mindmap.pptx`) is differenciálatlanok — nincs `_bsc` / `_msc` variánsuk. A 10_presentation_maker (PPTX-gyártás) csak az összevont wip-ből dolgozik, így a clean PPTX-ek MSc-tartalmat is hordoznak. Szükséges lépés: a BSc-szűrés (MSc-blokkok elhagyása) a 10-es lépés **előtt** fusson, különben a BSc prezi soha nem készül el MSc-tartalom nélkül.
 - 🔲 B-14: **`#`/`##` elnevezési csúszás** — a `06_summarize_box_injector` `#`-et nevez „fejezetnek", a `04` viszont `##`-et; a `🗺️` per-`#` (egy db) vs `💡`/`❓` per-`##`. A tényleges struktúrában `#` = dokumentumcím, `##` = fejezet. Tisztázni a terminológiát a 04/06/Instructions §7 között (kozmetikai, de zavaró). Opcionális.
 
 ## Ötletek — jövőbeni megfontolásra (💡)
@@ -115,12 +117,32 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - ❔ B-21: **„Sok kép / sok szöveg" dia-redesign — strukturális tervezési elv.** A 10-es prezi-diák hagyományosan zsúfoltak (sok kép + sok szöveg egy dián). Elv a továbbiakra: **egy gondolat / dia** (Mayer-féle coherence + segmenting), a content-igényes részek (k/n) többrészes diákra bontva (lásd 10 skill §3.1c-bis). Folyamatos finomítás, nem egyszeri javítás.
 - 🔲 **B-22**: **Moodle képlet-renderelés tisztázása** — melyik math-motort konfigurálja az intézményi Moodle (MathJax / TeX-filter / MathML)? Addig a képletes kérdések XML-exportja kockázatos. Megoldás: `--math-format` paraméter a `09-1_moodle_export.py`-ban (`latex` default, `mathjax`, `tex-filter`, `strip`). Prioritás: export-script megírása előtt tisztázni. — a skill és a Moodle-export script teljeskörű specifikációja a fenti döntések alapján: (1) L1 áganként min. 10 MCQ (volt: 3); (2) „mindegyik helyes" / „egyik sem helyes" engedélyezett; (3) mélységrendszer `(2)`–`(5)` taggel minden kérdésen — `(2)` csak Fejezet összefoglaló-alapú, `(3)` Összegzés-alapú, `(4)` teljes jegyzet, `(5)` mélyebb; (4) magyarázat + `[N]` hivatkozás a megfelelő fejezetszakaszra (review miatt); (5) számítási feladatok az MCQ részei; (6) `09_moodle_export.py` markdown-first konverzió, `--no-explanation` + `--level bsc|msc` kapcsolókkal, heti és aggregált módban.
 
+- 🔲 B-23: **Új DUE template-ek** — a jelenlegi `due_jegyzet_template.docx` és `due_presentation_template.pptx` ideiglenes placeholderek. Amikor az intézményi arculati template-ek elkészülnek, cseréld le:
+  - `templates/due_jegyzet_template.docx` — Jegyzet DOCX (11_bsc_export használja)
+  - `templates/due_presentation_template_default.potx` — Prezentáció default variáns (10_presentation_maker)
+  - `templates/due_presentation_template_mindmap.potx` — Prezentáció mindmap variáns (10_presentation_maker)
+  Az új template-ek bevezetésekor a `10_pptx_gyarto.py --variant` és `11-2_pandoc_export.py` `find_template()` keresési logikáját is frissíteni kell.
+
 ## Nyitott kérdések (❔)
 
 - ❔ Q-01: DUE template DOCX portolása — `templates/` mappába szükséges-e?
 - ❔ Q-02: A `subject_status.md` (sablon: `subject_status_template.md`) mikor és ki által töltődik ki — különösen a §5 kérdésbank-beállítás a `09_question_bank` skill véglegesítése után? (😎 induláskor vagy 🤖 a 09 konfigjából?)
 - ❔ Q-03 (B-07-hez): A `.claude/skills/` lépés-dokumentumok maradjanak protokoll-doksik, vagy váljanak valódi, hívható Claude-skillekké (`SKILL.md` + `name`/`description`)? — Mindent a maga idejében; a B-07/B-08 keretében döntjük el.
 - ❔ Q-04 (B-05/B-06/B-13-hoz): A 12_youtube_finder (`📎▶`) és 13_jupyter_catalogizer (`📎🧪`) a kimeneti fázisban, **a jegyzet/prezi elkészülte UTÁN** futnak — hogyan lehet a csatolmányokat **visszamenőlegesen** beregisztrálni a már kész wip ÉS clean outputokba? Megválaszolandó: (1) a wip `4_wip_outputs/N_Jegyzet.md` / `N_Prezentacio.md` újraírása-e a horgony beszúrásához, vagy külön overlay/regiszter-fájl; (2) a már legenerált clean outputok (`5_clean_outputs/` .docx/.pptx) frissítése — újragenerálás a wip-ből vagy utólagos patch; (3) idempotencia és a bővülő/szűkülő videó-/notebook-lista kezelése a stabil `[link]` hivatkozással. Kapcsolódó kötött jelölés: `📎▶` / `📎🧪` (12/13 §3.1).
+  - **Konkrét tünet (2026-06-08, atg/1_het):** a YouTube visszaregisztráció csak `4_wip_outputs/1_Jegyzet.md`-be történt meg. Hiányzik még (feladat):
+    - `4_wip_outputs/1_Prezentacio_default.md`
+    - `4_wip_outputs/1_Prezentacio_mindmap.md`
+    - `5_clean_outputs/1_Jegyzet.docx` *(utólagos python-docx patch — részleges kísérlet volt, ellenőrizni)*
+    - `5_clean_outputs/1_Jegyzet_bsc.docx`
+    - `5_clean_outputs/1_Prezentacio.pptx`
+    - `5_clean_outputs/1_Prezentacio_mindmap.pptx`
+  - **BSc/MSc szűrési feltétel:** MSc-szintű videó ne kerüljön BSc-outputba (a `<!-- MSc -->` blokkon belüli bekezdéshez rendelt videókat BSc clean exportból ki kell hagyni).
+  - **Notebook visszaregisztrálás (2026-06-08, atg/1_het):** a `📎🧪` csatolmány bekerült `4_wip_outputs/1_Jegyzet.md`-be (2. Kompresszortérkép összegzés után), de hiányzik (feladat — ugyanaz a lista mint YouTube-nál):
+    - `4_wip_outputs/1_Prezentacio_default.md`
+    - `4_wip_outputs/1_Prezentacio_mindmap.md`
+    - `5_clean_outputs/1_Jegyzet.docx`, `1_Jegyzet_bsc.docx`
+    - `5_clean_outputs/1_Prezentacio.pptx`, `1_Prezentacio_mindmap.pptx`
+  - **6_assets mappa-konvenció (döntés, 2026-06-08):** notebookok (`📎🧪`) és regiszterek (YouTube + notebook lista) a `<hét>/6_assets/` mappában laknak — ez a 12/13 lépések kimeneti helye. YouTube regiszter is heti szintű, ugyanitt. A `6_assets/` a mappastruktúra új, 6. eleme (lásd Instructions §6).
 
 ## Változásjegyzék
 

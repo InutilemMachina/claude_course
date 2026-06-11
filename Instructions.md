@@ -118,8 +118,8 @@ claude_course/
         ├── 2_clean_inputs/
         ├── 3_mindmap/
         ├── 4_wip_outputs/
-        └── 5_clean_outputs/
-        └── 6_asset_outputs/
+        ├── 5_asset_outputs/   # 12/13 gazdagítás: videó/notebook regiszter + overlay
+        └── 6_clean_outputs/   # camera-ready: a véglegesített wip tiszta konverziója
 ```
 
 ## 7. Vizuális gazdagítás — kötelező szabály

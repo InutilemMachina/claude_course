@@ -90,6 +90,8 @@ Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12]
 
 ## 10. Változásjegyzék
 
+<!-- Konvenció: a legfrissebb változás LEGALUL (kronológiai, növekvő sorrend) — minden changelogra. -->
+
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | YYYY-MM-DD | 1.0 | Létrehozva |

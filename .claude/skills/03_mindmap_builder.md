@@ -3,10 +3,10 @@ name: 03_mindmap_builder
 title: 03_MINDMAP_BUILDER — Hierarchikus elmetérkép generálása
 type: skill
 tags: [meta, skill]
-role: ??
+role: 🤖
 status: active
-version: 1.4
-updated: 2026-06-05
+version: 1.5
+updated: 2026-06-11
 description: Claude elolvassa az összes forrást és fogalmi összefüggések alapján hierarchikus mindmapet generál. Ha 02_mineru_to_catalog futott, a strukturált MinerU markdown az elsődleges szövegforrás (raw PDF fallback). A felhasználó revideálja, MSc-ágakat jelöl. Ez a pipeline sarokköve.
 ---
 
@@ -19,7 +19,7 @@ alapján — nem merev fejezet-hierarchia szerint — hierarchikus mindmapet gen
 A mindmap az összes downstream output (04–10) vezérfonala.
 
 **Input:** `1_raw_inputs/*.pdf, *.pptx` (eredeti forrásanyagok)
-**Output:** `3_mindmap/mindmap.md` (Mermaid `flowchart LR`, ?? jóváhagyás után végleges)
+**Output:** `3_mindmap/mindmap.md` (Mermaid `flowchart LR`, 😎 jóváhagyás után végleges)
 **WIP Output:** `test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_horz.md` (LR) és `{N}_Mindmap_vert.md` (TD) — draft
 
 ## 2. Bemenetek
@@ -143,10 +143,10 @@ test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_vert.md    ‹ flowchart
 ```
 
 A wip_outputs verziókban:
-- Csak cím és mindmap Mermaid blokk marad (YAML frontmatter + referencia-tábla törlve)
-- lowchart LR › horz (horizontal/baloldali-jobboldali)
-- lowchart TD › ert (vertical/topdown)
-- Mindkét verzió ugyanazt az elemetérképet tartalmazza, csak más irányultságban
+- Csak cím és mindmap Mermaid blokk marad (YAML frontmatter + referencia-tábla törölve)
+- flowchart LR › horz (horizontal/baloldali-jobboldali)
+- flowchart TD › vert (vertical/topdown)
+- Mindkét verzió ugyanazt az elmetérképet tartalmazza, csak más irányultságban
 
 YAML frontmatter kötelező a fő fájlban:
 
@@ -160,11 +160,11 @@ week: N
 sources: [fájlnév1, fájlnév2, ...]
 msc_nodes: [csomópont1, csomópont2, ...]  ‹ Claude javaslata
 created: YYYY-MM-DD
-status: draft  ‹ ?? jóváhagyás után: approved
+status: draft  ‹ 😎 jóváhagyás után: approved
 ---
 ```
 
-### 3.5. Checkpoint — ?? felhasználói revízió
+### 3.5. Checkpoint — 😎 felhasználói revízió
 
 A draft mindmap elkészítése után:
 
@@ -175,7 +175,7 @@ A draft mindmap elkészítése után:
 
 A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 
-**?? A 04_content_synthesizer csak `status: approved` mindmap alapján indul!**
+**🚦 A 04_content_synthesizer csak `status: approved` mindmap alapján indul!**
 
 ## 4. Kimenetek
 
@@ -229,12 +229,9 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-05 | 1.4 | §3.3 Szabályok újraírva 😎 visszajelzés alapján: minden szám után pont; Fig/Eq/inline matek tilos a renderelt node-ban (→ új §3.3.1 nem renderelt réteg); `[MSc]` egységes forma; modellnév évszám nélkül; `<br>` csak indokolt; idegen szavak óvatosan + nyíl→szó szivárgás tiltva; egyszerű/egygyerekes node OK; szigorú fa — csak szülő→gyermek él (kereszt-/testvér-él, közös node-ba futtatás tiltva). §5 checklist + §6 két hibasor + §8 RAG-ötlet. |
 | 2026-06-01 | 1.0 | Létrehozva (claude_play 08_mindmap_manager alapján, Claude-natív) |
 | 2026-06-03 | 1.1 | §2 input javítva: `2_clean_inputs/**/*.md` › `1_raw_inputs/` (02 skill csak képet termel, szöveg-szintézis Claude direkt PDF-olvasással); §3.1 + §5 igazítva |
+| 2026-06-03 | 1.2 | §3.4, §4 bővítve: WIP draft verziók (`1_Mindmap_horz.md` LR + `1_Mindmap_vert.md` TD) a `4_wip_outputs/` alatt |
 | 2026-06-05 | 1.3 | MinerU-first pipeline: §2 MinerU `.md` elsődleges szövegforrás (raw PDF fallback); §3.1 kettéválasztva standard/fallback; §6 új hibasor. Gain: heading-struktúra, LaTeX formulák, tábla-MD, kéthasábos olvasási sorrend. |
-| 2026-06-03 | 1.2 | §3.4, §4 bővítve: WIP draft verziók (1_Mindmap_horz.md LR + 1_Mindmap_vert.md TD) wip_outputs/atg/ alatt
-
-
-
-
+| 2026-06-05 | 1.4 | §3.3 Szabályok újraírva 😎 visszajelzés alapján: minden szám után pont; Fig/Eq/inline matek tilos a renderelt node-ban (→ új §3.3.1 nem renderelt réteg); `[MSc]` egységes forma; modellnév évszám nélkül; `<br>` csak indokolt; idegen szavak óvatosan + nyíl→szó szivárgás tiltva; egyszerű/egygyerekes node OK; szigorú fa — csak szülő→gyermek él (kereszt-/testvér-él, közös node-ba futtatás tiltva). §5 checklist + §6 két hibasor + §8 RAG-ötlet. |
+| 2026-06-11 | 1.5 | Higiénia: 😎-emoji helyreállítva (mojibake `??`→😎); typók javítva (`flowchart`/`vert`/`elmetérkép`/`törölve`); changelog kronológiai sorrendbe (legfrissebb alul) + lezáratlan 1.2 sor zárva. |

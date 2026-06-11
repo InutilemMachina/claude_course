@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖+🐍
 status: active
-version: 1.2
-updated: 2026-06-06
+version: 1.3
+updated: 2026-06-11
 description: figure_catalog alapján ábrák beillesztése a jegyzet megfelelő fejezet-szakaszaiba; számozott, önálló koherens felirat a kép alatt (Instructions §7.1).
 ---
 
@@ -65,13 +65,20 @@ Claude ellenőrzi a beillesztett ábrákat:
 |:-----|:---------|
 | `4_wip_outputs/N_Jegyzet.md` | Ábrahivatkozásokkal gazdagított verzió |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — `1_Jegyzet.md` + `figure_catalog.json` (v4).
+- **Akció:** §3 — `<!-- FIGURE: forrás/id -->` placeholderek feloldása `![]()`-re (a script v4-átírása Fázis 2).
+- **Várt kimenet:** Beillesztett ábrák a megfelelő szakaszban, számozott önálló felirattal.
+- **Eval:** §6 ellenőrzőlista (képútvonalak léteznek, placeholderek naplózva).
+
+## 6. Ellenőrzés
 
 - [ ] Minden `figure_catalog` bejegyzés beillesztve vagy placeholder-rel jelezve
 - [ ] Képútvonalak érvényesek (relatív, létező fájl)
 - [ ] `<!-- FIGURE: -->` placeholder-ek számát naplózd (felhasználó eldönti mi legyen velük)
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -79,21 +86,22 @@ Claude ellenőrzi a beillesztett ábrákat:
 | `suggested_section` nem talál fejezetet | Fejezetnév változott 04-ben | `figure_catalog.json` manuális frissítés |
 | Képfájl hiányzik | MinerU nem mentette | `<!-- FIGURE: {id} — MISSING -->` jelölés |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
 - [04_content_synthesizer.md](04_content_synthesizer.md) — upstream
 - [06_summarize_box_injector.md](06_summarize_box_injector.md) — downstream
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 - ⚡ HIBA: a `05_figure_mapper.py` inkompatibilis a v4 `figure_catalog.json`-nal (beágyazott `_meta`+`sources` sémát laposként olvas), és valójában nem szúr be képet — csak `inserted_after_paragraph`-ot ír a katalógusba. A `<!-- FIGURE: source/fig_id -->` placeholder-feloldást (skill §3.3) jelenleg Claude végzi kézzel. Script-átírás: [project_status.md](../project_status.md) B-10.
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (mint 05_visual_enricher) |
 | 2026-06-06 | 1.2 | §3.2 felirat-formátum a kanonikus sémára: `i. ábra. Önálló koherens mondat. [forrás / saját szerk.]` a kép alatt (Instructions §7.1); folytonos ábraszámozás (Mermaid is). |
 | 2026-06-03 | 1.1 | Szétválasztva: összegző dobozok → 06_summarize_box_injector; átnevezés figure_integrator-ra; TODO lezárva |
+| 2026-06-11 | 1.3 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |

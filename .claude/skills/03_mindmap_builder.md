@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.5
+version: 1.6
 updated: 2026-06-11
 description: Claude elolvassa az összes forrást és fogalmi összefüggések alapján hierarchikus mindmapet generál. Ha 02_mineru_to_catalog futott, a strukturált MinerU markdown az elsődleges szövegforrás (raw PDF fallback). A felhasználó revideálja, MSc-ágakat jelöl. Ez a pipeline sarokköve.
 ---
@@ -185,7 +185,14 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 | `test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_horz.md` | Draft LR verzió — cím + flowchart LR, metaadat nélkül |
 | `test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_vert.md` | Draft TD verzió — cím + flowchart TD, metaadat nélkül |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — MinerU markdown + `figure_catalog.json` (v4) + `citations.json`.
+- **Akció:** §3 — Claude beolvassa a forrásokat és fogalmi hierarchiát épít.
+- **Várt kimenet:** `3_mindmap/mindmap.md` (Mermaid `flowchart LR`, 3–6 L1 ág, `status: draft`) + WIP horz/vert másolatok.
+- **Eval:** §6 ellenőrzőlista + 🚦 😎 checkpoint (struktúra/lefedettség).
+
+## 6. Ellenőrzés
 
 - [ ] Minden L1 ág azonosítható az `1_raw_inputs/` forrásokban?
 - [ ] Minden L1/L2 szám után pont (`5.`, `1.1.`)?
@@ -198,7 +205,7 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 - [ ] `status: approved` a YAML-ban?
 - [ ] A nem renderelt ábra/képlet-hivatkozások egyeznek a `figure_catalog.json`-nel?
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -211,13 +218,13 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 | Fig/Eq vagy inline matek a renderelt node-ban | Forrás-zaj a vázlatban | Áthelyezés a nem renderelt blokkba (§3.3.1); a node csak fogalmat tartalmaz |
 | `to`/`hoz` szó a node-címben | `→` nyíl szövegként szivárgott be | A kapcsolatot éllel fejezd ki; a címkéből töröld |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md) — §3 Checkpoint táblázat
 - [04_content_synthesizer.md](04_content_synthesizer.md) — downstream skill
 - [Instructions.md](../../Instructions.md) — §7 Vizuális gazdagítás szabályok
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 - 💡 **2. sprint — háttér-RAG / láthatatlan metaadat:** a MinerU-ból nyert többletinformáció
   (`text_context`, `caption`, `keywords`, oldal- és Fig/Eq-azonosítók) node-onként strukturált,
@@ -225,7 +232,7 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
   alapja lehet (04 szintézis és 09 kérdésbank célzottan a releváns forrásrészre hivatkozhat a
   teljes PDF újraolvasása helyett). Részletek: [project_status.md](../project_status.md) „Ötletek".
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
@@ -235,3 +242,4 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 | 2026-06-05 | 1.3 | MinerU-first pipeline: §2 MinerU `.md` elsődleges szövegforrás (raw PDF fallback); §3.1 kettéválasztva standard/fallback; §6 új hibasor. Gain: heading-struktúra, LaTeX formulák, tábla-MD, kéthasábos olvasási sorrend. |
 | 2026-06-05 | 1.4 | §3.3 Szabályok újraírva 😎 visszajelzés alapján: minden szám után pont; Fig/Eq/inline matek tilos a renderelt node-ban (→ új §3.3.1 nem renderelt réteg); `[MSc]` egységes forma; modellnév évszám nélkül; `<br>` csak indokolt; idegen szavak óvatosan + nyíl→szó szivárgás tiltva; egyszerű/egygyerekes node OK; szigorú fa — csak szülő→gyermek él (kereszt-/testvér-él, közös node-ba futtatás tiltva). §5 checklist + §6 két hibasor + §8 RAG-ötlet. |
 | 2026-06-11 | 1.5 | Higiénia: 😎-emoji helyreállítva (mojibake `??`→😎); typók javítva (`flowchart`/`vert`/`elmetérkép`/`törölve`); changelog kronológiai sorrendbe (legfrissebb alul) + lezáratlan 1.2 sor zárva. |
+| 2026-06-11 | 1.6 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |

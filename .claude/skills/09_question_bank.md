@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.3
-updated: 2026-06-07
+version: 1.4
+updated: 2026-06-11
 description: Mindmap L1 ágankénti bontásban MCQ kérdésbank generálása a végleges Jegyzet alapján. L1 áganként min. 10 kérdés, (2)–(5) mélységrendszer, BSc/MSc szintjelzéssel. Moodle-export: 09b_moodle_export.
 ---
 
@@ -141,7 +141,14 @@ created: YYYY-MM-DD
 
 Moodle XML-export: → [`09b_moodle_export.md`](09b_moodle_export.md)
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — `1_Jegyzet.md`.
+- **Akció:** §3 — L1-ágankénti MCQ-generálás.
+- **Várt kimenet:** `1_Kerdesbank.md` (L1 min. 10 MCQ, depth-tag `(2)`–`(5)`, helyes válasz + magyarázat + §-hivatkozás).
+- **Eval:** §6 ellenőrzőlista (lefedettség, tag-ek, egy helyes válasz).
+
+## 6. Ellenőrzés
 
 - [ ] Minden L1 ághoz legalább 10 MCQ kérdés
 - [ ] Minden L1 ághoz legalább 2 db `(2)` és 2 db `(3)` szintű kérdés
@@ -153,7 +160,7 @@ Moodle XML-export: → [`09b_moodle_export.md`](09b_moodle_export.md)
 - [ ] Magyarázatok tartalmasak (nem csak „mert ez a helyes")
 - [ ] Frontmatter count-mezők kitöltve
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -163,18 +170,18 @@ Moodle XML-export: → [`09b_moodle_export.md`](09b_moodle_export.md)
 | Hivatkozás hiányzik | Gyors generálás | Minden kérdésnél visszakeresni a megfelelő `##` fejezetet |
 | `<!-- MSc -->` blokk nem zárt | `<!-- /MSc -->` hiányzik | Manuálisan hozzáadni |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
 - [09b_moodle_export.md](09b_moodle_export.md) — Moodle XML-export spec
 - [08_quality_reviewer.md](08_quality_reviewer.md) — upstream
 - [03_mindmap_builder.md](03_mindmap_builder.md) — L1 ágak forrása
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
@@ -182,3 +189,4 @@ Moodle XML-export: → [`09b_moodle_export.md`](09b_moodle_export.md)
 | 2026-06-03 | 1.1 | Átszámozva 08→09 |
 | 2026-06-05 | 1.2 | MinerU-first: §2 MinerU `.md` mint számítási forrás; §3.1 számítási feladat kritérium pontosítva |
 | 2026-06-07 | 1.3 | **Alapelv-váltás:** forrásigazság = Jegyzet (nem MinerU); L1 min. 10 MCQ (volt 3); mélységrendszer (2)–(5) minden kérdésen; BSc/MSc szintjelzés + export-szabály; „Mindegyik/Egyik sem helyes" engedélyezett; fejezethivatkozás kötelező review-hoz; Moodle-export → 09b_moodle_export |
+| 2026-06-11 | 1.4 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |

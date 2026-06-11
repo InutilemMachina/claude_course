@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 2.2
-updated: 2026-06-06
+version: 2.3
+updated: 2026-06-11
 description: Minden `##` alfejezet végére `💡 Összegzés`, minden `#` fejezet zárásánál `🗺️ Fejezet összegfoglalása`, minden `##` fejezet zárásánál `❔ Ellenőrizd magad` retrieval-kérdés (válaszok a `🔑 Megoldókulcs` szekcióban) in-place beszúrása.
 ---
 
@@ -122,7 +122,14 @@ dokumentumban —, azt felülírja (nem duplikálja).
 |:-----|:---------|
 | `4_wip_outputs/N_Jegyzet.md` | `💡 Összegzés` + `🗺️ Fejezet összegfoglalása` blokkokkal kiegészített verzió |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — `1_Jegyzet.md` (szintetizált, ábrákkal).
+- **Akció:** §3 — `💡 Összegzés` / `🗺️ Fejezet összegfoglalása` / `❔ Ellenőrizd magad` + `🔑 Megoldókulcs` injektálása.
+- **Várt kimenet:** Minden `##` végén 💡, minden `#` zárásánál 🗺️, dokumentumvégi 🔑.
+- **Eval:** §6 ellenőrzőlista + idempotencia (újrafuttatás 0 duplikátum).
+
+## 6. Ellenőrzés
 
 - [ ] `💡 Összegzés` blokk minden `##` alfejezet végén (a `## Hivatkozásjegyzék` és `## Tartalomjegyzék` kivételével)
 - [ ] `🗺️ Fejezet összegfoglalása` blokk minden `#` fejezet zárásánál
@@ -133,7 +140,7 @@ dokumentumban —, azt felülírja (nem duplikálja).
 - [ ] A `> 💡`, `> 🗺️`, `> ❔` blockquote formátum egységes
 - [ ] Nincs duplikáció (idempotencia, §3.5)
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -146,18 +153,18 @@ dokumentumban —, azt felülírja (nem duplikálja).
 | `❔` / `🧱` blokk a 07 typesetter után külön blockquote-okra esett | A listaelemek `>` üres sor nélkül követték egymást (Rule D valódi üres sort szúrt be) | Minden `>` tartalmi sort `>` üres sorral elválasztani (§3.3 formátum-szabály); a `🔑` szekció normál markdown, ezt nem érinti |
 | Régi `📦 Összegző` blokkok maradtak vissza | Korábbi (v1.x) kimenet | Manuális csere `💡 Összegzés` / `🗺️ Fejezet összegfoglalása`-ra a §3.1–3.2 sablon szerint |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
 - [05_figure_integrator.md](05_figure_integrator.md) — upstream
 - [07_typesetter.md](07_typesetter.md) — downstream
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 -
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
@@ -165,3 +172,4 @@ dokumentumban —, azt felülírja (nem duplikálja).
 | 2026-06-06 | 2.1 | **Retrieval practice**: új `❔ Ellenőrizd magad` kérdés-blokk minden `##` fejezet zárásánál a `💡` elé, és elkülönített `## 🔑 Megoldókulcs` szekció a dokumentum végén (spoiler-mentes előhívás, Learning Scientists). §3.3 új; §3.4/3.5 átszámozva; idempotencia, ellenőrzés, hibakezelés kiterjesztve. |
 | 2026-06-03 | 1.0 | Létrehozva (05_visual_enricher összegző-doboz részéből kiválasztva) |
 | 2026-06-03 | 2.0 | `📦 Összegző` (egyetlen `##`-szintű doboz) helyett kétszintű séma: `💡 Összegzés` minden `##` alfejezet végén, `🗺️ Fejezet összegfoglalása` minden `#` fejezet zárásánál; idempotencia-szabály (§3.4) |
+| 2026-06-11 | 2.3 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |

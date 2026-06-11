@@ -3,7 +3,7 @@ name: NN_skill_name
 title: NN_SKILL_NAME -- Rövid cím
 type: skill
 tags: [meta, skill]
-role: 🐍 | 🤖 | 😎+🤖
+role: 🐍 | 🤖 | 😎+🤖   # több executor: +-szal, sorrend 😎 → 🤖 → 🐍
 status: active
 version: 1.0
 updated: YYYY-MM-DD

@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.6
-updated: 2026-06-07
+version: 1.7
+updated: 2026-06-11
 description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, az MSc-levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
 ---
 
@@ -222,7 +222,14 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 |:-----|:---------|
 | `4_wip_outputs/N_Jegyzet.md` | YAML + TJ-hely + fejezetek + diagramok + hivatkozásjegyzék |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — jóváhagyott `mindmap.md` + MinerU markdown + `citations.json`.
+- **Akció:** §3 — szekciónkénti, mindmap-vezérelt szintézis.
+- **Várt kimenet:** `4_wip_outputs/1_Jegyzet.md` (minden L1→`##`, 🔭/🎯 blokkok, Mermaid, IEEE `[N]`, Hivatkozásjegyzék).
+- **Eval:** `08_quality_check.py --week-dir …` + §6 ellenőrzőlista.
+
+## 6. Ellenőrzés
 
 - [ ] Minden L1 mindmap-ág `##` fejezetként szerepel?
 - [ ] `🔭 A Nagykép` blokk minden `##` fejezet nyitásánál (analógia, zsargon nélkül)?
@@ -238,7 +245,7 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 - [ ] `[MSc]` csomópontok `<!-- MSc -->...<!-- /MSc -->` blokkban?
 - [ ] YAML frontmatter `source_mindmap` mezővel?
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -250,14 +257,14 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 | [MSc] blokk nem záródik | Hiányzó `<!-- /MSc -->` | Keresés és pótlás |
 | `💡 Összegzés` / `🗺️ Fejezet összegfoglalása` hiányzik | Kimaradt a sablonból | Pótlás 06_summarize_box_injector-ben (kanonikus formátum: ott §3.1–3.2) |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md) — §2 Lépések és IO
 - [03_mindmap_builder.md](03_mindmap_builder.md) — upstream skill
 - [05_figure_integrator.md](05_figure_integrator.md) — downstream skill
 - [Instructions.md](../../Instructions.md) — §7 Vizuális gazdagítás, §8 Hivatkozási szabály
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 - 💬 NOTE (2026-06-07, `quality_review_test`): a jegyzetekben az ábrák/táblák **kizárólag önálló, számozott felirattal** jelennek meg — a szövegtörzs **nem** hivatkozik rájuk szövegközi módon (nincs „lásd a 3. ábrát", „(2. táblázat)" típusú utalás). A szöveg↔vizuál egyetlen kötése az **előfordulási sorrend**. Lehetséges kihatások:
@@ -266,7 +273,7 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
   - ⚡ **Kockázat:** ha később bevezetünk szövegközi ábrahivatkozást (kézzel vagy 04-szabályként), a `07-3` jelenleg **nem** frissíti azokat → felirat és hivatkozás elcsúszhat. A `07-3`-at **a konvenció bevezetése előtt** ki kell egészíteni ref-frissítéssel.
   - ❔ **Döntendő:** legyen-e 04-konvenció, hogy minden ábrára/táblára essék legalább egy szövegközi utalás a vonatkozó bekezdésben (signaling-előny), elfogadva a `07-3` bővítésének költségét? (Kapcsolódó: [Instructions §7.1](../../Instructions.md), [07_typesetter §3.4](07_typesetter.md).)
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
@@ -277,3 +284,4 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 | 2026-06-01 | 1.0 | Létrehozva (NLM 04+05 kiváltása, Claude-natív) |
 | 2026-06-05 | 1.2 | MinerU-first: §2 MinerU `.md` elsődleges szövegforrás; §3.4 új szekció (formulák+táblák MinerU-ból, ne kézzel); §3.5–3.9 átszámozva; §6 két új hibasor. |
 | 2026-06-03 | 1.1 | Sablon-sor: `📦 Összegző` → `💡 Összegzés` (`##` alfejezet végén); `🗺️ Fejezet összegfoglalása` placeholder a `#` fejezet zárásánál — kanonikus formátum a 06 skillben |
+| 2026-06-11 | 1.7 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |

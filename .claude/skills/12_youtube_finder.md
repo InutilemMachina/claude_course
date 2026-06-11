@@ -3,10 +3,10 @@ name: 12_youtube_finder
 title: 12_youtube_finder -- A tananyag gazdagítása Youtube videókkal
 type: skill
 tags: [meta, skill]
-role: 🤖,😎
+role: 😎+🤖
 status: planned
-version: 1.1
-updated: 2026-06-06
+version: 1.2
+updated: 2026-06-11
 description: A publikálható jegyzet/prezentáció kijelölt koncepcióihoz Youtube videókat/shortsokat rendel kontextuális horgonnyal + „Nézd és elemezd" feladattal (Mayer CTML + retrieval), és csatolmányként regisztrálja; használd a 08_quality_reviewer PUBLIKÁLHATÓ döntése után, opcionális gazdagító lépésként. Didaktikai metaprompt előtöltve; regiszter-mechanika backlog.
 ---
 
@@ -117,3 +117,4 @@ Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12]
 |-------|--------|--------|
 | 2026-06-06 | 1.1 | §1 + §3.1 didaktikai metaprompt előtöltve (rugalmas horgony, keresési spec, „Nézd és elemezd" CTML + time-stamp); §3.2 regiszter-mechanika backlogba. `status: planned` marad. |
 | YYYY-MM-DD | 1.0 | Létrehozva |
+| 2026-06-11 | 1.2 | role-notáció standardizálva (😎+🤖). |

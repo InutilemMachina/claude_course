@@ -3,10 +3,10 @@ name: 11_bsc_export
 title: 11_BSC_EXPORT — BSc szűrés és pandoc camera-ready DOCX
 type: skill
 tags: [meta, skill]
-role: 🤖->🐍
+role: 🤖+🐍
 status: active
-version: 1.2
-updated: 2026-06-07
+version: 1.3
+updated: 2026-06-11
 description: MSc tartalom kiszűrése és pandoc segítségével DUE arculatú DOCX fájlok generálása BSc és teljes verzióban. A LaTeX képletek NATÍV Word-egyenletként (OMML / Cambria Math, nem kép) — a 10 lépés `_omml.py` elvével konzisztens.
 ---
 
@@ -93,7 +93,14 @@ Remove-Item "4_wip_outputs/N_Jegyzet_bsc_filtered.md"
 | `5_clean_outputs/N_Jegyzet.docx` | Teljes (BSc+MSc) camera-ready DOCX |
 | `5_clean_outputs/N_Jegyzet_bsc.docx` | BSc-only camera-ready DOCX |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — `1_Jegyzet.md` + `due_jegyzet_template.docx`.
+- **Akció:** `11-2_pandoc_export.py --week-dir …` (a 11-1 bsc_filter Fázis 2-ben törlődik az MSc-vel).
+- **Várt kimenet:** `6_clean_outputs/1_Jegyzet.docx` (DUE sablon, natív OMML, beágyazott képek).
+- **Eval:** DOCX megnyitható Wordben; §6 ellenőrzőlista.
+
+## 6. Ellenőrzés
 
 - [ ] Mindkét DOCX fájl létezik és megnyitható
 - [ ] BSc verzióban nincs `<!-- MSc -->` szöveg vagy `[MSc]` prefix
@@ -101,7 +108,7 @@ Remove-Item "4_wip_outputs/N_Jegyzet_bsc_filtered.md"
 - [ ] Fejezetek számozása megmarad a DOCX-ben
 - [ ] Képek beágyazva (nem hiányzó hivatkozásként)
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -114,20 +121,21 @@ Remove-Item "4_wip_outputs/N_Jegyzet_bsc_filtered.md"
 | BSc-ben maradó MSc tartalom | Regex nem match-el a blokk határon | `11-1_bsc_filter.py` regex-et debug-olni |
 | Képek hiányoznak a DOCX-ben | Relatív útvonal a Markdown-ban | `--resource-path` flag pandocnak |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
 - [08_quality_reviewer.md](08_quality_reviewer.md) — upstream
 - [Instructions.md](../../Instructions.md) — DUE arculati szabályok
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-01 | 1.0 | Létrehozva (mint 10_bsc_export) |
 | 2026-06-03 | 1.1 | Átszámozva 10→11; scriptek 11-1/11-2 |
 | 2026-06-07 | 1.2 | §3.3a **natív egyenlet-elv** (OMML / Cambria Math, nem kép) — a 10 `_omml.py`-vel egységes; pandoc alap-OMML (ne `--webtex`); §3.5/§6 frissítve. Forrás-konvenció: `$...$`/`$$...$$` → PPTX+DOCX natív Cambria Math. |
+| 2026-06-11 | 1.3 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva; role 🤖+🐍. |

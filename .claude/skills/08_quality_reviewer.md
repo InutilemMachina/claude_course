@@ -3,10 +3,10 @@ name: 08_quality_reviewer
 title: 08_QUALITY_REVIEWER — Minőségellenőrzés és publikálhatóság
 type: skill
 tags: [meta, skill]
-role: 🤖,😎
+role: 😎+🤖
 status: active
-version: 1.5
-updated: 2026-06-07
+version: 1.6
+updated: 2026-06-11
 description: Script-alapú lint + Claude Explore review (6 szempont, köztük Biggs constructive alignment); publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez. A 🚦-checkpointon a 😎 célzott revíziót kérhet a Review §6 csatornán (meglévő/új forrás routing).
 ---
 
@@ -46,7 +46,7 @@ Ellenőrzési szempontok:
 
 ### 3.2. Claude Explore review
 
-Claude értékeli az alábbi 5 szempont szerint (1–5 skálán):
+Claude értékeli az alábbi 6 szempont szerint (1–5 skálán):
 
 | Szempont | Leírás |
 |:---------|:-------|
@@ -120,14 +120,21 @@ a `N_Review.md` `## 6. Felhasználói revíziós kérések (😎)` szekciója:
 |:-----|:---------|
 | `4_wip_outputs/N_Review.md` | Részletes minőségi értékelés, döntéssel |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — `1_Jegyzet.md` + approved `mindmap.md`.
+- **Akció:** `08_quality_check.py --week-dir …` + Claude review (6 szempont, 1–5).
+- **Várt kimenet:** `1_Review.md` (szempontonkénti pontszám, átlag, döntés ≥3.0).
+- **Eval:** Numerikus pontszám minden szempontnál + 🚦 😎 checkpoint.
+
+## 6. Ellenőrzés
 
 - [ ] `N_Review.md` tartalmaz numerikus pontszámot minden szempontnál
 - [ ] Döntés egyértelmű: `PUBLIKÁLHATÓ` vagy `VISSZAKÜLDÉS`
 - [ ] Ha visszaküldés: konkrét revision note-ok a 04-es lépés számára
 - [ ] Script kimenet csatolva a review-hoz
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -135,19 +142,19 @@ a `N_Review.md` `## 6. Felhasználói revíziós kérések (😎)` szekciója:
 | Claude pontozás szélsőséges (1-es vagy 5-ös) | Nincs elegendő kontextus | Mindmap és forrásokat is betölteni a reviewhoz |
 | `N_Review.md` nem keletkezik | Script crash | Naplót ellenőrizni; manuális review is elfogadható |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
 - [07_typesetter.md](07_typesetter.md) — upstream
 - [04_content_synthesizer.md](04_content_synthesizer.md) — visszaküldési cél
 - [09_question_bank.md](09_question_bank.md) — downstream (ha publikálható)
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 - ✅ B-12 JAVÍTVA (2026-06-07): a `08_quality_check.py` citáció-számlálója `\[\d+\]`-re bővítve — a kanonikus `[N]` (Instructions §8) ÉS a régi `<sup>[N]</sup>` jelölést is lefedi. (atg/1_het: a korábbi „0 citáció" false negatív helyett valós 102.)
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
@@ -157,3 +164,4 @@ a `N_Review.md` `## 6. Felhasználói revíziós kérések (😎)` szekciója:
 | 2026-06-01 | 1.0 | Létrehozva (mint 07_quality_reviewer) |
 | 2026-06-03 | 1.1 | Átszámozva 07→08; downstream 09–13, script 08_quality_check.py |
 | 2026-06-03 | 1.2 | §3.1 összegző-doboz check átírva a kétszintű sémára (`💡 Összegzés` per `##`, `🗺️ Fejezet összegfoglalása` per `#`) |
+| 2026-06-11 | 1.6 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva; §3.2 „5→6 szempont” javítva; role 😎+🤖. |

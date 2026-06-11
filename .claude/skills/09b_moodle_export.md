@@ -4,9 +4,9 @@ title: 09b_MOODLE_EXPORT — Kérdésbank → Moodle XML konverzió
 type: skill
 tags: [meta, skill]
 role: 🐍
-status: active
-version: 1.0
-updated: 2026-06-07
+status: planned
+version: 1.1
+updated: 2026-06-11
 description: N_Kerdesbank.md → Moodle XML konverzió. Heti vagy aggregált mód, --level bsc|msc szűrő, --no-explanation kapcsoló. Script: scripts/09-1_moodle_export.py
 ---
 
@@ -147,14 +147,15 @@ A) / B) / C) / D)         → answer choice-ok
 |:--|:-------|:--------|
 | Q1 | **Képlet-renderelés:** Moodle számos math-motort támogat (MathJax `\(...\)`, TeX-filter `$$...$$`, MathML). Nem tudni, melyiket konfigurálja az adott intézmény. **Javaslat:** `--math-format` paraméter a scriptbe (`latex` / `mathjax` / `tex-filter` / `strip`); default: `latex` (változatlanul hagyja a `$...$` jelölést, a Moodle-adminnak kell a MathJax-szűrőt bekapcsolni). Addig, amíg ez tisztázatlan, a képletet tartalmazó kérdések XML-exportja kockázatos. | ❔ tisztázandó intézményi Moodle-konfiggal |
 
-## 10. Hivatkozások
+## 9. Hivatkozások
 
 - [09_question_bank.md](09_question_bank.md) — upstream, a `.md` forrás spec-je
 - [pipeline.md](../pipeline.md) — §2 kimeneti fázis
 - [Instructions.md](../../Instructions.md) — §6 mappastruktúra
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-07 | 1.0 | Létrehozva: markdown-first Moodle-export spec, heti+aggregált mód, BSc/MSc+depth tagek |
+| 2026-06-11 | 1.1 | status: active → planned (a `09-1_moodle_export.py` még nem létezik — őszinte spec); §9/§10 (Hivatkozások/Változásjegyzék) számozás rendezve. |

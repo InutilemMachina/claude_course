@@ -82,7 +82,7 @@ Ez a skill addig csak a fenti didaktikai metapromptot szolgáltatja.
 
 ## 5. Teszt
 
-Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12](../Instructions.md)).
+Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12](../../Instructions.md)).
 
 - **Fixture (bemenet):** melyik anyag — `test_sources/atg` (sok kis forrás) vagy `test_sources/dft` (1 könyv) — és hova kerül (`test_outputs/<tárgy>/N_het/...`).
 - **Akció:** a §3 konkrét parancsa / Claude-feladata.

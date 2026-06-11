@@ -59,4 +59,4 @@ Funkcionális index (mi mire való). Elvek és dokumentációs tekintély-sorren
 - Ha valami nem egyértelmű, a megfelelő kanonikus fájlra hivatkozz.
 
 ## 6. Visszajelzések
-[x]  ebben a fájlban vannak a hivatkozásokat le kell ellenőrizni.
+✅ Link-audit (2026-06-11, F1.5): a doksi összes relatív hivatkozása ellenőrizve (161 link / 33 fájl); a fantom/hibás linkek javítva.

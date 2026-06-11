@@ -2,7 +2,7 @@
 title: Project Status — claude_course
 type: project_status
 tags: [meta]
-updated: 2026-06-03
+updated: 2026-06-11
 ---
 
 # Project Status — claude_course
@@ -112,9 +112,9 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
   ```
   Így az 1 fájl → sok hét (minden hétre) és az 1 fájl → néhány hét (range) eset is lefedett, anélkül hogy a fájlt n-szer kellene másolni. A script keresési sorrendje: `1_raw_inputs/` → `../0_shared_sources/` → `../<tól>-<ig>_shared_sources/` (ahol a hét száma a tartományba esik).
 
-- 🔲 **B-20 [PRIORITÁS]**: **BSc/MSc szintelkülönítés a kérdésbankban** — BSc-exportban csak BSc kérdések, MSc-exportban BSc+MSc kérdések szerepelnek. Strukturális döntés: (1) explicit szintjelzés a `.md`-ben (a jelenlegi `<!-- MSc -->` blokk kiterjesztése: minden kérdésnek legyen `<!-- BSc -->` / `<!-- MSc -->` jelölője); (2) a `09_moodle_export.py` `--level bsc|msc` paramétere szűr; (3) a `subject_status.md §5`-be tantárgyankénti BSc/MSc konfig. Kapcsolódó: `09_question_bank` skill és a tervezett `09_moodle_export.py`.
+- 🔲 **B-24 [PRIORITÁS]**: **BSc/MSc szintelkülönítés a kérdésbankban** — BSc-exportban csak BSc kérdések, MSc-exportban BSc+MSc kérdések szerepelnek. Strukturális döntés: (1) explicit szintjelzés a `.md`-ben (a jelenlegi `<!-- MSc -->` blokk kiterjesztése: minden kérdésnek legyen `<!-- BSc -->` / `<!-- MSc -->` jelölője); (2) a `09_moodle_export.py` `--level bsc|msc` paramétere szűr; (3) a `subject_status.md §5`-be tantárgyankénti BSc/MSc konfig. Kapcsolódó: `09_question_bank` skill és a tervezett `09_moodle_export.py`.
 - ✅ **B-21**: **09 skill + 09b_moodle_export spec** — kész (2026-06-07): 09_question_bank v1.3 (Jegyzet-first, L1 min. 10, mélységrendszer (2)–(5), BSc/MSc tag, fejezethivatkozás kötelező, „mindegyik/egyik sem" engedélyezett); 09b_moodle_export v1.0 (markdown→XML spec, heti+aggregált, --level, --no-explanation, --math-format). ❔ Nyitott: Moodle képlet-renderelés (Q1 a 09b §8-ban).
-- ❔ B-21: **„Sok kép / sok szöveg" dia-redesign — strukturális tervezési elv.** A 10-es prezi-diák hagyományosan zsúfoltak (sok kép + sok szöveg egy dián). Elv a továbbiakra: **egy gondolat / dia** (Mayer-féle coherence + segmenting), a content-igényes részek (k/n) többrészes diákra bontva (lásd 10 skill §3.1c-bis). Folyamatos finomítás, nem egyszeri javítás.
+- ❔ B-25: **„Sok kép / sok szöveg" dia-redesign — strukturális tervezési elv.** A 10-es prezi-diák hagyományosan zsúfoltak (sok kép + sok szöveg egy dián). Elv a továbbiakra: **egy gondolat / dia** (Mayer-féle coherence + segmenting), a content-igényes részek (k/n) többrészes diákra bontva (lásd 10 skill §3.1c-bis). Folyamatos finomítás, nem egyszeri javítás.
 - 🔲 **B-22**: **Moodle képlet-renderelés tisztázása** — melyik math-motort konfigurálja az intézményi Moodle (MathJax / TeX-filter / MathML)? Addig a képletes kérdések XML-exportja kockázatos. Megoldás: `--math-format` paraméter a `09-1_moodle_export.py`-ban (`latex` default, `mathjax`, `tex-filter`, `strip`). Prioritás: export-script megírása előtt tisztázni. — a skill és a Moodle-export script teljeskörű specifikációja a fenti döntések alapján: (1) L1 áganként min. 10 MCQ (volt: 3); (2) „mindegyik helyes" / „egyik sem helyes" engedélyezett; (3) mélységrendszer `(2)`–`(5)` taggel minden kérdésen — `(2)` csak Fejezet összefoglaló-alapú, `(3)` Összegzés-alapú, `(4)` teljes jegyzet, `(5)` mélyebb; (4) magyarázat + `[N]` hivatkozás a megfelelő fejezetszakaszra (review miatt); (5) számítási feladatok az MCQ részei; (6) `09_moodle_export.py` markdown-first konverzió, `--no-explanation` + `--level bsc|msc` kapcsolókkal, heti és aggregált módban.
 
 - 🔲 B-23: **Új DUE template-ek** — a jelenlegi `due_jegyzet_template.docx` és `due_presentation_template.pptx` ideiglenes placeholderek. Amikor az intézményi arculati template-ek elkészülnek, cseréld le:

@@ -22,8 +22,13 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | Vizsgakérdések (Moodle MCQ) | `09_question_bank` |
 | Youtube search | 🔲 tervezett `12_youtube_finder` |
 | Jupyter notebook | 🔲 tervezett `13_jupyter_catalogizer` |
+[ ] Youtube, Jupyter már folyamatban. De a fő kérdés, hogy miért nem írodott át itt a pipeline?
 
 **Kulcselv:** → [Instructions.md §2](../Instructions.md)
+
+[ ] Ha felfelé hivatkozunk az miért kell?
+
+[ ] Fő feladat, hogy egy tényleges call_graph-ot kapjunk, hogy lássuk mennyire egyezik a fenti "tervezett" szekvenciális elképzeléssel. Én úgy érzem, hogy a legtöbb ponton felül kell vizsálni az állomásokat, de vannak olyan pontok ahol például egyértelműen én jelölök ki anyagokat/bekezdéseket (pl youtube, jupyter) te legyártod, és visszafelé felveszed a wip és clean jegyzetekbe. VAGY addig a wip-ben maradunk, amíg már minden kész nincs tartalmilag és csak utána megyünk a camera-ready státusz-ba, aminek elv szerint színtiszta konverziónak és template használatnak kéne lennie. Ebben az esetben 5_asset_outputs és 6_clean_outputs lenne a helyes mappastruktúra.
 
 ## 2. Lépések és IO
 
@@ -104,6 +109,7 @@ flowchart TD
 ```
 
 ## 3. Checkpointok
+TODO az MSc demarkációt teljesen feleslegesnek tartom. de a mindmap az egyik legfontosabb alapkő, amit mindenképp át kell nézni. És innen kéne egy visszacsatolás, hogy hol milyen új forrásokkal tudnánk erősíteni a tananyagot. VISZONT ez legtöbbször csak az első wip jegyzet létrejöttekor látható igazán. Ez komoly tervezési kérdés.
 
 | Checkpoint | Feltétel | Következő lépés |
 |:-----------|:---------|:----------------|
@@ -115,14 +121,18 @@ A 08-checkpointon a 😎 a PUBLIKÁLHATÓ döntés ellenére is kérhet **célzo
 **meglévő forrás** → vissza 04-hez; **új forrás** → vissza 01 → 02 → 04. A revízió után 07 → 08 újrafut.
 
 ## 4. Vizuális gazdagítás
+TODO Ezeket is már említettük upstream. Nem tudom, hogyha ez a bekezdés nincs itt, akkor nem lépne életbe a jelen bekezdés tartalma?
 
 A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus helye: [Instructions.md §7](../Instructions.md). A pipeline-ban ezt a `04 content_synthesizer`, `05 figure_integrator` (ábrák, `figure_catalog.json` alapján) és `06 summarize_box_injector` lépések valósítják meg — utóbbi minden `##` alfejezet végére `💡 Összegzés`, minden `#` fejezet zárásánál `🗺️ Fejezet összegfoglalása` blokkot illeszt (formátum: [skills/06_summarize_box_injector.md](skills/06_summarize_box_injector.md) §3).
 
 ## 5. Mappastruktúra
+TODO ezt itt kell dokumentálni?
 
 → Kanonikus mappastruktúra: [Instructions.md §6](../Instructions.md).
 
 ## 6. Citáció-rendszer
+
+TODO ezt itt kell dokumentálni?
 
 ```json
 // 1_raw_inputs/citations.json — fájlnév-alapú, IEEE-kompatibilis
@@ -140,6 +150,16 @@ A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus hely
 
 ## 7. Agent architektúra
 
+TODO: ez itt inkább egy human-in-the-loop és Agent architektúra, csak nem világos hogy ezeket miért nevezed agent-nek.
+
+TODO: Tulajdonképpen minden lépés után meg kell néznem az eredményeket.
+
+TODO: 12 és 13 szinte biztos nem automatikusak. Gyakorlatilag nekem kell kijelölni, hogy mihez keress videókat és mihez gyárts notebook-ok.
+
+TODO: A Bsc filter ki fog esni, mert az MSc jelölésektől megválunk: A user a mindmap-et szerkeszti és eldönti, hogy túl erős-e egy-egy rész.
+
+TODO: Erősen kételkedem, hogy itt lesznek párhuzamos lépések. 
+
 | Típus | Lépések | Indok |
 |-------|---------|-------|
 | Szekvenciális (foreground) | 02→03→04→05→06→07→08 | Output-függőség; checkpointok |
@@ -153,6 +173,8 @@ Az agent-prompt minden skill esetén a skill `§3 Eljárás` szekciója alapján
 → Backlog kezelése: [project_status.md](project_status.md).
 
 ## Változásjegyzék
+
+TODO: a változásjegyzék miért össze-vissza frissül? legyen a legfrissebb változás legalul és legyen ez konvenció, amit vagy itt vagy fentebb rögzítesz (Ezt nem biztos, hogy itt kell rögzíteni, csak itt vettem észre.)
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|

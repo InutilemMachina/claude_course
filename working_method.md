@@ -90,7 +90,7 @@ Nyugodt, szisztematikus tempó. Minden állomáson:
 - Nyitott szálakat ne ejts el → project_status.md (backlog / nyitott kérdés).
 
 ## 6. Hivatkozások
-
+[ ] Az alábbi hivatkozások miért nem igazi hivatkozások? miért kell upstream hivatkozás?
 - Instructions.md — alkotmány (elvek, jelöléstan, §12 skill-fejlesztési ciklus)
 - pipeline.md — futási gráf
 - skill_template.md — a skillek sablonja

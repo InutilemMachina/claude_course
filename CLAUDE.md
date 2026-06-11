@@ -59,4 +59,4 @@ Funkcionális index (mi mire való). Elvek és dokumentációs tekintély-sorren
 - Ha valami nem egyértelmű, a megfelelő kanonikus fájlra hivatkozz.
 
 ## 6. Visszajelzések
-[ ]  ebben a fájlban vannak a hivatkozásokat le kell ellenőrizni.
+[x]  ebben a fájlban vannak a hivatkozásokat le kell ellenőrizni.

@@ -18,7 +18,7 @@ módszertana külön: [subject_working_method.md](subject_working_method.md).
 
 A már kodifikált elveket nem ismétlem, csak megerősítem (kanonikus hely zárójelben):
 
-- **A kevesebb néha több** — általában hard-cap, néha soft-cap: ne bokrosodjon; helyi javítás > új fájl (Instructions §10).
+- **A kevesebb néha több** — alapból **hard-cap** (ne bokrosodjon; helyi javítás > új fájl), ritka indokolt kivétellel (Instructions §10.1).
 - **Cél-orientált** - a beszélgetések a célra tartsanak, ne a bokrosodás irányába.
 - **Tisztaság és egyértelműség** — rövid, világos, szabványos (Instructions §2).
 - **Egy fájl = egy cél; egy információ egy kanonikus helyen** (Instructions §2).
@@ -132,3 +132,4 @@ A fejlesztés ezekre a kanonikus forrásokra épül:
 | 2026-06-07 | 1.3 | §5 új szokás: **Git-tanító mód** — minden git-művelet Bash-parancsait tanító jelleggel (parancs + mit/miért) kiírjuk 😎-nak, mert 😎 a git-et tanulja. |
 | 2026-06-12 | 2.0 | **Szétbontás (P2.10, 15. döntés):** `working_method.md` → `meta_working_method.md` (fejlesztés) + új `subject_working_method.md` (gyártás). §2 „skills 00–10" → „00–13"; §6 valódi markdown-linkek + a `[ ]` TODO feloldva; cím/description a fejlesztési fókuszra élesítve. |
 | 2026-06-12 | 2.1 | **Sprint-konvenció + memória-desztilláció (P2.12, D12):** §1 új vezérelv „Komparatív kutatás ELŐBB" (a Claude-memóriából felemelve); §5.1 ÚJ sprint-/ág-lezárási konvenció (ág-merge nem-törléssel, külső input → archive, kísérleti melléktermék törlendő, tanulság kanonikus rétegbe). |
+| 2026-06-12 | 2.2 | **Cap-terminológia egységesítés (P2.13, D12):** §1 „általában hard-cap, néha soft-cap" → „alapból hard-cap (ritka indokolt kivétellel)"; Instructions §10 hivatkozás → §10.1. |

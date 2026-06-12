@@ -2,7 +2,7 @@
 title: Instructions
 type: project_constitution
 tags: [meta]
-version: 1.3
+version: 1.4
 updated: 2026-06-12
 description: Projekt-szintű elvek, jelölések és dokumentációs szabványok.
 ---
@@ -205,31 +205,36 @@ hanem rövid, magyarázó mondat).
 | `webpage` | `[N] Szerző, "Cím," *Forrás*. [Online]. Available: URL.` |
 
 ## 9. Szerkesztési szabályok
-TODO: Ez mehet az alapelvekbe, de ugyanúgy érvényes a tananygra is?
-- Csak a szükséges részt módosítsd.
-- Kerüld a teljes fájlok fölösleges újragenerálását.
-- A redundancia csökkentése elsődleges szempont. 
+
+Mind a meta-rétegre (fejlesztés), mind a tananyagra (gyártás) érvényes — a §2 elvek alkalmazása:
+
+- Csak a szükséges részt módosítsd; ne generáld újra a teljes fájlt.
+- A redundancia csökkentése elsődleges (egy információ egy kanonikus helyen, §2).
 
 ## 10. Változtatási rend
 
-### 10.1. Soft-cap — a projekt ne bokrosodjon
-TODO: Tananyag esetében (test/prod) ez nem igaz. De a projektre fejlesztésére határozottan igaz. És akkor a fenti alapelvek miatt a 10.1 ahogy van, nem is szükséges.
-Irányelv, nem szigorú szabály: **a kevesebb néha több.** Törekedj a meglévő fájlok *helyi* javítására ahelyett, hogy újabb és újabb fájlok jönnének létre.
+### 10.1. A projekt ne bokrosodjon (alapból hard-cap)
 
-- Először a meglévő fájlt javítsd; új fájl csak akkor, ha tényleg nem fér el sehol.
-- Új skill: indokold, miért nem fér el meglévőben.
+A **meta-réteg** (skillek, scriptek, doksik) fejlesztésére vonatkozik — a tananyag mennyiségére nem.
+**A kevesebb néha több:** alapból **hard-cap** — helyi javítás a meglévő fájlban; új fájl csak ritka,
+**erősen indokolt, dokumentált** kivételként.
+
+- Először a meglévő fájlt javítsd; új fájl/skill csak ha tényleg nem fér el sehol — és indokold.
 - Időnként nézd át, mi vonható össze vagy törölhető.
 
 Tájékoztató mérce: `python scripts/_backlog_index.py`.
 
 ## 11. Visszajelzések protokoll
-TODO: ennek egyértelműnek kellene lennie §4.1 alapján.
+
 A szimbólumok jelentése: §4.1. A bejegyzések helye:
 
-- **Skill-specifikus** megfigyelés/TODO/kérdés → az adott skill `§8 Visszajelzések`.
-TODO: De látható, hogy a usernek egyszerűbb a fájlokban a megfelelő környékre illeszteni a megjegyzéseit, ezért a gépi TODO/NOTE azt a Claude vezeti magának.
-**Inline TODO/NOTE a szövegtörzsben TILOS** — minden bejegyzés a dedikált szekcióba kerül.
+- **Skill-specifikus** megfigyelés/TODO/kérdés → az adott skill `§9 Visszajelzések`.
 - **Projekt-szintű** → [project_status.md](.claude/project_status.md) (Backlog / Nyitott kérdések).
+
+**Munkamegosztás (😎 ↔ 🤖):** a 😎 kényelméből inline `[ ]` jegyzetet tehet a szövegtörzsbe a
+releváns hely mellé (gyors, kontextusban). A 🤖 ezeket review során **feldolgozza**: a dedikált
+szekcióba (skill §9 / project_status) emeli, és az inline jegyzetet törli. A **véglegesített**
+kanonikus szövegben inline TODO/NOTE ne maradjon.
 
 ## 12. Skill-fejlesztési módszertan
 
@@ -240,16 +245,13 @@ TODO: De látható, hogy a usernek egyszerűbb a fájlokban a megfelelő körny�
 3. Eval: `08_quality_check.py` + Claude Explore review
 4. Gap-azonosítás: mi hiányzik, mi rossz formátumú?
 5. Fix: skill `§3 Eljárás` + `§6 Hibakezelés` frissítése
-6. Commit: hard-cap ellenőrzés
-TODO: lám-lám itt már hard-cap van. Én azt mondom, hogy mostly hard-cap.
+6. Commit: hard-cap ellenőrzés (§10.1 — nem bokrosodott-e a változás)
 
 ## 13. Nyitott pontok
 
-→ Backlog kezelése: [project_status.md](.claude/project_status.md).
+→ Backlog és nyitott kérdések kanonikus helye: [project_status.md](.claude/project_status.md).
 
-[ ] Minden clean outputs-nak legyen majd egy fejléce és lábléce, de azt még meg kell tervezni
-[ ] Nagyon komoly architekturális kérdés, hogy jelen fájl mire vonatkozik? A tervezésre vagy a tananyaggyártásra? Mert kicsit mindkettő az egyben. De persze ha később majd production tananyagot gyártunk, akkor példáula kommunikációs szabályok fontosak. A working_method nagy részét tisztázza a pipeline fejlesztésnek. Lehetne a neve meta_working_method.md és a tantárgyspecifikus munkákra pedig subject_working_method.md
-[ ] C:\Users\lasz\.claude\projects\C--Users-lasz-claude-course\memory-ban van négy fájl. egy része már elavult, amit be kell dokumentálni a neki megfelelő backlog-ba. Más részeket pedig át kell ültetni a meta upstream dokumentumokba, hiszen a kevesebb néha több. 
-[ ] van hogy egy-egy sprinthez hapsz külső kutatási anyagokat, amik a sprint végén az archive-ba kerülnek. lásd: .claude\archive\Automated Document Image Extraction Pipeline.md és .claude\sprints\image_rag. De ilyen input is például a Kutatási Útmutató Témák Feldolgozásához.md, amivel a tananyagot író skill-jeidet élesítettük. Sajnos akkor nem volt kimondva hogy sprint, de volt hozzá egy megfelelő branch. 
-[ ] Valahogy a jelen szakasz "12. Skill-fejlesztési módszertan" és a working_method.md meg a tényleges eljárásaink nem mindig harmonikusak. Maga a pipeline fejlesztést éppen élőben csináljuk, mégse tartjuk be a szabályainkat, módszertanainkat. A branch-en fejlesztés az például egy jó gyakorlat és siker esetén a branch merge, az ág törlése nélkül.
-[ ] Egyes sprintek és ágak után azonban marad némi szemét, lásd: .claude\sprints Mert nincs kialakult gyakorlatunk a módszertant illetően. Volt egyszer, hogy 4 ágens 4 Worktree-n dolgozott, csak hát sehol nem látja az ember a szigorú módszertan nyomát.Hát menet közben tanulunk meg járni.
+**Ez a fájl (Instructions) szerepe:** a projekt **alkotmánya** — elvek, jelöléstan, szabványok,
+amelyek a meta-rétegre (fejlesztés) ÉS a tananyagra (gyártás) is érvényesek. A *hogyan*-módszertan
+külön: [meta_working_method.md](meta_working_method.md) (fejlesztés) + [subject_working_method.md](subject_working_method.md) (gyártás).
+A sprint-/ág-lezárási konvenció: [meta_working_method §5.1](meta_working_method.md).

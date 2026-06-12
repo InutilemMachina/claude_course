@@ -116,6 +116,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
   - `templates/due_presentation_template_mindmap.potx` — Prezentáció mindmap variáns (10_presentation_maker)
   Az új template-ek bevezetésekor a `10_pptx_gyarto.py --variant` és `11-2_pandoc_export.py` `find_template()` keresési logikáját is frissíteni kell.
 - 🔲 B-26: **Register-aware konverzió (12/13 overlay-feloldás).** A `6_clean_outputs` előállításakor a `10_pptx_gyarto.py` / `11-2_pandoc_export.py` oldja fel a wip `<!-- ENRICH: <id> -->` horgonyait a `5_asset_outputs/enrichment_register.md`-ből a látható `📎▶`/`📎🧪` blokká (Q-04 megoldás mechanizált fele). Addig a 😎 kézzel illeszt a regiszterből. Spec: 12/13 §3.2.
+- 🔲 B-27: **Clean-output fejléc/lábléc.** A `6_clean_outputs/` DOCX/PPTX termékekhez egységes fejléc + lábléc (intézményi arculat) megtervezése — a DUE template-ek (B-23) bevezetésekor. (Instructions §13-ból áthozva, P2.13.)
 
 ## Nyitott kérdések (❔)
 

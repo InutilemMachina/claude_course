@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 🤖+🐍
 status: active
-version: 1.9
+version: 1.10
 updated: 2026-06-11
 description: Approved mindmap és végleges jegyzet alapján MARP prezentáció és PPTX, KÉT variánsban (default fejléc-breadcrumb / mindmap oldalsáv-TOC) ugyanabból a navigációs modellből (_nav_util.py). Kötött dia-architektúra (Cím → Áttekintés → szakaszonként Nyitó/belső/Záró → Végső → Hivatkozásjegyzék); kötött `>` keret-blokk-rend (🧭/🔭/🎯/💡/🗺️) a jegyzet újrahasznosításával; belső diák tiszta tananyag; navigáció = SZÖVEG (TOC/breadcrumb), tartalmi diagramok = előrenderelt Mermaid-PNG (10-1); .potx idx-szerződés (idx0/idx1/idx5); kétoszlopos layout; beszédes diák; számozott feliratok.
 ---
@@ -29,7 +29,7 @@ majd `10_pptx_gyarto.py`-val PPTX-re konvertálja.
 | `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Ábrák diákba illesztéséhez |
 
 A `3_mindmap/mindmap.md`-t a [`_nav_util.py`](../../scripts/_nav_util.py) parse-olja
-**navigációs modellé** (ROOT → szakaszok → alszakaszok, `[MSc]` taggel) — ebből áll elő
+**navigációs modellé** (ROOT → szakaszok → alszakaszok) — ebből áll elő
 mindkét variáns tájékozódása (breadcrumb / TOC), nem renderelt képből.
 
 **Előfeltétel:** `08_quality_reviewer` döntése `PUBLIKÁLHATÓ`; MARP CLI telepítve.
@@ -302,3 +302,4 @@ python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 | 2026-06-01 | 1.0 | Létrehozva (mint 09_presentation_maker) |
 | 2026-06-03 | 1.1 | Átszámozva 09→10; script 10_pptx_gyarto.py |
 | 2026-06-11 | 1.9 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |
+| 2026-06-11 | 1.10 | MSc-kivezetés: a navigációs modellből a `[MSc]` tag eltávolítva. |

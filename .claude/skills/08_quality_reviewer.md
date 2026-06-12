@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 😎+🤖
 status: active
-version: 1.6
+version: 1.7
 updated: 2026-06-11
 description: Script-alapú lint + Claude Explore review (6 szempont, köztük Biggs constructive alignment); publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez. A 🚦-checkpointon a 😎 célzott revíziót kérhet a Review §6 csatornán (meglévő/új forrás routing).
 ---
@@ -51,7 +51,7 @@ Claude értékeli az alábbi 6 szempont szerint (1–5 skálán):
 | Szempont | Leírás |
 |:---------|:-------|
 | **Teljesség** | Minden mindmap L1 ág lefedett? |
-| **Mélység** | BSc szintű magyarázat elegendő? Képletek, példák jelen? |
+| **Mélység** | A magyarázat mélysége elegendő a célcsoportnak? Képletek, példák jelen? |
 | **Koherencia** | Fejezetek logikusan következnek egymásból? |
 | **Forrásintegráció** | Hivatkozások beépítve, nem csak felsorolva? |
 | **Olvashatóság** | Tipográfia, tagolás, összegzők rendben? |
@@ -60,7 +60,6 @@ Claude értékeli az alábbi 6 szempont szerint (1–5 skálán):
 A **Konstruktív illeszkedés** mérhető al-kérdései:
 - Van-e minden `##` fejezethez azonosítható, Bloom-szintű tanulási cél (a `🎯 Cél` blokk, 04 §3.2)?
 - A `❔ Ellenőrizd magad` kérdések és a 09 kérdésbank lefedik-e a fejezet céljait?
-- Az MSc-célok valóban magasabb Bloom-szintűek (Elemzés/Alkotás), mint a BSc-éi (Emlékezés/Megértés)?
 
 Eredmény: **átlag pontszám** (1–5) a **6 szempontból**, szöveges indoklással.
 
@@ -165,3 +164,4 @@ a `N_Review.md` `## 6. Felhasználói revíziós kérések (😎)` szekciója:
 | 2026-06-03 | 1.1 | Átszámozva 07→08; downstream 09–13, script 08_quality_check.py |
 | 2026-06-03 | 1.2 | §3.1 összegző-doboz check átírva a kétszintű sémára (`💡 Összegzés` per `##`, `🗺️ Fejezet összegfoglalása` per `#`) |
 | 2026-06-11 | 1.6 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva; §3.2 „5→6 szempont” javítva; role 😎+🤖. |
+| 2026-06-11 | 1.7 | MSc-kivezetés: §3.2 Mélység-szempont szint-semlegesre; a BSc/MSc Bloom-alkérdés törölve. |

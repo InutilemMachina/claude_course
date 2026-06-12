@@ -2,7 +2,7 @@
 title: Pipeline.md — claude_course
 type: meta
 status: active
-version: 2.1
+version: 3.0
 updated: 2026-06-12
 description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 ---
@@ -42,7 +42,7 @@ A fonal egyszerű nyelven, egy héten belül:
 | **🚦 GATE 2 — publikálhatóság** | 08 után | publikálsz/visszaküldesz; célzott revíziót injektálsz → hurok 04-re |
 | **Kijelölő** | 12, 13 | rámutatsz koncepciókra/ábrákra; a 🤖 gyárt; **nem automatikus** |
 
-A cél-gráf a [§2.1 Vizualizáció](#21-vizualizáció)-ban; a két gate a [§3 Checkpointok](#3-checkpointok)-ban.
+A három állapot (EREDETI → CÉL → VALÓS) és a CÉL-lefedettség a [§2.1 Vizualizáció](#21-vizualizáció--eredeti--cél--valós)-ban; a két gate a [§3 Checkpointok](#3-checkpointok)-ban.
 
 ## 1. A tradicionális oktató → Claude leképezés
 
@@ -82,60 +82,116 @@ csak stabil horgonyt kap), a `6_clean_outputs` ebből + a wip-ből **újrakonver
 | `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`12_youtube_finder`](skills/12_youtube_finder.md) — videó-overlay (😎-kijelölt) | 🤖+😎 | `5_asset_outputs/enrichment_register.md` (📎▶) + `<!-- ENRICH: v* -->` horgony |
 | `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`13_jupyter_catalogizer`](skills/13_jupyter_catalogizer.md) — notebook-overlay (😎-kijelölt) | 🤖+😎 | `5_asset_outputs/enrichment_register.md` (📎🧪) + `<!-- ENRICH: nb* -->` horgony |
 
-## 2.1 Vizualizáció
+> **VALÓS-státusz** (a fenti „Automatizáltság" a TERVET mutatja; ez a tényleges script-lét): `🐍✅`
+> valódi futó script — **00, 02, 05, 07-2/07-3, 08, 10-1/10-2/10_pptx, 11-2**. `🤖` Claude-kézi (nincs
+> script) — **02b, 03, 04, 06, 09**. `😎+🤖` kézi — **01, 12, 13**. `⏳` tervezett — **09b** (Moodle, a
+> script még nem létezik). A teljes őszinte folyam: §2.1.c VALÓS.
+
+## 2.1 Vizualizáció — EREDETI → CÉL → VALÓS
+
+A folyamatot **három állapotban** mutatjuk, hogy a terv–valóság ív (és a rés) látható legyen
+(őszinte napló, Instructions §2):
+
+- **EREDETI** — az eredeti, naiv elképzelés (lineáris, minden „automatikus").
+- **CÉL** — amit megterveztünk (a `plan_3` cél-gráfja: MinerU-only, szint-semleges, overlay+regiszter, camera-ready).
+- **VALÓS** — ami MOST ténylegesen megépült, őszinte végrehajtó-jelöléssel.
+
+### 2.1.a EREDETI — eredeti elképzelés
+
+A kiinduló feltevés: lineáris lánc, minden lépés „automatikus", a kimenetek „párhuzamosak", a 😎
+csak 2 gate-en avatkozik be.
+
+```mermaid
+flowchart LR
+    A["00 init"] --> B["01 sources"] --> C["02 (+02b)"] --> G1{"03 🚦"} --> D["04"] --> E["05"] --> F["06"] --> H["07"] --> G2{"08 🚦"}
+    G2 --> O["09 ‖ 10 ‖ 11 ‖ 12 ‖ 13<br>(párhuzamos kimenetek)"]
+```
+
+### 2.1.b CÉL — a megtervezett cél (plan_3)
+
+Ezt céloztuk meg: egyetlen MinerU-út, szint-semleges metszés a GATE 1-en, valódi 05-script, 07-2/07-3,
+GATE 2 revízió-hurokkal, camera-ready `6_clean`, és a 12/13 overlay+regiszter (nincs 6-fájlos visszaírás).
 
 ```mermaid
 flowchart TD
-    subgraph INIT["① Előkészítés"]
-        direction TB
-        I0["00 init<br>🐍<br>subject_status.md + mappák"]
-        I1["01 source_collector<br>😎 + 🤖<br>→ 1_raw_inputs/"]
-        I0 --> I1
+    T00["00 init 🐍<br>→ 6 almappa"] --> T01["01 sources 😎+🤖"]
+    T01 --> T02["02 extract 🐍<br>MinerU-ONLY (1 út)"]
+    T02 --> T02b["02b enrich 🤖<br>(minimális)"]
+    T02b --> TG1{"🚦 GATE 1 😎<br>szkóp+mélység<br>(szint-semleges)"}
+    TG1 --> T04["04 synthesize 🤖<br>(MSc nélkül)"]
+    T04 --> T05["05 figures 🤖+🐍<br>(valódi script)"]
+    T05 --> T06["06 summaries 🤖"] --> T07["07 typeset 🐍<br>07-2 + 07-3"]
+    T07 --> TG2{"🚦 GATE 2 😎<br>publikál? + revízió"}
+    TG2 -->|revízió| T04
+    TG2 -->|🟢| TCONV["tiszta determinisztikus<br>konverzió"]
+    TCONV --> TOUT
+    subgraph TOUT["6_clean_outputs — szint-semleges"]
+      U09["09 q_bank 🤖<br>(09b Moodle planned)"]
+      U10["10 prezi 🤖+🐍<br>(2 variáns)"]
+      U11["11 export 🐍<br>tiszta DOCX"]
     end
-
-    subgraph EXT["② Forrás-feldolgozás"]
-        direction TB
-        E1m["02_mineru_to_catalog<br>🐍 (kanonikus)<br>MinerU PDF + python-pptx<br>→ képek + katalógus<br>caption+text_ctx+kw auto"]
-        E2["02b figure_enricher<br>🤖<br>visual_content + keywords<br>(Claude-only munka)"]
-        E1m --> E2
+    TG2 -.->|😎 kijelöl| TENR
+    subgraph TENR["5_asset_outputs — overlay + regiszter"]
+      U12["12 youtube 😎+🤖"]
+      U13["13 jupyter 😎+🤖"]
     end
-
-    subgraph UNDERSTAND["③ Megértés — sarokkő"]
-        direction TB
-        U1["03 mindmap_builder<br>🤖<br>források olvasása<br>→ mindmap draft"]
-        U2{"😎 Checkpoint<br>Revízió: szkóp+mélység<br>→ 3_mindmap/mindmap.md"}
-        U1 --> U2
-    end
-
-    subgraph CREATE["④ Tartalom-alkotás"]
-        direction TB
-        C1["04 content_synthesizer<br>🤖<br>mindmap-vezérelt szintézis<br>+ Mermaid + IEEE hivatkozások<br>→ 4_wip_outputs/N_Jegyzet.md"]
-        C2["05 figure_integrator<br>🤖 + 🐍<br>05_figure_mapper (placeholder-feloldás)<br>→ N_Jegyzet.md (ábrák)"]
-        C3["06 summarize_box_injector<br>🤖<br>összegző dobozok<br>→ N_Jegyzet.md (összegzők)"]
-        C1 --> C2 --> C3
-    end
-
-    subgraph QUALITY["⑤ Minőség"]
-        direction TB
-        Q1["07 typesetter<br>🤖+🐍<br>terminológia + 07-2/07-3 számozó"]
-        Q2["08 quality_reviewer<br>🐍 + 🤖<br>metrikák + Explore review<br>→ N_Review.md"]
-        Q3{"😎 Checkpoint<br>publikálhatóság ≥ 3/5"}
-        Q1 --> Q2 --> Q3
-    end
-
-    subgraph OUTPUT["⑥ Kimenetek — a gate után, egymástól függetlenül"]
-        direction TB
-        O1["09 question_bank<br>🤖<br>Moodle MCQ (A–D)"]
-        O2["10 presentation_maker<br>🤖 + 🐍<br>PPTX — 2 variáns<br>default / mindmap"]
-        O3["11 docx_export<br>🐍<br>pandoc<br>→ 6_clean_outputs/ .docx"]
-        O4["12 youtube_finder<br>🤖 + 😎<br>videó-overlay → 5_asset_outputs<br>regiszter + ENRICH-horgony"]
-        O5["13 jupyter_catalogizer<br>🤖 + 😎<br>notebook-overlay → 5_asset_outputs<br>regiszter + ENRICH-horgony"]
-    end
-
-    INIT --> EXT --> UNDERSTAND --> CREATE --> QUALITY
-    Q3 -->|"🟢 OK"| OUTPUT
-    Q3 -->|"🔴 Javít"| CREATE
+    TENR -.->|stabil link a regiszterből| TCONV
 ```
+
+### 2.1.c VALÓS — jelenlegi valóság
+
+A **fő, őszinte** gráf. Jelmagyarázat: `🐍✅` valódi futó script · `🤖` Claude-kézi (nincs script) ·
+`😎` emberi · `⏳` tervezett/backlog. A folyam **ciklikus, ember-a-hurokban**.
+
+```mermaid
+flowchart TD
+    S00["00 init<br>🐍✅ 00_init_course.py"] --> S01["01 sources<br>😎+🤖 — NINCS script<br>(kézi + WebSearch + Edge→PDF)"]
+    S01 --> S02["02 extract<br>🐍✅ 02_mineru_to_catalog.py<br>(conda mineru env)"]
+    S02 --> S02b["02b enrich<br>🤖 — NINCS script (Read image)"]
+    S02b --> S03["03 mindmap<br>🤖 — NINCS script"]
+    S03 --> G1{"🚦 GATE 1 — 😎<br>birtokolja a mindmapet · STOP"}
+    G1 --> S04["04 synthesize<br>🤖 — NINCS script"]
+    S04 --> S05["05 figures<br>🤖 + 🐍✅ 05_figure_mapper.py"]
+    S05 --> S06["06 summaries<br>🤖 — NINCS script"]
+    S06 --> S07["07 typeset<br>🤖 terminológia + 🐍✅ 07-2/07-3"]
+    S07 --> S08["08 quality<br>🐍✅ 08_quality_check.py + 🤖 review"]
+    S08 --> G2{"🚦 GATE 2 — 😎<br>publikál? · STOP"}
+    G2 -->|"revízió: meglévő forrás"| S04
+    G2 -->|"revízió: új forrás"| S01
+    G2 -->|"🟢 finalize wip"| CONV["tiszta konverzió"]
+    CONV --> OUT
+    subgraph OUT["6_clean_outputs (a gate után, egymástól függetlenül)"]
+      O09["09 q_bank 🤖<br>09b Moodle ⏳ planned"]
+      O10["10 prezi 🤖+🐍✅<br>(2 variáns)"]
+      O11["11 export 🐍✅<br>pandoc DOCX"]
+    end
+    G2 -.->|"😎 kijelöl (opcionális)"| ENR
+    subgraph ENR["5_asset_outputs — overlay (😎-vezérelt, kézi)"]
+      O12["12 youtube 😎+🤖"]
+      O13["13 jupyter 😎+🤖"]
+    end
+    ENR -.->|"regiszter + ENRICH-horgony<br>újrakonverzió: ⏳ B-26 (ma kézi)"| CONV
+```
+
+**Spot-check** (😎 ránéz, **nem** gate): 02/02b, 04, 05, 06, 07 — a folyam nem áll meg, csak a 2 🚦-gate-nél (03, 08).
+
+### 2.1.d Lefedettség — a VALÓS lefedi a CÉL-t?
+
+| CÉL-elem (plan_3) | VALÓS | hol |
+|---|---|---|
+| 02 MinerU-only (fallback törölve) | ✅ | P2.3 |
+| szint-semleges (MSc ki): 03/04/09/10/11 | ✅ | P2.1 |
+| 05 valódi 🐍 placeholder-feloldás | ✅ | P2.5 |
+| 07 = 07-2+07-3 (07-1 törölve, NLM-mentes) | ✅ | P2.4 |
+| mappa 5_asset + 6_clean | ✅ | P2.2 |
+| 6_clean camera-ready (tiszta konverzió) | ✅ | P2.9 |
+| 5_asset overlay+regiszter modell | ✅ | P2.6 |
+| heading-hierarchia / 06 szintek | ✅ | B-14 |
+| **09b Moodle** | ⏳ `planned` | a CÉL maga is így tervezte (10. döntés) |
+| **register-aware újrakonverzió** | ⏳ B-26 | a CÉL a modellt kérte, az auto-konverziót nem |
+
+→ **A VALÓS lefedi a CÉL-t.** A két `⏳` nem rés, hanem a CÉL által szándékosan későbbre tett tétel
+(09b planned, B-26 backlog) — a tervezett scope teljesült.
 
 ## 3. Checkpointok
 
@@ -202,3 +258,4 @@ a sorrendet és a gate-eket rögzíti.
 | 2026-06-05 | 1.6 | **MinerU-first pipeline**: `02_mineru_to_catalog.py` a standard 02 lépés (caption+text_context+keywords draft gépileg auto-kitöltve MinerU _content_list.json-ból); `02_image_extraction.py` fallback marad. `02b_figure_enricher` csak `visual_content` + keywords finomítás = Claude-only minimális munka. Sprint: [ocr_lab/decision.md](sprints/image_rag/ocr_lab/decision.md). |
 | 2026-06-12 | 2.0 | **„Egyetlen igazság" átfésülés (P2.8, 17. döntés):** §0 amatőr-áttekintés + HITL-szereptábla az elejére; §7 „Agent architektúra" → őszinte human-in-the-loop modell (nincs „background agent"); §2 IO-tábla 02-duplikáció összevonva (MinerU-only) + 10 kimenet `6_clean`; §4/§5/§6 redundancia → kanonikus pointerek (Instructions §6/§7/§8); minden inline TODO megválaszolva/törölve; 12/13 „tervezett" → 😎-overlay; changelog sorrend növekvőre; verzió 1.6 → 2.0. |
 | 2026-06-12 | 2.1 | **Aktualizálás a P2/B-14 után:** §4 heading-modell `💡` per `###` szakasz / `🗺️` per `##` fejezet (B-14); §2 IO 10-es lépés „LaTeX→PNG" → **natív OMML** (a `_latex_png.py` törlése után); a „párhuzamosan" szóhasználat „egymástól függetlenül"-re (§2.1 gráf + §3) a §7 őszinte modelljéhez igazítva. |
+| 2026-06-12 | 3.0 | **§2.1 EREDETI → CÉL → VALÓS:** az egyetlen idealizált gráf helyett három állapot-gráf (EREDETI naiv lineáris, CÉL = plan_3 célgráf, VALÓS = őszinte jelenlegi: `🐍✅`/`🤖`/`😎`/`⏳` jelöléssel, 2 STOP-gate, revízió-hurok, overlay-ág) + §2.1.d Lefedettség-tábla (a VALÓS lefedi a CÉL-t; 09b/B-26 szándékosan későbbi). §2 IO-tábla alá kompakt „VALÓS-státusz" (tényleges script-lét). §0 horgony frissítve. |

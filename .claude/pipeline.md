@@ -41,7 +41,7 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | `2_clean_inputs/figure_catalog.json` | 🤖 | [`02b_figure_enricher`](skills/02b_figure_enricher.md) — `visual_content` + `keywords` finomítás (csak ez marad Claude-ra) | 🤖 | ugyanaz, `visual_content` + végleges `keywords` kitöltve |
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
-| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`05_figure_integrator`](skills/05_figure_integrator.md) — `05_figure_mapper.py` | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (ábrák) |
+| `4_wip_outputs/N_Jegyzet.md` (FIGURE-placeholderek) | 🤖+🐍 | [`05_figure_integrator`](skills/05_figure_integrator.md) — `05_figure_mapper.py` placeholder-feloldás (v4 lookup) + Claude felirat-finomítás | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (beillesztett ábrák) |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`06_summarize_box_injector`](skills/06_summarize_box_injector.md) — összegző dobozok | 🤖 | `4_wip_outputs/N_Jegyzet.md` (összegzők) |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`07_typesetter`](skills/07_typesetter.md) — Claude terminológia-pass + `07-2_heading_numberer.py` + `07-3_figure_numberer.py` | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (egységesítés + fejezet/ábra-számozás) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍+🤖 | [`08_quality_reviewer`](skills/08_quality_reviewer.md) — `08_quality_check.py` | 🐍+🤖 🚦😎 | `4_wip_outputs/N_Review.md` |
@@ -79,7 +79,7 @@ flowchart TD
     subgraph CREATE["④ Tartalom-alkotás"]
         direction TB
         C1["04 content_synthesizer<br>🤖<br>mindmap-vezérelt szintézis<br>+ Mermaid + IEEE hivatkozások<br>→ 4_wip_outputs/N_Jegyzet.md"]
-        C2["05 figure_integrator<br>🤖 + 🐍<br>05_figure_mapper<br>→ N_Jegyzet.md (ábrák)"]
+        C2["05 figure_integrator<br>🤖 + 🐍<br>05_figure_mapper (placeholder-feloldás)<br>→ N_Jegyzet.md (ábrák)"]
         C3["06 summarize_box_injector<br>🤖<br>összegző dobozok<br>→ N_Jegyzet.md (összegzők)"]
         C1 --> C2 --> C3
     end

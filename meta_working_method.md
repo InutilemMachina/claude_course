@@ -1,17 +1,18 @@
 ---
-title: WORKING_METHOD — A pipeline fejlesztésének módszertana
+title: META_WORKING_METHOD — A pipeline fejlesztésének módszertana
 type: meta
 tags: [meta]
 status: active
-version: 1.2
-updated: 2026-06-07
-description: A „módszertanok módszertana" — hogyan fejlesztjük/refaktoráljuk magát a pipeline-t. Kövesd minden review/refaktor session során.
+version: 2.0
+updated: 2026-06-12
+description: A „módszertanok módszertana" — hogyan FEJLESZTJÜK/refaktoráljuk magát a pipeline-t. Kövesd minden review/refaktor session során. (A tananyag GYÁRTÁSÁNAK módszertana → subject_working_method.md.)
 ---
 
-# WORKING_METHOD
+# META_WORKING_METHOD
 
-A „módszertanok módszertana": **hogyan dolgozunk a pipeline fejlesztésén** (nem a tananyag-pipeline maga — az → Instructions.md, pipeline.md).
-Ezt a fájlt követem minden átnézési/refaktor session során.
+A „módszertanok módszertana": **hogyan dolgozunk a pipeline fejlesztésén** (nem a tananyag-pipeline maga — az → [Instructions.md](Instructions.md), [pipeline.md](.claude/pipeline.md)).
+Ezt a fájlt követem minden átnézési/refaktor session során. A **tananyag-gyártás** végrehajtási
+módszertana külön: [subject_working_method.md](subject_working_method.md).
 
 ## 1. Vezérelvek
 
@@ -39,7 +40,7 @@ A már kodifikált elveket nem ismétlem, csak megerősítem (kanonikus hely zá
 
 ## 2. Az állomás-túra (a review-ciklus)
 
-Lépésről lépésre a belépési ponttól: `CLAUDE.md → Instructions.md → pipeline.md → skills 00–10 (+ scriptek) → templates`.
+Lépésről lépésre a belépési ponttól: `CLAUDE.md → Instructions.md → pipeline.md → skills 00–13 (+ scriptek) → templates`.
 Nyugodt, szisztematikus tempó. Minden állomáson:
 
 0. **Cél-tisztázás** — ismertesd a jelenlegi forgatókönyvet (mit tud/csinál a skill most), majd kérdezd meg: „Mi lenne az elképzelésed / szándékod?" Ne feltételezd, hogy a jelenlegi állapot a kívánt.
@@ -90,17 +91,23 @@ Nyugodt, szisztematikus tempó. Minden állomáson:
 - Nyitott szálakat ne ejts el → project_status.md (backlog / nyitott kérdés).
 
 ## 6. Hivatkozások
-[ ] Az alábbi hivatkozások miért nem igazi hivatkozások? miért kell upstream hivatkozás?
-- Instructions.md — alkotmány (elvek, jelöléstan, §12 skill-fejlesztési ciklus)
-- pipeline.md — futási gráf
-- skill_template.md — a skillek sablonja
-- project_status.md — állapot, backlog, nyitott kérdések
+
+A fejlesztés ezekre a kanonikus forrásokra épül:
+
+- [Instructions.md](Instructions.md) — alkotmány (elvek, jelöléstan, §12 skill-fejlesztési ciklus)
+- [.claude/pipeline.md](.claude/pipeline.md) — futási gráf + HITL-modell
+- [.claude/skill_template.md](.claude/skill_template.md) — a skillek sablonja
+- [.claude/project_status.md](.claude/project_status.md) — állapot, backlog, nyitott kérdések
+- [subject_working_method.md](subject_working_method.md) — a tananyag-gyártás végrehajtási módszertana
 
 ## 7. Változásjegyzék
 
+<!-- Konvenció (Instructions): a legfrissebb változás LEGALUL (kronológiai, növekvő sorrend). -->
+
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-07 | 1.3 | §5 új szokás: **Git-tanító mód** — minden git-művelet Bash-parancsait tanító jelleggel (parancs + mit/miért) kiírjuk 😎-nak, mert 😎 a git-et tanulja. |
-| 2026-06-07 | 1.2 | §4 új megállapodás: **„Nincs shortcut — a lépést végig kell futtatni"** (forrás 02-feldolgozása kötelező, valódi ábra > Mermaid-helyettesítő, kényszerű kihagyást explicit jelezni). `quality_review_test` tanulság. |
-| 2026-06-06 | 1.1 | §1 új vezérelv: „Fixture-ből absztrahálj" — konkrét esetből általános szabályt kodifikálunk; a domain-specifikum nem szivárog a skill/script kanonikus rétegébe. |
 | 2026-06-03 | 1.0 | Létrehozva — a session módszertani inputjaiból |
+| 2026-06-06 | 1.1 | §1 új vezérelv: „Fixture-ből absztrahálj" — konkrét esetből általános szabályt kodifikálunk; a domain-specifikum nem szivárog a skill/script kanonikus rétegébe. |
+| 2026-06-07 | 1.2 | §4 új megállapodás: **„Nincs shortcut — a lépést végig kell futtatni"** (forrás 02-feldolgozása kötelező, valódi ábra > Mermaid-helyettesítő, kényszerű kihagyást explicit jelezni). `quality_review_test` tanulság. |
+| 2026-06-07 | 1.3 | §5 új szokás: **Git-tanító mód** — minden git-művelet Bash-parancsait tanító jelleggel (parancs + mit/miért) kiírjuk 😎-nak, mert 😎 a git-et tanulja. |
+| 2026-06-12 | 2.0 | **Szétbontás (P2.10, 15. döntés):** `working_method.md` → `meta_working_method.md` (fejlesztés) + új `subject_working_method.md` (gyártás). §2 „skills 00–10" → „00–13"; §6 valódi markdown-linkek + a `[ ]` TODO feloldva; cím/description a fejlesztési fókuszra élesítve. |

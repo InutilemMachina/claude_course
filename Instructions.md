@@ -234,7 +234,7 @@ TODO: De látható, hogy a usernek egyszerűbb a fájlokban a megfelelő körny�
 ## 12. Skill-fejlesztési módszertan
 
 **Fejlesztési ciklus:** `draft skill → lépésteszt → eval → fix → commit`
-TODO: ezt mintha részletesebben tárgyalná a working_method.md, de a lényeg itt van fent egyetlen sorban.
+(A teljes review/refaktor-módszertan: [meta_working_method.md](meta_working_method.md); ez a §12 a tömör, kanonikus összefoglaló.)
 1. Skill draft a `skill_template.md` alapján (vagy `/skill-creator`)
 2. Teszt: 1-2 forrás, 1 fejezet — egyszerű bemenet
 3. Eval: `08_quality_check.py` + Claude Explore review

@@ -43,7 +43,8 @@ Más fájlt csak akkor olvass be, ha a feladat ezt közvetlenül igényli.
 Funkcionális index (mi mire való). Elvek és dokumentációs tekintély-sorrend: [Instructions.md](Instructions.md) (§2, §3).
 
 - [Instructions.md](Instructions.md) — projekt-alkotmány: elvek, jelöléstan, szabványok
-- [working_method.md](working_method.md) — a fejlesztés munkamódszere (refaktor/review session során kövesd)
+- [meta_working_method.md](meta_working_method.md) — a pipeline FEJLESZTÉSÉNEK módszertana (refaktor/review session során kövesd)
+- [subject_working_method.md](subject_working_method.md) — a tananyag GYÁRTÁSÁNAK végrehajtási módszertana (tantárgyon dolgozva)
 - [.claude/pipeline.md](.claude/pipeline.md) — pipeline-gráf, lépések, függőségek
 - [.claude/project_status.md](.claude/project_status.md) — futási állapot + Backlog
 - [.claude/skill_template.md](.claude/skill_template.md) — skill-sablon

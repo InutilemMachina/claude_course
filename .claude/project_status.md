@@ -121,7 +121,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - ❔ Q-01: DUE template DOCX portolása — `templates/` mappába szükséges-e?
 - ❔ Q-02: A `subject_status.md` (sablon: `subject_status_template.md`) mikor és ki által töltődik ki — különösen a §5 kérdésbank-beállítás a `09_question_bank` skill véglegesítése után? (😎 induláskor vagy 🤖 a 09 konfigjából?)
 - ❔ Q-03 (B-07-hez): A `.claude/skills/` lépés-dokumentumok maradjanak protokoll-doksik, vagy váljanak valódi, hívható Claude-skillekké (`SKILL.md` + `name`/`description`)? — Mindent a maga idejében; a B-07/B-08 keretében döntjük el.
-- ❔ Q-04 (B-05/B-06/B-13-hoz): A 12_youtube_finder (`📎▶`) és 13_jupyter_catalogizer (`📎🧪`) a kimeneti fázisban, **a jegyzet/prezi elkészülte UTÁN** futnak — hogyan lehet a csatolmányokat **visszamenőlegesen** beregisztrálni a már kész wip ÉS clean outputokba? Megválaszolandó: (1) a wip `4_wip_outputs/N_Jegyzet.md` / `N_Prezentacio.md` újraírása-e a horgony beszúrásához, vagy külön overlay/regiszter-fájl; (2) a már legenerált clean outputok (`5_clean_outputs/` .docx/.pptx) frissítése — újragenerálás a wip-ből vagy utólagos patch; (3) idempotencia és a bővülő/szűkülő videó-/notebook-lista kezelése a stabil `[link]` hivatkozással. Kapcsolódó kötött jelölés: `📎▶` / `📎🧪` (12/13 §3.1).
+- ❔ Q-04 (B-05/B-06/B-13-hoz): A 12_youtube_finder (`📎▶`) és 13_jupyter_catalogizer (`📎🧪`) a kimeneti fázisban, **a jegyzet/prezi elkészülte UTÁN** futnak — hogyan lehet a csatolmányokat **visszamenőlegesen** beregisztrálni a már kész wip ÉS clean outputokba? Megválaszolandó: (1) a wip `4_wip_outputs/N_Jegyzet.md` / `N_Prezentacio.md` újraírása-e a horgony beszúrásához, vagy külön overlay/regiszter-fájl; (2) a már legenerált clean outputok (`6_clean_outputs/` .docx/.pptx) frissítése — újragenerálás a wip-ből vagy utólagos patch; (3) idempotencia és a bővülő/szűkülő videó-/notebook-lista kezelése a stabil `[link]` hivatkozással. Kapcsolódó kötött jelölés: `📎▶` / `📎🧪` (12/13 §3.1).
   - **Konkrét tünet (2026-06-08, atg/1_het):** a YouTube visszaregisztráció csak `4_wip_outputs/1_Jegyzet.md`-be történt meg. Hiányzik még (feladat):
     - `4_wip_outputs/1_Prezentacio_default.md`
     - `4_wip_outputs/1_Prezentacio_mindmap.md`
@@ -133,7 +133,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
     - `4_wip_outputs/1_Prezentacio_mindmap.md`
     - `6_clean_outputs/1_Jegyzet.docx`
     - `6_clean_outputs/1_Prezentacio.pptx`, `1_Prezentacio_mindmap.pptx`
-  - **6_assets mappa-konvenció (döntés, 2026-06-08):** notebookok (`📎🧪`) és regiszterek (YouTube + notebook lista) a `<hét>/6_assets/` mappában laknak — ez a 12/13 lépések kimeneti helye. YouTube regiszter is heti szintű, ugyanitt. A `6_assets/` a mappastruktúra új, 6. eleme (lásd Instructions §6).
+  - **5_asset_outputs mappa-konvenció (döntés, 2026-06-08; sorrendcsere 2026-06-12):** notebookok (`📎🧪`) és regiszterek (YouTube + notebook lista) a `<hét>/5_asset_outputs/` mappában laknak — ez a 12/13 lépések kimeneti helye. YouTube regiszter is heti szintű, ugyanitt. A `5_asset_outputs/` a mappastruktúra 5. eleme; a `6_clean_outputs/` a camera-ready (lásd Instructions §6).
 
 ## Változásjegyzék
 

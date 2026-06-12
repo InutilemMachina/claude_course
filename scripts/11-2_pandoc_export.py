@@ -173,7 +173,7 @@ def main():
     parser.add_argument("--no-mermaid", action="store_true",
                         help="Mermaid-renderelés kihagyása (blokkok kódként maradnak)")
     parser.add_argument("--pdf", action="store_true",
-                        help="PDF exportálás is (xelatex, 5_clean_outputs/-ba)")
+                        help="PDF exportálás is (xelatex, 6_clean_outputs/-ba)")
     args = parser.parse_args()
 
     week_dir = args.week_dir.resolve()

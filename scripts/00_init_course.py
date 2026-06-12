@@ -8,7 +8,7 @@ táblát automatikusan kitölti.
 
 Létrehozza:
     test_outputs/<Tantargy>/subject_status.md    (a sablonból, ha még nincs)
-    test_outputs/<Tantargy>/N_het/1_raw_inputs/  ... 5_clean_outputs/  (minden hétre)
+    test_outputs/<Tantargy>/N_het/1_raw_inputs/  ... 6_clean_outputs/  (minden hétre)
 
 Idempotens: meglévő subject_status.md-t és mappákat nem ír felül.
 
@@ -34,14 +34,14 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = PROJECT_ROOT / "templates" / "subject_status_template.md"
 
 WEEK_SUBDIRS = ["1_raw_inputs", "2_clean_inputs", "3_mindmap",
-                "4_wip_outputs", "5_clean_outputs"]
+                "4_wip_outputs", "5_asset_outputs", "6_clean_outputs"]
 
 # A subject_status.md §2 táblájának sorai = pipeline-lépések (🚦 = checkpoint).
 PIPELINE_STEPS = [
     "00 init", "01 source_collector", "02 image_extraction",
     "03 mindmap_builder 🚦", "04 content_synthesizer", "05 figure_integrator",
     "06 summarize_box_injector", "07 typesetter", "08 quality_reviewer 🚦",
-    "09 question_bank", "10 presentation_maker", "11 bsc_export",
+    "09 question_bank", "10 presentation_maker", "11 docx_export",
     "12 youtube_finder", "13 jupyter_catalogizer",
 ]
 

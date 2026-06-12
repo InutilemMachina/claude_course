@@ -19,7 +19,7 @@ Szűrhető magyarázat-megjelenítés szerint.
 Futtatható hetente vagy az összes hétre aggregáltan (vizsgaidőszak előtt).
 
 **Input:** `4_wip_outputs/N_Kerdesbank.md` (egy vagy több hét)
-**Output:** `5_clean_outputs/N_Kerdesbank.xml` (heti) / `5_clean_outputs/vizsgabank.xml` (aggregált)
+**Output:** `6_clean_outputs/N_Kerdesbank.xml` (heti) / `6_clean_outputs/vizsgabank.xml` (aggregált)
 
 ## 2. Script hívása
 
@@ -110,8 +110,8 @@ A) / B) / C) / D)         → answer choice-ok
 
 | Fájl | Mód | Tartalom |
 |:-----|:----|:---------|
-| `5_clean_outputs/N_Kerdesbank.xml` | heti | Adott hét kérdésbankja Moodle XML-ben |
-| `5_clean_outputs/vizsgabank.xml` | aggregált | Összes hét kérdésbankja összevonva |
+| `6_clean_outputs/N_Kerdesbank.xml` | heti | Adott hét kérdésbankja Moodle XML-ben |
+| `6_clean_outputs/vizsgabank.xml` | aggregált | Összes hét kérdésbankja összevonva |
 
 ## 6. Ellenőrzés
 
@@ -148,4 +148,4 @@ A) / B) / C) / D)         → answer choice-ok
 |-------|--------|--------|
 | 2026-06-07 | 1.0 | Létrehozva: markdown-first Moodle-export spec, heti+aggregált mód, BSc/MSc+depth tagek |
 | 2026-06-11 | 1.1 | status: active → planned (a `09-1_moodle_export.py` még nem létezik — őszinte spec); §9/§10 (Hivatkozások/Változásjegyzék) számozás rendezve. |
-| 2026-06-12 | 1.2 | MSc-kivezetés (P2.1): `--level bsc/msc` és BSc/MSc szintszűrés eltávolítva; parsing formátumból `(BSc|MSc)` törölve; XML-tagekből BSc/MSc törölve. |
+| 2026-06-12 | 1.2 | MSc-kivezetés (P2.1): `--level bsc/msc` és BSc/MSc szintszűrés eltávolítva; parsing formátumból `(BSc|MSc)` törölve; XML-tagekből BSc/MSc törölve. Mappa-migráció (P2.2): XML-kimenet `5_clean_outputs` → `6_clean_outputs`. |

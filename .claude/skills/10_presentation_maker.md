@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖+🐍
 status: active
-version: 1.10
-updated: 2026-06-11
+version: 1.11
+updated: 2026-06-12
 description: Approved mindmap és végleges jegyzet alapján MARP prezentáció és PPTX, KÉT variánsban (default fejléc-breadcrumb / mindmap oldalsáv-TOC) ugyanabból a navigációs modellből (_nav_util.py). Kötött dia-architektúra (Cím → Áttekintés → szakaszonként Nyitó/belső/Záró → Végső → Hivatkozásjegyzék); kötött `>` keret-blokk-rend (🧭/🔭/🎯/💡/🗺️) a jegyzet újrahasznosításával; belső diák tiszta tananyag; navigáció = SZÖVEG (TOC/breadcrumb), tartalmi diagramok = előrenderelt Mermaid-PNG (10-1); .potx idx-szerződés (idx0/idx1/idx5); kétoszlopos layout; beszédes diák; számozott feliratok.
 ---
 
@@ -18,7 +18,7 @@ A végleges jegyzetből és az approved mindmap-ből MARP-kompatibilis prezentá
 majd `10_pptx_gyarto.py`-val PPTX-re konvertálja.
 
 **Input:** `4_wip_outputs/N_Jegyzet.md` + `3_mindmap/mindmap.md`
-**Output:** `4_wip_outputs/N_Prezentacio.md` + `5_clean_outputs/N_Prezentacio.pptx`
+**Output:** `4_wip_outputs/N_Prezentacio.md` + `6_clean_outputs/N_Prezentacio.pptx`
 
 ## 2. Bemenetek
 
@@ -205,7 +205,7 @@ python scripts/10_pptx_gyarto.py --week-dir <tárgy>/<N_het> --variant both
   a stílus a sablonból örökl, a script csak a placeholdereket (idx) tölti.
 - Sablonválasztás variáns szerint: `default` → `due_presentation_default_master.potx`;
   `mindmap` → `due_presentation_mindmap_master.potx`. (`--template` felülírja.)
-- Output: `5_clean_outputs/N_Prezentacio.pptx` (default) [+ `N_Prezentacio_mindmap.pptx`].
+- Output: `6_clean_outputs/N_Prezentacio.pptx` (default) [+ `N_Prezentacio_mindmap.pptx`].
 - Ellenőrzés: slide count; mindmap variánsban az `idx5` TOC kitöltve a content/keret diákon
   (ábra/tábla kivételével); default variánsban a content diák címe többsoros breadcrumb.
 
@@ -236,7 +236,7 @@ python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 | Fájl | Tartalom |
 |:-----|:---------|
 | `4_wip_outputs/N_Prezentacio.md` | MARP Markdown, minden dián vizuális elemmel |
-| `5_clean_outputs/N_Prezentacio.pptx` | Végleges PowerPoint |
+| `6_clean_outputs/N_Prezentacio.pptx` | Végleges PowerPoint |
 
 ## 5. Teszt
 
@@ -303,3 +303,4 @@ python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 | 2026-06-03 | 1.1 | Átszámozva 09→10; script 10_pptx_gyarto.py |
 | 2026-06-11 | 1.9 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |
 | 2026-06-11 | 1.10 | MSc-kivezetés: a navigációs modellből a `[MSc]` tag eltávolítva. |
+| 2026-06-12 | 1.11 | Mappa-migráció (P2.2): PPTX-kimenet `5_clean_outputs` → `6_clean_outputs` (§1/§3/§4 + `10_pptx_gyarto.py`). |

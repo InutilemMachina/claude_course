@@ -175,7 +175,7 @@ hanem rövid, magyarázó mondat).
 
 ## 8. Hivatkozási szabály
 
-- IEEE forrásjegyzék (`## Hivatkozásjegyzék`) kötelező MINDEN 4_wip_outputs és 5_clean_outputs termékben.
+- IEEE forrásjegyzék (`## Hivatkozásjegyzék`) kötelező MINDEN 4_wip_outputs és 6_clean_outputs termékben.
 - Szövegbeli hivatkozás és lista is `[1]`, `[1,2]`, `[1-3]`, `[1,3,6]`, … (IEEE-szabvány).
 - Forrás: `1_raw_inputs/citations.json`; a listát a `_ieee_renderer.py` rendereli `type` szerint:
 

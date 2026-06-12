@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🐍
 status: planned
-version: 1.2
+version: 1.3
 updated: 2026-06-12
-description: N_Kerdesbank.md → Moodle XML konverzió. Heti vagy aggregált mód, --no-explanation kapcsoló. Script: scripts/09-1_moodle_export.py
+description: N_Kerdesbank.md → Moodle XML konverzió. Heti vagy aggregált mód, --no-explanation kapcsoló. Script: scripts/09b_moodle_export.py
 ---
 
 # 09b_MOODLE_EXPORT
@@ -25,13 +25,13 @@ Futtatható hetente vagy az összes hétre aggregáltan (vizsgaidőszak előtt).
 
 ```bash
 # Heti export, magyarázattal
-python scripts/09-1_moodle_export.py --subject atg --week 1
+python scripts/09b_moodle_export.py --subject atg --week 1
 
 # Heti export, magyarázat nélkül
-python scripts/09-1_moodle_export.py --subject atg --week 1 --no-explanation
+python scripts/09b_moodle_export.py --subject atg --week 1 --no-explanation
 
 # Aggregált export — összes hét (vizsgaidőszak előtt)
-python scripts/09-1_moodle_export.py --subject atg --aggregate
+python scripts/09b_moodle_export.py --subject atg --aggregate
 ```
 
 ### 2.1 Paraméterek
@@ -147,5 +147,6 @@ A) / B) / C) / D)         → answer choice-ok
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-07 | 1.0 | Létrehozva: markdown-first Moodle-export spec, heti+aggregált mód, BSc/MSc+depth tagek |
-| 2026-06-11 | 1.1 | status: active → planned (a `09-1_moodle_export.py` még nem létezik — őszinte spec); §9/§10 (Hivatkozások/Változásjegyzék) számozás rendezve. |
+| 2026-06-11 | 1.1 | status: active → planned (a `09b_moodle_export.py` még nem létezik — őszinte spec); §9/§10 (Hivatkozások/Változásjegyzék) számozás rendezve. |
 | 2026-06-12 | 1.2 | MSc-kivezetés (P2.1): `--level bsc/msc` és BSc/MSc szintszűrés eltávolítva; parsing formátumból `(BSc|MSc)` törölve; XML-tagekből BSc/MSc törölve. Mappa-migráció (P2.2): XML-kimenet `5_clean_outputs` → `6_clean_outputs`. |
+| 2026-06-12 | 1.3 | Névkonvenció (P2.7, 10. döntés): a planned script `09-1_moodle_export.py` → `09b_moodle_export.py` (1:1 a skill nevével; Instructions §5.1 betűs-alskill szabály). `status: planned` marad. |

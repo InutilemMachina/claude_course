@@ -81,11 +81,13 @@ Te használhatod őket, de a user szinte soha nem illeszti be azokat, pl.:  `IDE
 | Típus | Séma | Példa |
 |-------|------|-------|
 | Egy script egy lépéshez | `NN_name.py` | `05_figure_mapper.py` |
-| Több script egy lépéshez | `NN-M_name.py` | `02-1_mineru_pipeline.py` |
+| Több script egy lépéshez | `NN-M_name.py` | `07-2_heading_numberer.py` |
+| Betűs alskill scriptje | `NNx_name.py` | `09b_moodle_export.py` |
 | Megosztott segédkönyvtár | `_name.py` | `_citations_util.py` |
 
 - `NN`: pipeline lépés sorszáma (00–13), párhuzamos a skill-számokkal
 - `M`: lépésen belüli sorrend (1, 2, ...)
+- `x`: betűs alskill jele (pl. `02b`, `09b`) — a script a skill nevét viszi **1:1** (`09b_moodle_export.md` ↔ `09b_moodle_export.py`)
 - `_` prefix: nem lépés-specifikus utility — nincs hozzá külön skill
 
 ### 5.2. YAML fejléc — `tags` séma

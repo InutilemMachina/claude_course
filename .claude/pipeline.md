@@ -2,12 +2,47 @@
 title: Pipeline.md — claude_course
 type: meta
 status: active
-version: 1.6
-updated: 2026-06-04
+version: 2.0
+updated: 2026-06-12
 description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 ---
 
 # PIPELINE.MD — claude_course
+
+## 0. Hogyan működik az egész? (amatőr-áttekintés)
+
+Ez **nem** egy „indítsd el és gyere vissza a késztermékért" batch-folyamat. **Interaktív,
+ember-felügyelt szerzői hurok**: a 😎 (te, az oktató) irányítasz, a 🤖 (Claude) végzi a
+szellemi gyártás zömét, a 🐍 (scriptek) a determinisztikus, megbízható átalakításokat.
+
+A fonal egyszerű nyelven, egy héten belül:
+
+1. **Beállítás** (00–01): megadod a tárgyat/heteket; forrásokat gyűjtesz (PDF/URL/PPTX).
+2. **Feldolgozás** (02–02b): a MinerU kinyeri a képeket + felépíti az ábra-katalógust; Claude
+   leírja, mit ábrázolnak a képek.
+3. **🚦 GATE 1 — elmetérkép** (03): Claude megérti az anyagot és **elmetérképet** rajzol. **Te
+   birtoklod**: eldöntöd a szkópot és a mélységet. Ez a legfontosabb sarokkő.
+4. **Megírás** (04–06): a mindmap vezérletével Claude megírja a jegyzetet, beilleszti az ábrákat
+   és az összegző dobozokat.
+5. **Tördelés** (07): terminológia-egységesítés + determinisztikus fejezet/ábra-számozás.
+6. **🚦 GATE 2 — publikálhatóság** (08): minőség-ellenőrzés. **Te döntesz**: publikálható, vagy
+   célzott revíziót kérsz (vissza 04-re, új forrásnál 01-re).
+7. **Kimenetek** (09–11): kérdésbank, prezentáció (PPTX), camera-ready DOCX — a véglegesített
+   wip **tiszta konverziója** a `6_clean_outputs/`-ba.
+8. **Gazdagítás** (12–13, opcionális): te koncepciókat jelölsz ki, Claude videót/notebookot rendel
+   hozzá; ezek **overlay-ként** a `5_asset_outputs/` regiszterbe kerülnek (lásd 12/13 §3.2).
+
+### A te szerepeid (human-in-the-loop)
+
+| 😎-szerep | Hol | Mit csinálsz |
+|-----------|-----|--------------|
+| **Setup** | 00, 01 | tárgy/hetek/célok; forrás-válogatás (több jelölt), saját fájl, zárt hozzáférés letöltése |
+| **Spot-check** | 02/02b, 04, 05, 06, 07 | ránézel az eredményre — könnyű felügyelet, nem gate |
+| **🚦 GATE 1 — mindmap** | 03 után | **birtoklod az elmetérképet**: szkóp, mélység, mit metsz |
+| **🚦 GATE 2 — publikálhatóság** | 08 után | publikálsz/visszaküldesz; célzott revíziót injektálsz → hurok 04-re |
+| **Kijelölő** | 12, 13 | rámutatsz koncepciókra/ábrákra; a 🤖 gyárt; **nem automatikus** |
+
+A cél-gráf a [§2.1 Vizualizáció](#21-vizualizáció)-ban; a két gate a [§3 Checkpointok](#3-checkpointok)-ban.
 
 ## 1. A tradicionális oktató → Claude leképezés
 
@@ -20,15 +55,12 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | Word: ír, hivatkozik, képek, egyenletek, táblázatok, diagrammok | `04_content_synthesizer` + `05_figure_integrator` + `06_summarize_box_injector` |
 | Word → PowerPoint | `10_presentation_maker` |
 | Vizsgakérdések (Moodle MCQ) | `09_question_bank` |
-| Youtube search | 🔲 tervezett `12_youtube_finder` |
-| Jupyter notebook | 🔲 tervezett `13_jupyter_catalogizer` |
-[ ] Youtube, Jupyter már folyamatban. De a fő kérdés, hogy miért nem írodott át itt a pipeline?
+| Youtube search | `12_youtube_finder` (😎-kijelölt overlay) |
+| Jupyter notebook | `13_jupyter_catalogizer` (😎-kijelölt overlay) |
 
-**Kulcselv:** → [Instructions.md §2](../Instructions.md)
-
-[ ] Ha felfelé hivatkozunk az miért kell?
-
-[ ] Fő feladat, hogy egy tényleges call_graph-ot kapjunk, hogy lássuk mennyire egyezik a fenti "tervezett" szekvenciális elképzeléssel. Én úgy érzem, hogy a legtöbb ponton felül kell vizsálni az állomásokat, de vannak olyan pontok ahol például egyértelműen én jelölök ki anyagokat/bekezdéseket (pl youtube, jupyter) te legyártod, és visszafelé felveszed a wip és clean jegyzetekbe. VAGY addig a wip-ben maradunk, amíg már minden kész nincs tartalmilag és csak utána megyünk a camera-ready státusz-ba, aminek elv szerint színtiszta konverziónak és template használatnak kéne lennie. Ebben az esetben 5_asset_outputs és 6_clean_outputs lenne a helyes mappastruktúra.
+**Kulcselv:** → [Instructions.md §2](../Instructions.md). A 12/13 **nem** automatikus: a 😎 jelöl ki
+koncepciókat, a 🤖 gyárt, az eredmény overlay-ként a `5_asset_outputs/` regiszterbe kerül (a wip
+csak stabil horgonyt kap), a `6_clean_outputs` ebből + a wip-ből **újrakonvertál** (lásd §0, 12/13 §3.2).
 
 ## 2. Lépések és IO
 
@@ -36,8 +68,7 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 |:------|:--------|:------|:----------------|:-------|
 | Célcsoport, hetek, tantárgy | 😎 | [`00_init`](skills/00_init.md) — `00_init_course.py` | 🐍 | `subject_status.md` + mappák |
 | URL-ek, PDF-ek, PPTX-ek | 😎+🤖 | [`01_source_collector`](skills/01_source_collector.md) | 🤖+😎 | `1_raw_inputs/` + `citations.json` |
-| `1_raw_inputs/` | 🐍 | `02_mineru_to_catalog` — `scripts/02_mineru_to_catalog.py` (MinerU + PPTX) **standard** | 🐍 | `2_clean_inputs/` képek + `figure_catalog.json` (v4, caption+text_context+keywords előtöltve) |
-| `1_raw_inputs/` | 🐍 | [`02_image_extraction`](skills/02_image_extraction.md) — `02_mineru_to_catalog.py` (MinerU, conda `mineru` env); caption+text_context+keywords-draft gépi | 🐍 | `2_clean_inputs/` képek + `figure_catalog.json` (v4) |
+| `1_raw_inputs/` + `citations.json` | 🐍 | [`02_image_extraction`](skills/02_image_extraction.md) — `02_mineru_to_catalog.py` (MinerU, conda `mineru` env); caption+text_context+keywords-draft gépi | 🐍 | `2_clean_inputs/` képek + `figure_catalog.json` (v4) |
 | `2_clean_inputs/figure_catalog.json` | 🤖 | [`02b_figure_enricher`](skills/02b_figure_enricher.md) — `visual_content` + `keywords` finomítás (csak ez marad Claude-ra) | 🤖 | ugyanaz, `visual_content` + végleges `keywords` kitöltve |
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
@@ -46,7 +77,7 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`07_typesetter`](skills/07_typesetter.md) — Claude terminológia-pass + `07-2_heading_numberer.py` + `07-3_figure_numberer.py` | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (egységesítés + fejezet/ábra-számozás) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍+🤖 | [`08_quality_reviewer`](skills/08_quality_reviewer.md) — `08_quality_check.py` | 🐍+🤖 🚦😎 | `4_wip_outputs/N_Review.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`09_question_bank`](skills/09_question_bank.md) — mindmap-alapú MCQ | 🤖 | `4_wip_outputs/N_Kerdesbank.md` |
-| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`10_presentation_maker`](skills/10_presentation_maker.md) — tartalmi Mermaid→PNG (`10-1_mermaid_render.py`) + navigáció-injektálás (`10-2_nav_inject.py`) + `.potx`-natív PPTX (`10_pptx_gyarto.py --variant`). Két variáns: **default** (fejléc-breadcrumb) / **mindmap** (oldalsáv-TOC), közös navigációs modellből (`_nav_util.py`); a PPTX a `.potx` mesterekből (Garamond cím + Aptos body) készül, valódi táblákkal és LaTeX→PNG képletekkel | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` (+ `_default`/`_mindmap`) + `5_clean_outputs/N_Prezentacio.pptx` (+ `_mindmap`) |
+| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`10_presentation_maker`](skills/10_presentation_maker.md) — tartalmi Mermaid→PNG (`10-1_mermaid_render.py`) + navigáció-injektálás (`10-2_nav_inject.py`) + `.potx`-natív PPTX (`10_pptx_gyarto.py --variant`). Két variáns: **default** (fejléc-breadcrumb) / **mindmap** (oldalsáv-TOC), közös navigációs modellből (`_nav_util.py`); a PPTX a `.potx` mesterekből (Garamond cím + Aptos body) készül, valódi táblákkal és LaTeX→PNG képletekkel | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` (+ `_default`/`_mindmap`) + `6_clean_outputs/N_Prezentacio.pptx` (+ `_mindmap`) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`11_docx_export`](skills/11_docx_export.md) — pandoc (`11-2`) | 🐍 | `6_clean_outputs/N_Jegyzet.docx` |
 | `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`12_youtube_finder`](skills/12_youtube_finder.md) — videó-overlay (😎-kijelölt) | 🤖+😎 | `5_asset_outputs/enrichment_register.md` (📎▶) + `<!-- ENRICH: v* -->` horgony |
 | `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`13_jupyter_catalogizer`](skills/13_jupyter_catalogizer.md) — notebook-overlay (😎-kijelölt) | 🤖+😎 | `5_asset_outputs/enrichment_register.md` (📎🧪) + `<!-- ENRICH: nb* -->` horgony |
@@ -118,58 +149,44 @@ A 08-checkpointon a 😎 a PUBLIKÁLHATÓ döntés ellenére is kérhet **célzo
 **meglévő forrás** → vissza 04-hez; **új forrás** → vissza 01 → 02 → 04. A revízió után 07 → 08 újrafut.
 
 ## 4. Vizuális gazdagítás
-TODO Ezeket is már említettük upstream. Nem tudom, hogyha ez a bekezdés nincs itt, akkor nem lépne életbe a jelen bekezdés tartalma?
 
-A kötelező vizuális rétegek és a diagram-típus döntési fa kanonikus helye: [Instructions.md §7](../Instructions.md). A pipeline-ban ezt a `04 content_synthesizer`, `05 figure_integrator` (ábrák, `figure_catalog.json` alapján) és `06 summarize_box_injector` lépések valósítják meg — utóbbi minden `##` alfejezet végére `💡 Összegzés`, minden `#` fejezet zárásánál `🗺️ Fejezet összegfoglalása` blokkot illeszt (formátum: [skills/06_summarize_box_injector.md](skills/06_summarize_box_injector.md) §3).
+A kötelező vizuális rétegek és a diagram-típus döntési fa **kanonikus helye**:
+[Instructions.md §7](../Instructions.md). A pipeline-ban ezt a `04`, `05` (ábrák a
+`figure_catalog.json`-ból) és `06` lépések valósítják meg (06: `💡 Összegzés` per `##`,
+`🗺️ Fejezet összegfoglalása` per `#` — formátum: [06 §3](skills/06_summarize_box_injector.md)).
 
 ## 5. Mappastruktúra
-TODO ezt itt kell dokumentálni?
 
-→ Kanonikus mappastruktúra: [Instructions.md §6](../Instructions.md).
+→ Kanonikus: [Instructions.md §6](../Instructions.md) (`1_raw_inputs` … `5_asset_outputs`, `6_clean_outputs`).
 
 ## 6. Citáció-rendszer
 
-TODO ezt itt kell dokumentálni?
+→ Kanonikus formátum (IEEE, `type`-alapú) és a `## Hivatkozásjegyzék` kötelezettség:
+[Instructions.md §8](../Instructions.md). A `1_raw_inputs/citations.json` séma és kitöltése:
+[01_source_collector](skills/01_source_collector.md); renderelés: `_ieee_renderer.py`.
 
-```json
-// 1_raw_inputs/citations.json — fájlnév-alapú, IEEE-kompatibilis
-{
-  "_meta": {"subject": "...", "week": 1},
-  "1": {"type": "book", "author": "...", "title": "...", "year": "...", "venue": "...", "filename": "gravdahl1999_book.pdf", "original_filename": "D6 kieg - gravdahl1999-Book-….pdf"},
-  "2": {"type": "webpage", "author": "...", "title": "...", "year": "...", "url": "...", "filename": "wikipedia2024_webpage.pdf", "original_filename": "https://…"}
-}
-```
+## 7. Human-in-the-loop modell
 
-- A kulcs (`"1"`, `"2"`) megegyezik a szövegbeli `[1]`, `[2]` jelöléssel.
-- `filename` = konvenciós név; `original_filename` = provenance (nem kerül a kész outputba).
-- Hivatkozási formátum (IEEE, `type`-alapú) és a `## Hivatkozásjegyzék` kötelezettség: [Instructions.md §8](../Instructions.md).
-- Generálás: `_ieee_renderer.py` (a `1_raw_inputs/citations.json`-ból).
+A pipeline **interaktív, ember-felügyelt szerzői hurok**, nem batch és nem „background agent"-ek
+raja. A 😎-szerepek a [§0](#0-hogyan-működik-az-egész-amatőr-áttekintés) tábláján; a mechanika:
 
-## 7. Agent architektúra
+| Mód | Lépések | Mit jelent |
+|-----|---------|------------|
+| **Szekvenciális** | 02→03→04→05→06→07→08 | output-függőség; minden lépés után a 😎 ránézhet (spot-check) |
+| **Gate (emberi döntés)** | 03 🚦, 08 🚦 | a hurok itt **megáll** a 😎 jóváhagyásáig (§3) |
+| **Kimenet** | 09, 10, 11 | a 08-gate után, a véglegesített wip-ből; egymástól függetlenek (de nem „párhuzamos agent") |
+| **Overlay (😎-vezérelt)** | 12, 13 | a 😎 kijelöl, a 🤖 gyárt; nem automatikus (§0, 12/13 §3.2) |
 
-TODO: ez itt inkább egy human-in-the-loop és Agent architektúra, csak nem világos hogy ezeket miért nevezed agent-nek.
-
-TODO: Tulajdonképpen minden lépés után meg kell néznem az eredményeket.
-
-TODO: 12 és 13 szinte biztos nem automatikusak. Gyakorlatilag nekem kell kijelölni, hogy mihez keress videókat és mihez gyárts notebook-ok.
-
-TODO: Erősen kételkedem, hogy itt lesznek párhuzamos lépések. 
-
-| Típus | Lépések | Indok |
-|-------|---------|-------|
-| Szekvenciális (foreground) | 02→03→04→05→06→07→08 | Output-függőség; checkpointok |
-| Párhuzamos (background) | 09 ‖ 10 ‖ 11 (‖ 12 ‖ 13) | Független outputok |
-| Interaktív (inline) | 03 checkpoint, 08 checkpoint | Emberi döntés szükséges |
-
-Az agent-prompt minden skill esetén a skill `§3 Eljárás` szekciója alapján generálódik.
+Minden lépés végrehajtási protokollja a saját skill `§3 Eljárás` szekciójában él — a pipeline csak
+a sorrendet és a gate-eket rögzíti.
 
 ## 8. Nyitott pontok
 
-→ Backlog kezelése: [project_status.md](project_status.md).
+→ Backlog és nyitott kérdések kanonikus helye: [project_status.md](project_status.md).
 
 ## Változásjegyzék
 
-TODO: a változásjegyzék miért össze-vissza frissül? legyen a legfrissebb változás legalul és legyen ez konvenció, amit vagy itt vagy fentebb rögzítesz (Ezt nem biztos, hogy itt kell rögzíteni, csak itt vettem észre.)
+<!-- Konvenció (Instructions): a legfrissebb változás LEGALUL (kronológiai, növekvő sorrend). -->
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
@@ -177,6 +194,7 @@ TODO: a változásjegyzék miért össze-vissza frissül? legyen a legfrissebb v
 | 2026-06-02 | 1.1 | Mermaid vertikalizálva + `<br>` sortörés-javítás; D1/D2 deduplikáció (vizuális → Instructions §7, IEEE → §8); 05 script a táblába |
 | 2026-06-03 | 1.2 | 05 szétválasztva: 05_figure_integrator + 06_summarize_box_injector; 06–10 lépések +1 átszámozva (→ 07–11), scriptek párhuzamosan; 12_youtube_finder + 13_jupyter_catalogizer beillesztve a kimeneti fázisba |
 | 2026-06-03 | 1.3 | §4: 06 kimenete `📦 Összegző` (egyszintű) → kétszintű (`💡 Összegzés` per `##` + `🗺️ Fejezet összegfoglalása` per `#`) |
-| 2026-06-05 | 1.6 | **MinerU-first pipeline**: `02_mineru_to_catalog.py` a standard 02 lépés (caption+text_context+keywords draft gépileg auto-kitöltve MinerU _content_list.json-ból); `02_image_extraction.py` fallback marad. `02b_figure_enricher` csak `visual_content` + keywords finomítás = Claude-only minimális munka. Sprint: [ocr_lab/decision.md](sprints/image_rag/ocr_lab/decision.md). |
-| 2026-06-05 | 1.5 | **image_rag_OCR sprint**: 02c_mineru_layout opcionális lépés (MinerU layout/formula/képpárosítás) `02 → 02c → 02b` chain-ben. 02b_figure_enricher v1.1: backend-preferencia chain (MinerU > PyMuPDF4LLM > Tesseract > Claude Read). Komparatív kutatás: [.claude/sprints/image_rag/ocr_lab/decision.md](sprints/image_rag/ocr_lab/decision.md). |
 | 2026-06-04 | 1.4 | **image_rag sprint (Block 8)**: 02b_figure_enricher beillesztve a 02 és 03 közé; `figure_catalog.json` séma v4 (`_meta + sources` csoportosítva, 11 mező logikus sorrendben, `_status` derived flag, `_usage.example_entry` self-documenting); egységes `pNNN_figNNN.png` naming-konvenció; OCR-cache szkennelt PDF-ekhez. Sprint plan: [.claude/sprints/image_rag/image_rag_plan.md](sprints/image_rag/image_rag_plan.md) |
+| 2026-06-05 | 1.5 | **image_rag_OCR sprint**: 02c_mineru_layout opcionális lépés (MinerU layout/formula/képpárosítás) `02 → 02c → 02b` chain-ben. 02b_figure_enricher v1.1: backend-preferencia chain (MinerU > PyMuPDF4LLM > Tesseract > Claude Read). Komparatív kutatás: [.claude/sprints/image_rag/ocr_lab/decision.md](sprints/image_rag/ocr_lab/decision.md). |
+| 2026-06-05 | 1.6 | **MinerU-first pipeline**: `02_mineru_to_catalog.py` a standard 02 lépés (caption+text_context+keywords draft gépileg auto-kitöltve MinerU _content_list.json-ból); `02_image_extraction.py` fallback marad. `02b_figure_enricher` csak `visual_content` + keywords finomítás = Claude-only minimális munka. Sprint: [ocr_lab/decision.md](sprints/image_rag/ocr_lab/decision.md). |
+| 2026-06-12 | 2.0 | **„Egyetlen igazság" átfésülés (P2.8, 17. döntés):** §0 amatőr-áttekintés + HITL-szereptábla az elejére; §7 „Agent architektúra" → őszinte human-in-the-loop modell (nincs „background agent"); §2 IO-tábla 02-duplikáció összevonva (MinerU-only) + 10 kimenet `6_clean`; §4/§5/§6 redundancia → kanonikus pointerek (Instructions §6/§7/§8); minden inline TODO megválaszolva/törölve; 12/13 „tervezett" → 😎-overlay; changelog sorrend növekvőre; verzió 1.6 → 2.0. |

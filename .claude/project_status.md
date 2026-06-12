@@ -115,25 +115,15 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
   - `templates/due_presentation_template_default.potx` — Prezentáció default variáns (10_presentation_maker)
   - `templates/due_presentation_template_mindmap.potx` — Prezentáció mindmap variáns (10_presentation_maker)
   Az új template-ek bevezetésekor a `10_pptx_gyarto.py --variant` és `11-2_pandoc_export.py` `find_template()` keresési logikáját is frissíteni kell.
+- 🔲 B-26: **Register-aware konverzió (12/13 overlay-feloldás).** A `6_clean_outputs` előállításakor a `10_pptx_gyarto.py` / `11-2_pandoc_export.py` oldja fel a wip `<!-- ENRICH: <id> -->` horgonyait a `5_asset_outputs/enrichment_register.md`-ből a látható `📎▶`/`📎🧪` blokká (Q-04 megoldás mechanizált fele). Addig a 😎 kézzel illeszt a regiszterből. Spec: 12/13 §3.2.
 
 ## Nyitott kérdések (❔)
 
 - ❔ Q-01: DUE template DOCX portolása — `templates/` mappába szükséges-e?
 - ❔ Q-02: A `subject_status.md` (sablon: `subject_status_template.md`) mikor és ki által töltődik ki — különösen a §5 kérdésbank-beállítás a `09_question_bank` skill véglegesítése után? (😎 induláskor vagy 🤖 a 09 konfigjából?)
 - ❔ Q-03 (B-07-hez): A `.claude/skills/` lépés-dokumentumok maradjanak protokoll-doksik, vagy váljanak valódi, hívható Claude-skillekké (`SKILL.md` + `name`/`description`)? — Mindent a maga idejében; a B-07/B-08 keretében döntjük el.
-- ❔ Q-04 (B-05/B-06/B-13-hoz): A 12_youtube_finder (`📎▶`) és 13_jupyter_catalogizer (`📎🧪`) a kimeneti fázisban, **a jegyzet/prezi elkészülte UTÁN** futnak — hogyan lehet a csatolmányokat **visszamenőlegesen** beregisztrálni a már kész wip ÉS clean outputokba? Megválaszolandó: (1) a wip `4_wip_outputs/N_Jegyzet.md` / `N_Prezentacio.md` újraírása-e a horgony beszúrásához, vagy külön overlay/regiszter-fájl; (2) a már legenerált clean outputok (`6_clean_outputs/` .docx/.pptx) frissítése — újragenerálás a wip-ből vagy utólagos patch; (3) idempotencia és a bővülő/szűkülő videó-/notebook-lista kezelése a stabil `[link]` hivatkozással. Kapcsolódó kötött jelölés: `📎▶` / `📎🧪` (12/13 §3.1).
-  - **Konkrét tünet (2026-06-08, atg/1_het):** a YouTube visszaregisztráció csak `4_wip_outputs/1_Jegyzet.md`-be történt meg. Hiányzik még (feladat):
-    - `4_wip_outputs/1_Prezentacio_default.md`
-    - `4_wip_outputs/1_Prezentacio_mindmap.md`
-    - `6_clean_outputs/1_Jegyzet.docx` *(utólagos python-docx patch — részleges kísérlet volt, ellenőrizni)*
-    - `6_clean_outputs/1_Prezentacio.pptx`
-    - `6_clean_outputs/1_Prezentacio_mindmap.pptx`
-  - **Notebook visszaregisztrálás (2026-06-08, atg/1_het):** a `📎🧪` csatolmány bekerült `4_wip_outputs/1_Jegyzet.md`-be (2. Kompresszortérkép összegzés után), de hiányzik (feladat — ugyanaz a lista mint YouTube-nál):
-    - `4_wip_outputs/1_Prezentacio_default.md`
-    - `4_wip_outputs/1_Prezentacio_mindmap.md`
-    - `6_clean_outputs/1_Jegyzet.docx`
-    - `6_clean_outputs/1_Prezentacio.pptx`, `1_Prezentacio_mindmap.pptx`
-  - **5_asset_outputs mappa-konvenció (döntés, 2026-06-08; sorrendcsere 2026-06-12):** notebookok (`📎🧪`) és regiszterek (YouTube + notebook lista) a `<hét>/5_asset_outputs/` mappában laknak — ez a 12/13 lépések kimeneti helye. YouTube regiszter is heti szintű, ugyanitt. A `5_asset_outputs/` a mappastruktúra 5. eleme; a `6_clean_outputs/` a camera-ready (lásd Instructions §6).
+- ✅ Q-04 (B-05/B-06/B-13-hoz): **Megoldva** (2026-06-12, P2.6, 9. döntés) — **overlay + regiszter modell**. A 12/13 gazdagítás nem patcheli a kész fájlokat: (1) a wip-be csak egy stabil `<!-- ENRICH: <id> -->` horgony kerül a 😎-kijelölt helyre (a wip egyébként érintetlen, camera-ready); (2) a tényleges csatolmány-blokk a hét közös `5_asset_outputs/enrichment_register.md` táblájában él (12+13, típus `📎▶`/`📎🧪`, `v<id>`/`nb<id>`); (3) a `6_clean_outputs` a wip + regiszterből **újrakonvertál**, nem patchel 6 fájlt — a bővülő/szűkülő lista csak a regisztert érinti. Spec: [12 §3.2](skills/12_youtube_finder.md) + [13 §3.2](skills/13_jupyter_catalogizer.md). **Maradék (backlog):** a register-aware automatizált horgony-feloldás a `10_pptx_gyarto.py` / `11-2_pandoc_export.py`-ban (addig 😎 kézzel illeszt). — **kész**
+  - **5_asset_outputs mappa-konvenció (döntés, 2026-06-08; sorrendcsere 2026-06-12):** notebookok (`📎🧪`) és a közös gazdagítási regiszter a `<hét>/5_asset_outputs/`-ban laknak — ez a 12/13 kimeneti helye. A `5_asset_outputs/` a mappastruktúra 5. eleme; a `6_clean_outputs/` a camera-ready (lásd Instructions §6).
 
 ## Változásjegyzék
 

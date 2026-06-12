@@ -48,8 +48,8 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`09_question_bank`](skills/09_question_bank.md) — mindmap-alapú MCQ | 🤖 | `4_wip_outputs/N_Kerdesbank.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`10_presentation_maker`](skills/10_presentation_maker.md) — tartalmi Mermaid→PNG (`10-1_mermaid_render.py`) + navigáció-injektálás (`10-2_nav_inject.py`) + `.potx`-natív PPTX (`10_pptx_gyarto.py --variant`). Két variáns: **default** (fejléc-breadcrumb) / **mindmap** (oldalsáv-TOC), közös navigációs modellből (`_nav_util.py`); a PPTX a `.potx` mesterekből (Garamond cím + Aptos body) készül, valódi táblákkal és LaTeX→PNG képletekkel | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` (+ `_default`/`_mindmap`) + `5_clean_outputs/N_Prezentacio.pptx` (+ `_mindmap`) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`11_docx_export`](skills/11_docx_export.md) — pandoc (`11-2`) | 🐍 | `6_clean_outputs/N_Jegyzet.docx` |
-| `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`12_youtube_finder`](skills/12_youtube_finder.md) — videó-csatolmányok 🔲 *tervezett* | 🤖+😎 | videó-katalógus + csatolmány-jelölés |
-| `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`13_jupyter_catalogizer`](skills/13_jupyter_catalogizer.md) — notebook-csatolmányok 🔲 *tervezett* | 🤖+😎 | notebook-katalógus + csatolmány-jelölés |
+| `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`12_youtube_finder`](skills/12_youtube_finder.md) — videó-overlay (😎-kijelölt) | 🤖+😎 | `5_asset_outputs/enrichment_register.md` (📎▶) + `<!-- ENRICH: v* -->` horgony |
+| `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`13_jupyter_catalogizer`](skills/13_jupyter_catalogizer.md) — notebook-overlay (😎-kijelölt) | 🤖+😎 | `5_asset_outputs/enrichment_register.md` (📎🧪) + `<!-- ENRICH: nb* -->` horgony |
 
 ## 2.1 Vizualizáció
 
@@ -97,8 +97,8 @@ flowchart TD
         O1["09 question_bank<br>🤖<br>Moodle MCQ (A–D)"]
         O2["10 presentation_maker<br>🤖 + 🐍<br>PPTX — 2 variáns<br>default / mindmap"]
         O3["11 docx_export<br>🐍<br>pandoc<br>→ 6_clean_outputs/ .docx"]
-        O4["12 youtube_finder<br>🤖 + 😎<br>videó-csatolmányok<br>🔲 tervezett"]
-        O5["13 jupyter_catalogizer<br>🤖 + 😎<br>notebook-csatolmányok<br>🔲 tervezett"]
+        O4["12 youtube_finder<br>🤖 + 😎<br>videó-overlay → 5_asset_outputs<br>regiszter + ENRICH-horgony"]
+        O5["13 jupyter_catalogizer<br>🤖 + 😎<br>notebook-overlay → 5_asset_outputs<br>regiszter + ENRICH-horgony"]
     end
 
     INIT --> EXT --> UNDERSTAND --> CREATE --> QUALITY

@@ -37,7 +37,7 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | Célcsoport, hetek, tantárgy | 😎 | [`00_init`](skills/00_init.md) — `00_init_course.py` | 🐍 | `subject_status.md` + mappák |
 | URL-ek, PDF-ek, PPTX-ek | 😎+🤖 | [`01_source_collector`](skills/01_source_collector.md) | 🤖+😎 | `1_raw_inputs/` + `citations.json` |
 | `1_raw_inputs/` | 🐍 | `02_mineru_to_catalog` — `scripts/02_mineru_to_catalog.py` (MinerU + PPTX) **standard** | 🐍 | `2_clean_inputs/` képek + `figure_catalog.json` (v4, caption+text_context+keywords előtöltve) |
-| `1_raw_inputs/` | 🐍 | [`02_image_extraction`](skills/02_image_extraction.md) — PyMuPDF + OCR cache **fallback** (ha nincs conda mineru env) | 🐍 | `2_clean_inputs/` képek + `text/` OCR + `figure_catalog.json` (v4, strukturális mezők) |
+| `1_raw_inputs/` | 🐍 | [`02_image_extraction`](skills/02_image_extraction.md) — `02_mineru_to_catalog.py` (MinerU, conda `mineru` env); caption+text_context+keywords-draft gépi | 🐍 | `2_clean_inputs/` képek + `figure_catalog.json` (v4) |
 | `2_clean_inputs/figure_catalog.json` | 🤖 | [`02b_figure_enricher`](skills/02b_figure_enricher.md) — `visual_content` + `keywords` finomítás (csak ez marad Claude-ra) | 🤖 | ugyanaz, `visual_content` + végleges `keywords` kitöltve |
 | `2_clean_inputs/` | 🤖 | [`03_mindmap_builder`](skills/03_mindmap_builder.md) — olvas, szintetizál | 🤖 🚦😎 | `3_mindmap/mindmap.md` (flowchart LR) |
 | `3_mindmap/mindmap.md` | 🤖 | [`04_content_synthesizer`](skills/04_content_synthesizer.md) — mindmap-vezérelt szintézis | 🤖 🚦 | `4_wip_outputs/N_Jegyzet.md` |
@@ -64,11 +64,9 @@ flowchart TD
 
     subgraph EXT["② Forrás-feldolgozás"]
         direction TB
-        E1m["02_mineru_to_catalog<br>🐍 (standard)<br>MinerU PDF + python-pptx<br>→ képek + katalógus<br>caption+text_ctx+kw auto"]
-        E1["02_image_extraction<br>🐍 (fallback)<br>PyMuPDF + OCR<br>→ képek + katalógus<br>strukturális mezők only"]
+        E1m["02_mineru_to_catalog<br>🐍 (kanonikus)<br>MinerU PDF + python-pptx<br>→ képek + katalógus<br>caption+text_ctx+kw auto"]
         E2["02b figure_enricher<br>🤖<br>visual_content + keywords<br>(Claude-only munka)"]
         E1m --> E2
-        E1 -.->|"ha nincs MinerU env"| E2
     end
 
     subgraph UNDERSTAND["③ Megértés — sarokkő"]

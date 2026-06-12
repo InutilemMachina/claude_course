@@ -35,6 +35,10 @@ A már kodifikált elveket nem ismétlem, csak megerősítem (kanonikus hely zá
   - vagy korábbi lépésekeket is javítunk
 így **fontos, hogy re-usable és világos absztrahált megoldásokat találjunk**
 - **Best practice elsőként** — Anthropic skill-elvek + skill_template.md + ha van references.
+- **Komparatív kutatás ELŐBB, döntés UTÁNA** — backend-/eszközválasztásnál (OCR, parsing, konverzió)
+  ne ragadd meg a legkézenfekvőbbet: tervezz komparatív tesztet (hipotézisek, fix input, mérési
+  mátrix → `decision.md`), és csak utána rögzítsd az architektúrát. (Az image_rag sprintben a MinerU
+  mérten jobb lett a vártnál — a korai Tesseract-döntés elvesztette volna a LaTeX/diakritika előnyt.)
 - **NLM-mentesség** — a `claude_play` maradványait felismerjük és irtjuk.
 - **A feladathoz illő Claude agent-ek** - terveidbe vedd bele, hogy milyen szintű agent-ekre van szükség milyen feladatokhoz, hogy a tokenekkel takarékoskodjunk. A kognitív feladatok erősebb agent-eket kívánnak, míg egyszerűbb feladatok olcsóbb modelleket.
 
@@ -90,6 +94,22 @@ Nyugodt, szisztematikus tempó. Minden állomáson:
   művelet menetét kövesse és tanulja, ne csak az eredményt lássa.
 - Nyitott szálakat ne ejts el → project_status.md (backlog / nyitott kérdés).
 
+### 5.1. Sprint- és ág-kezelés (lezárási konvenció)
+
+Egy **sprint** = fókuszált felfedezés/refaktor saját **branch**-en (akkor is, ha nem nevezzük
+formálisan sprintnek — de adjunk neki nevet + ágat).
+
+- **Fejlesztés ágon.** A pipeline-fejlesztés branch-en folyik; siker esetén **merge a `main`-be**,
+  az ágat **nem töröljük** (a history nyomon követhető maradjon).
+- **Külső kutatási input → `.claude/archive/`.** A sprinthez behúzott külső anyagok (pl. OCR-kutatás,
+  „Kutatási Útmutató…") a sprint végén az `archive/`-ba kerülnek — referencia, nem élő doksi.
+- **Sprint-munkadosszié → `.claude/sprints/<név>/`.** A `decision.md` / terv **megmarad** (a döntés
+  rögzítése); a **kísérleti melléktermékek** (pl. `test_outputs/_*lab/`, metrika-dumpok) **törlendők**.
+- **Tanulság-desztilláció.** A sprint általános erejű tanulságát a **kanonikus rétegbe** emeld
+  (skill/Instructions/itt), ne hagyd csak a sprint-dossziéban vagy a Claude-memóriában.
+- **Lezáráskor takaríts.** Árva melléktermék ne maradjon a `sprints/`-ben; ami nem döntés vagy
+  reprodukálható fixture, az megy.
+
 ## 6. Hivatkozások
 
 A fejlesztés ezekre a kanonikus forrásokra épül:
@@ -111,3 +131,4 @@ A fejlesztés ezekre a kanonikus forrásokra épül:
 | 2026-06-07 | 1.2 | §4 új megállapodás: **„Nincs shortcut — a lépést végig kell futtatni"** (forrás 02-feldolgozása kötelező, valódi ábra > Mermaid-helyettesítő, kényszerű kihagyást explicit jelezni). `quality_review_test` tanulság. |
 | 2026-06-07 | 1.3 | §5 új szokás: **Git-tanító mód** — minden git-művelet Bash-parancsait tanító jelleggel (parancs + mit/miért) kiírjuk 😎-nak, mert 😎 a git-et tanulja. |
 | 2026-06-12 | 2.0 | **Szétbontás (P2.10, 15. döntés):** `working_method.md` → `meta_working_method.md` (fejlesztés) + új `subject_working_method.md` (gyártás). §2 „skills 00–10" → „00–13"; §6 valódi markdown-linkek + a `[ ]` TODO feloldva; cím/description a fejlesztési fókuszra élesítve. |
+| 2026-06-12 | 2.1 | **Sprint-konvenció + memória-desztilláció (P2.12, D12):** §1 új vezérelv „Komparatív kutatás ELŐBB" (a Claude-memóriából felemelve); §5.1 ÚJ sprint-/ág-lezárási konvenció (ág-merge nem-törléssel, külső input → archive, kísérleti melléktermék törlendő, tanulság kanonikus rétegbe). |

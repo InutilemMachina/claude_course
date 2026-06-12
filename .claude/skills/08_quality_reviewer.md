@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 😎+🤖
 status: active
-version: 1.7
+version: 1.8
 updated: 2026-06-11
 description: Script-alapú lint + Claude Explore review (6 szempont, köztük Biggs constructive alignment); publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez. A 🚦-checkpointon a 😎 célzott revíziót kérhet a Review §6 csatornán (meglévő/új forrás routing).
 ---
@@ -42,7 +42,7 @@ Ellenőrzési szempontok:
 - Minimum terjedelem: `##` fejezetek legalább 3 bekezdéssel?
 - LaTeX hiány: egyetlen képlet sem jelenik meg egy képletintenzív témában?
 - Hivatkozások: a `citations.json` bejegyzések `[1]`, `[2]` formában megjelennek-e?
-- Összegző blokkok: minden `##` alfejezet végén van-e `> 💡 Összegzés` blokk, és minden `#` fejezet zárásánál `> 🗺️ Fejezet összegfoglalása` blokk? (formátum: [06_summarize_box_injector](06_summarize_box_injector.md) §3.1–3.2)
+- Összegző blokkok: minden `###` szakasz végén van-e `> 💡 Összegzés` blokk, és minden `##` fejezet zárásánál `> 🗺️ Fejezet összegfoglalása` blokk? (formátum: [06_summarize_box_injector](06_summarize_box_injector.md) §3.1–3.2)
 
 ### 3.2. Claude Explore review
 
@@ -165,3 +165,4 @@ a `N_Review.md` `## 6. Felhasználói revíziós kérések (😎)` szekciója:
 | 2026-06-03 | 1.2 | §3.1 összegző-doboz check átírva a kétszintű sémára (`💡 Összegzés` per `##`, `🗺️ Fejezet összegfoglalása` per `#`) |
 | 2026-06-11 | 1.6 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva; §3.2 „5→6 szempont” javítva; role 😎+🤖. |
 | 2026-06-11 | 1.7 | MSc-kivezetés: §3.2 Mélység-szempont szint-semlegesre; a BSc/MSc Bloom-alkérdés törölve. |
+| 2026-06-12 | 1.8 | Heading-hierarchia (P2.13, B-14): §3.1 összegző-check `💡` per `###` szakasz, `🗺️` per `##` fejezet; a `08_quality_check.py` metrika-címkék (Fejezetek/Szakaszok) + az „5-12" gazdagság-küszöb a `###` szakaszokra igazítva. |

@@ -5,20 +5,20 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 2.3
-updated: 2026-06-11
-description: Minden `##` alfejezet végére `💡 Összegzés`, minden `#` fejezet zárásánál `🗺️ Fejezet összegfoglalása`, minden `##` fejezet zárásánál `❔ Ellenőrizd magad` retrieval-kérdés (válaszok a `🔑 Megoldókulcs` szekcióban) in-place beszúrása.
+version: 2.4
+updated: 2026-06-12
+description: Minden `###` szakasz végére `💡 Összegzés`, minden `##` fejezet zárásánál `❔ Ellenőrizd magad` retrieval-kérdés + `🗺️ Fejezet összegfoglalása` (válaszok a `🔑 Megoldókulcs` szekcióban) in-place beszúrása. Heading-hierarchia: Instructions §7.
 ---
 
 # 06_SUMMARIZE_BOX_INJECTOR
 
 ## 1. Cél
 
-Az ábrákkal gazdagított jegyzetbe kétszintű összegzést illeszt:
+Az ábrákkal gazdagított jegyzetbe kétszintű összegzést illeszt (heading-hierarchia: [Instructions §7](../../Instructions.md) — `##`=Fejezet, `###`=Szakasz):
 
-- **Mikroszint** — minden `##` szintű alfejezet végére `💡 Összegzés` blokk.
-- **Makroszint** — minden `#` szintű fejezet zárásánál (a `## Hivatkozásjegyzék` előtt) `🗺️ Fejezet összegfoglalása` blokk.
-- **Retrieval** — minden `##` fejezet zárásánál `❔ Ellenőrizd magad` kérdés-blokk a `💡` elé; a válaszok elkülönítve a `## 🔑 Megoldókulcs` szekcióban (dokumentum vége).
+- **Mikroszint** — minden `###` szintű **szakasz** végére `💡 Összegzés` blokk.
+- **Makroszint** — minden `##` szintű **fejezet** zárásánál (a `## Hivatkozásjegyzék` előtt) `🗺️ Fejezet összegfoglalása` blokk.
+- **Retrieval** — minden `##` fejezet zárásánál `❔ Ellenőrizd magad` kérdés-blokk a `🗺️` **elé**; a válaszok elkülönítve a `## 🔑 Megoldókulcs` szekcióban (dokumentum vége).
 
 Az ábrabeillesztés külön, megelőző lépés: [05_figure_integrator](05_figure_integrator.md).
 
@@ -35,20 +35,20 @@ Az ábrabeillesztés külön, megelőző lépés: [05_figure_integrator](05_figu
 
 ## 3. Eljárás
 
-### 3.1. `💡 Összegzés` — minden `##` alfejezet végén
+### 3.1. `💡 Összegzés` — minden `###` szakasz végén
 
-A `##` szintű alfejezet utolsó érdemi tartalma (szöveg / képlet / diagram / ábra) után, közvetlenül a következő `##` (vagy `#`) heading előtt:
+A `###` szintű szakasz utolsó érdemi tartalma (szöveg / képlet / diagram / ábra) után, közvetlenül a következő `###` (vagy `##`) heading előtt:
 
 ```markdown
-> 💡 **Összegzés — Alfejezet neve**
+> 💡 **Összegzés — Szakasz neve**
 > **Kulcsgondolat:** [1-2 mondatos lényeg]
 > **Kulcsfogalmak:** fogalom1, fogalom2, fogalom3
 > **Képletek:** $Eq.X.Y$ — rövid megnevezés (ha van)
 ```
 
-### 3.2. `🗺️ Fejezet összegfoglalása` — minden `#` fejezet zárásánál
+### 3.2. `🗺️ Fejezet összegfoglalása` — minden `##` fejezet zárásánál
 
-A `#` szintű fejezet utolsó `##` alfejezete (és annak `💡 Összegzés` blokkja) után, a következő `#` heading vagy a `## Hivatkozásjegyzék` előtt:
+A `##` szintű fejezet utolsó `###` szakasza (és annak `💡 Összegzés` blokkja) után, a következő `##` heading vagy a `## Hivatkozásjegyzék` előtt (a fejezet `❔ Ellenőrizd magad` blokkja **után**):
 
 ```markdown
 > 🗺️ **Fejezet összegfoglalása — Fejezet címe**
@@ -56,7 +56,7 @@ A `#` szintű fejezet utolsó `##` alfejezete (és annak `💡 Összegzés` blok
 > **Fő üzenet:** [2-3 mondat, ami az egész fejezetet összefogja]
 >
 > **Mit tudsz most:**
-> - [3-6 bullet — a fejezet `##` alfejezeteinek kulcsgondolatai egyetlen ívben]
+> - [3-6 bullet — a fejezet `###` szakaszainak kulcsgondolatai egyetlen ívben]
 >
 > **Kulcsképletek:** $Eq.X.Y$, $Eq.X.Z$ — rövid címkével
 >
@@ -65,8 +65,8 @@ A `#` szintű fejezet utolsó `##` alfejezete (és annak `💡 Összegzés` blok
 
 ### 3.3. `❔ Ellenőrizd magad` + `🔑 Megoldókulcs` — retrieval practice
 
-**Kérdés-blokk** minden `##` fejezet zárásánál, közvetlenül a fejezet `💡 Összegzés` blokkja
-**elé** (a tanuló előbb előhív, csak utána látja a konszolidált összegzést):
+**Kérdés-blokk** minden `##` fejezet zárásánál, közvetlenül a fejezet `🗺️ Fejezet összegfoglalása`
+blokkja **elé** (a tanuló előbb előhív, csak utána látja a konszolidált összefoglalást):
 
 ```markdown
 > ❔ **Ellenőrizd magad — N. Fejezet neve**
@@ -102,10 +102,10 @@ olvasás közben). A kérdés→válasz párosítás a fejezetnév + sorszám al
 
 ### 3.4. Tartalmi szabályok
 
-- **`💡 Összegzés`** csak az adott `##` alfejezet tartalmát tükrözze — ne vezessen be új fogalmat.
-- **`🗺️ Fejezet összegfoglalása`** a `#` alá tartozó `##` alfejezeteket integrálja egyetlen narratívába; mutasson rá a fejezet belső ívére, ne csak ismételje a `💡` blokkokat.
+- **`💡 Összegzés`** csak az adott `###` szakasz tartalmát tükrözze — ne vezessen be új fogalmat.
+- **`🗺️ Fejezet összegfoglalása`** a `##` alá tartozó `###` szakaszokat integrálja egyetlen narratívába; mutasson rá a fejezet belső ívére, ne csak ismételje a `💡` blokkokat.
 - **Kulcsgondolat / Fő üzenet:** mondatok, nem felsorolás.
-- **Kulcsfogalmak:** alfejezetben 3–6, fejezetszinten az ívet visszaadó bullet-lista.
+- **Kulcsfogalmak:** szakaszban 3–6, fejezetszinten az ívet visszaadó bullet-lista.
 - **Képletek:** csak ténylegesen szereplő `(Eq.X.Y)` jelölésű képletek, rövid megnevezéssel.
 - A `## Hivatkozásjegyzék`, `## Tartalomjegyzék` és `## 🔑 Megoldókulcs` blokkokba **nem** kerül `💡 Összegzés`, `🗺️` vagy `❔` blokk.
 - **`❔ Ellenőrizd magad`:** előhívásra kényszerítő kérdés (emlékezetből), nem visszaolvasásra; a válasz kizárólag a `🔑 Megoldókulcs`-ban. A kérdések a fejezet kulcsfogalmait / képleteit célozzák.
@@ -126,14 +126,14 @@ dokumentumban —, azt felülírja (nem duplikálja).
 
 - **Fixture:** `test_outputs/atg/1_het` — `1_Jegyzet.md` (szintetizált, ábrákkal).
 - **Akció:** §3 — `💡 Összegzés` / `🗺️ Fejezet összegfoglalása` / `❔ Ellenőrizd magad` + `🔑 Megoldókulcs` injektálása.
-- **Várt kimenet:** Minden `##` végén 💡, minden `#` zárásánál 🗺️, dokumentumvégi 🔑.
+- **Várt kimenet:** Minden `###` szakasz végén 💡, minden `##` fejezet zárásánál ❔ majd 🗺️, dokumentumvégi 🔑.
 - **Eval:** §6 ellenőrzőlista + idempotencia (újrafuttatás 0 duplikátum).
 
 ## 6. Ellenőrzés
 
-- [ ] `💡 Összegzés` blokk minden `##` alfejezet végén (a `## Hivatkozásjegyzék` és `## Tartalomjegyzék` kivételével)
-- [ ] `🗺️ Fejezet összegfoglalása` blokk minden `#` fejezet zárásánál
-- [ ] `❔ Ellenőrizd magad` kérdés-blokk minden `##` fejezet zárásánál, a `💡` elé
+- [ ] `💡 Összegzés` blokk minden `###` szakasz végén (a `## Hivatkozásjegyzék` és `## Tartalomjegyzék` kivételével)
+- [ ] `🗺️ Fejezet összegfoglalása` blokk minden `##` fejezet zárásánál
+- [ ] `❔ Ellenőrizd magad` kérdés-blokk minden `##` fejezet zárásánál, a `🗺️` elé
 - [ ] `## 🔑 Megoldókulcs` szekció a dokumentum végén, a `## Hivatkozásjegyzék` elé, fejezetenként
 - [ ] A `🔑`-ban minden `❔` kérdéshez van válasz (fejezetnév + sorszám egyezik); a kérdés-blokk válasz nélküli
 - [ ] A blokkok csak az adott szakaszban szereplő fogalmakra / képletekre hivatkoznak
@@ -144,7 +144,7 @@ dokumentumban —, azt felülírja (nem duplikálja).
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
-| `💡 Összegzés` hiányzik egy `##` alfejezetnél | `##` heading elmaradt a szintézisben | 04 kimenetet javítani, majd újrafuttatni |
+| `💡 Összegzés` hiányzik egy `###` szakasznál | `###` heading elmaradt a szintézisben | 04 kimenetet javítani, majd újrafuttatni |
 | `🗺️` blokk a `## Hivatkozásjegyzék` után került | Heading-felismerés nem szűrte ki | A Hivatkozásjegyzék elé mozgatni; szűrőfeltétel pontosítása |
 | Blokk új, szakaszon kívüli fogalmat tartalmaz | Claude túláltalánosított | Tartalom szűkítése a szakasz fogalmaira |
 | Blokk duplikáltan jelenik meg | Idempotencia-szabály (§3.5) megsérült | `N_Jegyzet.md` visszaállítás git-ből + újrafuttatás |
@@ -173,3 +173,4 @@ dokumentumban —, azt felülírja (nem duplikálja).
 | 2026-06-03 | 1.0 | Létrehozva (05_visual_enricher összegző-doboz részéből kiválasztva) |
 | 2026-06-03 | 2.0 | `📦 Összegző` (egyetlen `##`-szintű doboz) helyett kétszintű séma: `💡 Összegzés` minden `##` alfejezet végén, `🗺️ Fejezet összegfoglalása` minden `#` fejezet zárásánál; idempotencia-szabály (§3.4) |
 | 2026-06-11 | 2.3 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |
+| 2026-06-12 | 2.4 | **Heading-hierarchia rögzítés (P2.13, B-14):** a valós `#`=Cím / `##`=Fejezet / `###`=Szakasz hierarchiához igazítva (Instructions §7). `💡 Összegzés` → `###` szakasz végén (volt `##`); `🗺️ Fejezet összegfoglalása` → `##` fejezet zárásánál (volt `#`); `❔ Ellenőrizd magad` a `🗺️` elé (volt `💡` elé). §1/§3.1–3.4/§5/§6/§7 átvezetve. |

@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.8
+version: 1.9
 updated: 2026-06-11
 description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, a komplex levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
 ---
@@ -94,7 +94,7 @@ flowchart LR / TD / sequenceDiagram
 > **Képletek:** $Eq.X.Y$ — rövid megnevezés (ha van)
 ```
 
-A `💡 Összegzés` (minden `##` alfejezet végén) és a `🗺️ Fejezet összegfoglalása` (minden `#` fejezet zárásánál) blokkok formátumát és tartalmi szabályait a [06_summarize_box_injector](06_summarize_box_injector.md) §3 definiálja kanonikusan; a 04 itt csak helyet készít — a tényleges injekciót a 06 végzi.
+A `💡 Összegzés` (minden `###` szakasz végén) és a `🗺️ Fejezet összegfoglalása` (minden `##` fejezet zárásánál) blokkok formátumát és tartalmi szabályait a [06_summarize_box_injector](06_summarize_box_injector.md) §3 definiálja kanonikusan; a 04 itt csak helyet készít — a tényleges injekciót a 06 végzi. Heading-hierarchia: [Instructions §7](../../Instructions.md).
 
 ### 3.3. Vizuális kötelezettségek
 
@@ -234,8 +234,8 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 - [ ] `🧱 Előfeltételek` blokk ott, ahol a fejezet új alapfogalmat igényel?
 - [ ] Komplex levezetések worked example (lépésről lépésre) formában?
 - [ ] Minden `##` fejezetnél van Mermaid diagram?
-- [ ] `💡 Összegzés` blokk minden `##` alfejezet végén?
-- [ ] `🗺️ Fejezet összegfoglalása` blokk minden `#` fejezet zárásánál? (→ 06_summarize_box_injector)
+- [ ] `💡 Összegzés` blokk minden `###` szakasz végén?
+- [ ] `🗺️ Fejezet összegfoglalása` blokk minden `##` fejezet zárásánál? (→ 06_summarize_box_injector)
 - [ ] `[1]`, `[2]` hivatkozások a szövegben?
 - [ ] `## Hivatkozásjegyzék` a fájl végén?
 - [ ] YAML frontmatter `source_mindmap` mezővel?
@@ -280,3 +280,4 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 | 2026-06-03 | 1.1 | Sablon-sor: `📦 Összegző` → `💡 Összegzés` (`##` alfejezet végén); `🗺️ Fejezet összegfoglalása` placeholder a `#` fejezet zárásánál — kanonikus formátum a 06 skillben |
 | 2026-06-11 | 1.7 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |
 | 2026-06-11 | 1.8 | MSc-kivezetés: `<!-- MSc -->` mechanika + §3.8 MSc-tartalomkezelés eltávolítva; a worked-example elv megmarad (szint-semleges); Szint-mező + checklist/hibasor törölve. |
+| 2026-06-12 | 1.9 | Heading-hierarchia (P2.13, B-14): a `💡`/`🗺️` szint-hivatkozások a valós hierarchiához igazítva (`💡` per `###` szakasz, `🗺️` per `##` fejezet); Instructions §7 link. |

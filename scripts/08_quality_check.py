@@ -5,16 +5,18 @@ A 08_quality_reviewer skill §3.1 metrikáit futtatja deterministically,
 API/kvóta nélkül. Strukturális és formázási ellenőrzéseket végez, és
 exit kóddal jelzi a kritikus hibákat (CI-barát).
 
+Heading-hierarchia (Instructions §7): `#`=Cím, `##`=Fejezet, `###`=Szakasz.
+
 Mit ellenőriz:
-  - ## szekciók száma (cél: 5-12)
-  - Fejezetenkénti ### alszakaszok (figyelmeztetés >15)
+  - ### szakaszok száma (tartalmi gazdagság, cél: 5-12)
+  - Fejezetenkénti ### szakaszok (figyelmeztetés >15)
   - IEEE [N] citációk száma (a <sup>[N]</sup> régi jelölést is lefedi)
   - Inline forrásblokk maradék (cél: 0)
   - Dupla <sup>[N]</sup>,<sup>[N]</sup> citáció (cél: 0)
   - Romlott <!, Q:N, > marker (Rule H regresszió-teszt, cél: 0)
   - Tartalomjegyzék blokkok száma (ToC idempotencia, cél: 1)
   - Törött ToC anchor (szóköz/nagybetű a #...-ben, cél: 0)
-  - 💡 Összegzés (## alfejezet végén) + 🗺️ Fejezet összegfoglalása (# fejezet zárásánál) blokkok száma
+  - 💡 Összegzés (### szakasz végén) + 🗺️ Fejezet összegfoglalása (## fejezet zárásánál) blokkok száma
 
 Exit kód: 0 = OK, 1 = kritikus hiba (>0 a "cél: 0" metrikákból).
 
@@ -110,11 +112,11 @@ def evaluate(m: dict) -> list[str]:
 def evaluate_warnings(m: dict) -> list[str]:
     """Return a list of non-critical warning strings."""
     warns = []
-    if not (5 <= m["h2_sections"] <= 12):
-        warns.append(f"## szekciók: {m['h2_sections']} (ajánlott: 5-12)")
+    if not (5 <= m["h3_subsections"] <= 12):
+        warns.append(f"### szakaszok: {m['h3_subsections']} (ajánlott: 5-12)")
     if m["max_chapter_subs"] > 15:
         warns.append(f"Túlterhelt fejezet: '{m['max_chapter_name']}' "
-                     f"({m['max_chapter_subs']} ### alszakasz, ajánlott: ≤15)")
+                     f"({m['max_chapter_subs']} ### szakasz, ajánlott: ≤15)")
     if m["citations"] < 10:
         warns.append(f"Kevés citáció: {m['citations']} (<10)")
     return warns
@@ -141,12 +143,12 @@ def main():
                          ensure_ascii=False, indent=2))
     else:
         print(f"=== 11b minőségi metrikák: {jegyzet.name} ===")
-        print(f"  ## szekciók:            {m['h2_sections']}")
-        print(f"  ### alszakaszok:        {m['h3_subsections']}")
+        print(f"  ## Fejezetek:           {m['h2_sections']}")
+        print(f"  ### Szakaszok:          {m['h3_subsections']}")
         print(f"  Legnagyobb fejezet:     '{m['max_chapter_name']}' ({m['max_chapter_subs']} ###)")
         print(f"  [N] citációk:           {m['citations']}")
-        print(f"  💡 Összegzés (##):      {m['osszegzes_sub_blocks']}")
-        print(f"  🗺️ Fejezet összegf. (#):{m['osszegfoglalas_blocks']}")
+        print(f"  💡 Összegzés (###):     {m['osszegzes_sub_blocks']}")
+        print(f"  🗺️ Fejezet összegf.(##):{m['osszegfoglalas_blocks']}")
         print(f"  Képek (![):             {m['images']}")
         print(f"  --- kritikus metrikák ---")
         print(f"  Inline forrásblokk:     {m['inline_source_blocks']} (cél 0)")

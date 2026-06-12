@@ -154,21 +154,22 @@ Diagram-típus döntési fa:
 - Slide-ok és fekvő lapformátum esetén → `flowchart LR`
 - Időbeli lefolyás → `sequenceDiagram`
 - Összehasonlítás → Markdown table
-- Összegzés (`##` alfejezet végén) → `> 💡 **Összegzés — …**` blockquote (kulcsgondolat + kulcsfogalmak + képletek)
-- Fejezet-szintű összefoglalás (`#` fejezet zárásánál) → `> 🗺️ **Fejezet összegfoglalása — …**` blockquote (fő üzenet + mit tudsz most + kulcsképletek + kapcsolódás)
-  [ ] TODO: Saját technikai adósság: sehol nincs rögzítve, hogy mi a Fejezet, Szakasz, Alszakasz és Al-Alaszakasz, illetve, hogy ezek markdown-ban hányadrendű `#`-vel rendelkeznek. Javaslatom:alább
-  ```markdown
-  # **Cím Camelcase Vastag**
-  ## 1. Fejezet
-  ### 1.1. Szakasz
-  #### 1.1.1. Alszakasz
-  ##### 1.1.1.1. Al-Alszakasz
-  ```
-  ebben az esetben pedig: 
-  - Összegzés minden másodrendű szakasz (`###`) után → `> 💡 **Szakasz összegzése — …**` blockquote (kulcsgondolat + kulcsfogalmak + képletek)
-  - Fejezet-szintű összefoglalás (`##`) után → `> 🗺️ **Fejezet összegfoglalása — …**` blockquote
-  TODO vége
-A két blokk kanonikus formátuma: [.claude/skills/06_summarize_box_injector.md](.claude/skills/06_summarize_box_injector.md) §3.1–3.2.
+**Heading-hierarchia** (kanonikus — minden jegyzetre):
+
+| Szint | Szerep | Példa |
+|-------|--------|-------|
+| `#` | Dokumentumcím (pontosan egy/dokumentum) | `# Áramlástechnikai gépek — 1. hét` |
+| `##` | **Fejezet** | `## 1. Kompresszorok` |
+| `###` | **Szakasz** | `### 1.3. Centrifugális kompresszor` |
+| `####` | Alszakasz | `#### 1.3.1. Diffúzor` |
+| `#####` | Al-alszakasz | |
+
+Összegző blokkok (a szint a hierarchiához igazodik; kanonikus formátum:
+[06 §3.1–3.3](.claude/skills/06_summarize_box_injector.md)):
+
+- **Szakasz-összegzés** minden `###` szakasz végén → `> 💡 **Összegzés — …**` (kulcsgondolat + kulcsfogalmak + képletek)
+- **Fejezet zárása** minden `##` fejezetnél: `> ❔ **Ellenőrizd magad — …**` (előhívás), majd
+  `> 🗺️ **Fejezet összegfoglalása — …**` (fő üzenet + mit tudsz most + kulcsképletek + kapcsolódás); a válaszok a dokumentumvégi `## 🔑 Megoldókulcs`-ban.
 
 ### 7.1. Ábra- és táblázatfelirat-konvenció
 

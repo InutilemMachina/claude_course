@@ -11,7 +11,8 @@ automatikusan kitölti a figure_catalog.json v4 séma mezőit:
 
 PPTX-hez python-pptx fallback (slides-on caption ritka, text_context a dia szövege).
 
-02_image_extraction.py marad fallback (ha nincs conda mineru env).
+Ez a kanonikus 02 forrás-feldolgozó. A korábbi PyMuPDF-fallback
+(02_image_extraction.py) megszűnt (P2.3, MinerU-only). Előfeltétel: conda `mineru` env.
 
 Usage:
     python scripts/02_mineru_to_catalog.py --week-dir test_outputs/atg/1_het
@@ -75,7 +76,7 @@ STOPWORDS = {
     "ez", "egy", "de", "ha", "nem", "hogy", "mint", "vagy", "sem", "már",
 }
 
-# ── v4 séma (02_image_extraction.py-val azonos) ───────────────────────────────
+# ── v4 séma (figure_catalog.json) ─────────────────────────────────────────────
 ENTRY_DEFAULTS = {
     "id":               None,
     "page":             None,
@@ -98,7 +99,7 @@ Forrás: `scripts/02_mineru_to_catalog.py` (MinerU-first pipeline)
 """
 
 
-# ── Catalog helper-ek (02_image_extraction.py-val azonos logika) ───────────────
+# ── Catalog helper-ek ─────────────────────────────────────────────────────────
 
 def load_citations(week_dir: Path) -> dict:
     cit_path = week_dir / "1_raw_inputs" / "citations.json"

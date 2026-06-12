@@ -2,8 +2,8 @@
 title: Instructions
 type: project_constitution
 tags: [meta]
-version: 1.2
-updated: 2026-06-03
+version: 1.4
+updated: 2026-06-12
 description: Projekt-szintű elvek, jelölések és dokumentációs szabványok.
 ---
 
@@ -81,11 +81,13 @@ Te használhatod őket, de a user szinte soha nem illeszti be azokat, pl.:  `IDE
 | Típus | Séma | Példa |
 |-------|------|-------|
 | Egy script egy lépéshez | `NN_name.py` | `05_figure_mapper.py` |
-| Több script egy lépéshez | `NN-M_name.py` | `02-1_mineru_pipeline.py` |
+| Több script egy lépéshez | `NN-M_name.py` | `07-2_heading_numberer.py` |
+| Betűs alskill scriptje | `NNx_name.py` | `09b_moodle_export.py` |
 | Megosztott segédkönyvtár | `_name.py` | `_citations_util.py` |
 
 - `NN`: pipeline lépés sorszáma (00–13), párhuzamos a skill-számokkal
 - `M`: lépésen belüli sorrend (1, 2, ...)
+- `x`: betűs alskill jele (pl. `02b`, `09b`) — a script a skill nevét viszi **1:1** (`09b_moodle_export.md` ↔ `09b_moodle_export.py`)
 - `_` prefix: nem lépés-specifikus utility — nincs hozzá külön skill
 
 ### 5.2. YAML fejléc — `tags` séma
@@ -118,8 +120,23 @@ claude_course/
         ├── 2_clean_inputs/
         ├── 3_mindmap/
         ├── 4_wip_outputs/
-        └── 5_clean_outputs/
+        ├── 5_asset_outputs/   # 12/13 gazdagítás: videó/notebook regiszter + overlay
+        └── 6_clean_outputs/   # camera-ready: a véglegesített wip tiszta konverziója
 ```
+
+### 6.1. Camera-ready elv (kötelező)
+
+A **tartalom egyetlen kanonikus helye a `4_wip_outputs/`** (a wip jegyzet/prezi/kérdésbank). A
+`6_clean_outputs/` a véglegesített wip **tiszta, determinisztikus konverziója** — sablon-alkalmazás
+és formátum-váltás (DOCX/PPTX/XML), **semmi tartalmi szerkesztés**.
+
+- A `6_clean_outputs/` bármikor **újragenerálható** a wip-ből (`10_pptx_gyarto.py`,
+  `11-2_pandoc_export.py`, `09b_moodle_export.py`) — soha ne szerkeszd kézzel.
+- A 08-gate (publikálhatóság) **előtt** minden tartalmi munka a wip-ben történik; a konverzió csak utána.
+- A gazdagítás (12/13) sem patcheli a clean fájlokat: a wip kap egy stabil `<!-- ENRICH: <id> -->`
+  horgonyt, a tartalom az `5_asset_outputs/`-regiszterben él, és a `6_clean` ezekből **újrakonvertál**
+  (lásd [pipeline §0](.claude/pipeline.md), 12/13 §3.2).
+- **Őszinteség:** ha egy clean output nem áll elő a wip-ből a scripttel, az hibajelzés — nem kézi javítás.
 
 ## 7. Vizuális gazdagítás — kötelező szabály
 
@@ -133,14 +150,26 @@ Minden tananyag-output "képnehéz": vizuálisan erősen támogatott.
 | MARP vizuális | Minden dián 1 Mermaid VAGY ábra — kötelező |
 
 Diagram-típus döntési fa:
-- Folyamat/szekvencia → `flowchart TD`
-- Hierarchia/fa → `flowchart LR`
+- Jegyzetek és álló lapformátum esetén → `flowchart TD`
+- Slide-ok és fekvő lapformátum esetén → `flowchart LR`
 - Időbeli lefolyás → `sequenceDiagram`
 - Összehasonlítás → Markdown table
-- Összegzés (`##` alfejezet végén) → `> 💡 **Összegzés — …**` blockquote (kulcsgondolat + kulcsfogalmak + képletek)
-- Fejezet-szintű összefoglalás (`#` fejezet zárásánál) → `> 🗺️ **Fejezet összegfoglalása — …**` blockquote (fő üzenet + mit tudsz most + kulcsképletek + kapcsolódás)
+**Heading-hierarchia** (kanonikus — minden jegyzetre):
 
-A két blokk kanonikus formátuma: [.claude/skills/06_summarize_box_injector.md](.claude/skills/06_summarize_box_injector.md) §3.1–3.2.
+| Szint | Szerep | Példa |
+|-------|--------|-------|
+| `#` | Dokumentumcím (pontosan egy/dokumentum) | `# Áramlástechnikai gépek — 1. hét` |
+| `##` | **Fejezet** | `## 1. Kompresszorok` |
+| `###` | **Szakasz** | `### 1.3. Centrifugális kompresszor` |
+| `####` | Alszakasz | `#### 1.3.1. Diffúzor` |
+| `#####` | Al-alszakasz | |
+
+Összegző blokkok (a szint a hierarchiához igazodik; kanonikus formátum:
+[06 §3.1–3.3](.claude/skills/06_summarize_box_injector.md)):
+
+- **Szakasz-összegzés** minden `###` szakasz végén → `> 💡 **Összegzés — …**` (kulcsgondolat + kulcsfogalmak + képletek)
+- **Fejezet zárása** minden `##` fejezetnél: `> ❔ **Ellenőrizd magad — …**` (előhívás), majd
+  `> 🗺️ **Fejezet összegfoglalása — …**` (fő üzenet + mit tudsz most + kulcsképletek + kapcsolódás); a válaszok a dokumentumvégi `## 🔑 Megoldókulcs`-ban.
 
 ### 7.1. Ábra- és táblázatfelirat-konvenció
 
@@ -163,8 +192,8 @@ hanem rövid, magyarázó mondat).
 
 ## 8. Hivatkozási szabály
 
-- IEEE forrásjegyzék (`## Hivatkozásjegyzék`) kötelező MINDEN wip és clean outputban.
-- Szövegbeli hivatkozás és lista is `[1]`, `[2]` … (IEEE-szabvány).
+- IEEE forrásjegyzék (`## Hivatkozásjegyzék`) kötelező MINDEN 4_wip_outputs és 6_clean_outputs termékben.
+- Szövegbeli hivatkozás és lista is `[1]`, `[1,2]`, `[1-3]`, `[1,3,6]`, … (IEEE-szabvány).
 - Forrás: `1_raw_inputs/citations.json`; a listát a `_ieee_renderer.py` rendereli `type` szerint:
 
 | `type` | IEEE-formátum |
@@ -178,18 +207,20 @@ hanem rövid, magyarázó mondat).
 
 ## 9. Szerkesztési szabályok
 
-- Csak a szükséges részt módosítsd.
-- Kerüld a teljes fájlok fölösleges újragenerálását.
-- A redundancia csökkentése elsődleges szempont.
+Mind a meta-rétegre (fejlesztés), mind a tananyagra (gyártás) érvényes — a §2 elvek alkalmazása:
+
+- Csak a szükséges részt módosítsd; ne generáld újra a teljes fájlt.
+- A redundancia csökkentése elsődleges (egy információ egy kanonikus helyen, §2).
 
 ## 10. Változtatási rend
 
-### 10.1. Soft-cap — a projekt ne bokrosodjon
+### 10.1. A projekt ne bokrosodjon (alapból hard-cap)
 
-Irányelv, nem szigorú szabály: **a kevesebb néha több.** Törekedj a meglévő fájlok *helyi* javítására ahelyett, hogy újabb és újabb fájlok jönnének létre.
+A **meta-réteg** (skillek, scriptek, doksik) fejlesztésére vonatkozik — a tananyag mennyiségére nem.
+**A kevesebb néha több:** alapból **hard-cap** — helyi javítás a meglévő fájlban; új fájl csak ritka,
+**erősen indokolt, dokumentált** kivételként.
 
-- Először a meglévő fájlt javítsd; új fájl csak akkor, ha tényleg nem fér el sehol.
-- Új skill: indokold, miért nem fér el meglévőben.
+- Először a meglévő fájlt javítsd; új fájl/skill csak ha tényleg nem fér el sehol — és indokold.
 - Időnként nézd át, mi vonható össze vagy törölhető.
 
 Tájékoztató mérce: `python scripts/_backlog_index.py`.
@@ -198,24 +229,30 @@ Tájékoztató mérce: `python scripts/_backlog_index.py`.
 
 A szimbólumok jelentése: §4.1. A bejegyzések helye:
 
-- **Skill-specifikus** megfigyelés/TODO/kérdés → az adott skill `§8 Visszajelzések`.
+- **Skill-specifikus** megfigyelés/TODO/kérdés → az adott skill `§9 Visszajelzések`.
 - **Projekt-szintű** → [project_status.md](.claude/project_status.md) (Backlog / Nyitott kérdések).
 
-**Inline TODO/NOTE a szövegtörzsben TILOS** — minden bejegyzés a dedikált szekcióba kerül.
+**Munkamegosztás (😎 ↔ 🤖):** a 😎 kényelméből inline `[ ]` jegyzetet tehet a szövegtörzsbe a
+releváns hely mellé (gyors, kontextusban). A 🤖 ezeket review során **feldolgozza**: a dedikált
+szekcióba (skill §9 / project_status) emeli, és az inline jegyzetet törli. A **véglegesített**
+kanonikus szövegben inline TODO/NOTE ne maradjon.
 
 ## 12. Skill-fejlesztési módszertan
 
 **Fejlesztési ciklus:** `draft skill → lépésteszt → eval → fix → commit`
-
+(A teljes review/refaktor-módszertan: [meta_working_method.md](meta_working_method.md); ez a §12 a tömör, kanonikus összefoglaló.)
 1. Skill draft a `skill_template.md` alapján (vagy `/skill-creator`)
 2. Teszt: 1-2 forrás, 1 fejezet — egyszerű bemenet
 3. Eval: `08_quality_check.py` + Claude Explore review
 4. Gap-azonosítás: mi hiányzik, mi rossz formátumú?
 5. Fix: skill `§3 Eljárás` + `§6 Hibakezelés` frissítése
-6. Commit: hard-cap ellenőrzés
+6. Commit: hard-cap ellenőrzés (§10.1 — nem bokrosodott-e a változás)
 
 ## 13. Nyitott pontok
 
-→ Backlog kezelése: [project_status.md](.claude/project_status.md).
+→ Backlog és nyitott kérdések kanonikus helye: [project_status.md](.claude/project_status.md).
 
-[ ] Minden clean outputs-nak legyen majd egy fejléce és lábléce, de azt még meg kell tervezni
+**Ez a fájl (Instructions) szerepe:** a projekt **alkotmánya** — elvek, jelöléstan, szabványok,
+amelyek a meta-rétegre (fejlesztés) ÉS a tananyagra (gyártás) is érvényesek. A *hogyan*-módszertan
+külön: [meta_working_method.md](meta_working_method.md) (fejlesztés) + [subject_working_method.md](subject_working_method.md) (gyártás).
+A sprint-/ág-lezárási konvenció: [meta_working_method §5.1](meta_working_method.md).

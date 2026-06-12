@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.6
-updated: 2026-06-07
-description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, az MSc-levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
+version: 1.9
+updated: 2026-06-11
+description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, a komplex levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
 ---
 
 # 04_CONTENT_SYNTHESIZER
@@ -94,7 +94,7 @@ flowchart LR / TD / sequenceDiagram
 > **Képletek:** $Eq.X.Y$ — rövid megnevezés (ha van)
 ```
 
-A `💡 Összegzés` (minden `##` alfejezet végén) és a `🗺️ Fejezet összegfoglalása` (minden `#` fejezet zárásánál) blokkok formátumát és tartalmi szabályait a [06_summarize_box_injector](06_summarize_box_injector.md) §3 definiálja kanonikusan; a 04 itt csak helyet készít — a tényleges injekciót a 06 végzi.
+A `💡 Összegzés` (minden `###` szakasz végén) és a `🗺️ Fejezet összegfoglalása` (minden `##` fejezet zárásánál) blokkok formátumát és tartalmi szabályait a [06_summarize_box_injector](06_summarize_box_injector.md) §3 definiálja kanonikusan; a 04 itt csak helyet készít — a tényleges injekciót a 06 végzi. Heading-hierarchia: [Instructions §7](../../Instructions.md).
 
 ### 3.3. Vizuális kötelezettségek
 
@@ -158,7 +158,7 @@ created: YYYY-MM-DD
 
 # {Témacím}
 
-**Szint:** BSc/MSc | **Tantárgy:** {tantárgy} | **Hét:** N
+**Tantárgy:** {tantárgy} | **Hét:** N
 
 ---
 
@@ -181,14 +181,10 @@ created: YYYY-MM-DD
 [IEEE lista]
 ```
 
-### 3.8. MSc-tartalom kezelése
+### 3.8. Komplex levezetések — worked example
 
-Ha a mindmapben `[MSc]` jelölésű csomópont van:
-- A szövegben: `<!-- MSc -->` kommentblokk nyitja, `<!-- /MSc -->` zárja
-- A 11_bsc_export skill ezeket kiszűri a BSc-verzióból
-
-**Worked example az MSc-levezetéseknél (worked-example effect):** ahol egy MSc-blokk
-képletet *vezet le* (pl. Greitzer-egyenletek, Moore–Greitzer, B-paraméter), ne csak a
+**Worked example a komplex levezetéseknél (worked-example effect):** ahol egy szakasz
+képletet *vezet le* (pl. egy összetett modell egyenleteinek levezetése), ne csak a
 végeredményt közöld — add meg a **lépésről lépésre kidolgozott levezetést** (kiindulás →
 köztes lépések → eredmény), a jelölések magyarázatával. Alacsony előtudásnál a kidolgozott
 példa többet ér, mint az önálló feladatmegoldás. A LaTeX-et továbbra is a MinerU `.md`-ből
@@ -222,23 +218,29 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 |:-----|:---------|
 | `4_wip_outputs/N_Jegyzet.md` | YAML + TJ-hely + fejezetek + diagramok + hivatkozásjegyzék |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — jóváhagyott `mindmap.md` + MinerU markdown + `citations.json`.
+- **Akció:** §3 — szekciónkénti, mindmap-vezérelt szintézis.
+- **Várt kimenet:** `4_wip_outputs/1_Jegyzet.md` (minden L1→`##`, 🔭/🎯 blokkok, Mermaid, IEEE `[N]`, Hivatkozásjegyzék).
+- **Eval:** `08_quality_check.py --week-dir …` + §6 ellenőrzőlista.
+
+## 6. Ellenőrzés
 
 - [ ] Minden L1 mindmap-ág `##` fejezetként szerepel?
 - [ ] `🔭 A Nagykép` blokk minden `##` fejezet nyitásánál (analógia, zsargon nélkül)?
 - [ ] `🎯 Cél` blokk (Bloom-igés) minden `##` fejezet nyitásánál, a `🔭` után?
 - [ ] Ábra-/táblázat-/Mermaid-feliratok a §3.3 séma szerint (számozott, önálló koherens)?
 - [ ] `🧱 Előfeltételek` blokk ott, ahol a fejezet új alapfogalmat igényel?
-- [ ] MSc-levezetések worked example (lépésről lépésre) formában?
+- [ ] Komplex levezetések worked example (lépésről lépésre) formában?
 - [ ] Minden `##` fejezetnél van Mermaid diagram?
-- [ ] `💡 Összegzés` blokk minden `##` alfejezet végén?
-- [ ] `🗺️ Fejezet összegfoglalása` blokk minden `#` fejezet zárásánál? (→ 06_summarize_box_injector)
+- [ ] `💡 Összegzés` blokk minden `###` szakasz végén?
+- [ ] `🗺️ Fejezet összegfoglalása` blokk minden `##` fejezet zárásánál? (→ 06_summarize_box_injector)
 - [ ] `[1]`, `[2]` hivatkozások a szövegben?
 - [ ] `## Hivatkozásjegyzék` a fájl végén?
-- [ ] `[MSc]` csomópontok `<!-- MSc -->...<!-- /MSc -->` blokkban?
 - [ ] YAML frontmatter `source_mindmap` mezővel?
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -247,17 +249,16 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 | Üres hivatkozásjegyzék | citations.json nem olvasva | Kézzel kitölteni, majd _ieee_renderer.py |
 | MinerU markdown hiányzik | `02_mineru_to_catalog` nem futott | Fallback: raw PDF, de formulák/táblák elvesznek — jelezd a szövegben |
 | Formula kézzel begépelve, eltér a forrástól | MinerU markdown figyelmen kívül hagyva | A `<stem>.md` LaTeX-ét másold pontosan, ne szintetizáld |
-| [MSc] blokk nem záródik | Hiányzó `<!-- /MSc -->` | Keresés és pótlás |
 | `💡 Összegzés` / `🗺️ Fejezet összegfoglalása` hiányzik | Kimaradt a sablonból | Pótlás 06_summarize_box_injector-ben (kanonikus formátum: ott §3.1–3.2) |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md) — §2 Lépések és IO
 - [03_mindmap_builder.md](03_mindmap_builder.md) — upstream skill
 - [05_figure_integrator.md](05_figure_integrator.md) — downstream skill
 - [Instructions.md](../../Instructions.md) — §7 Vizuális gazdagítás, §8 Hivatkozási szabály
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 - 💬 NOTE (2026-06-07, `quality_review_test`): a jegyzetekben az ábrák/táblák **kizárólag önálló, számozott felirattal** jelennek meg — a szövegtörzs **nem** hivatkozik rájuk szövegközi módon (nincs „lásd a 3. ábrát", „(2. táblázat)" típusú utalás). A szöveg↔vizuál egyetlen kötése az **előfordulási sorrend**. Lehetséges kihatások:
@@ -266,7 +267,7 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
   - ⚡ **Kockázat:** ha később bevezetünk szövegközi ábrahivatkozást (kézzel vagy 04-szabályként), a `07-3` jelenleg **nem** frissíti azokat → felirat és hivatkozás elcsúszhat. A `07-3`-at **a konvenció bevezetése előtt** ki kell egészíteni ref-frissítéssel.
   - ❔ **Döntendő:** legyen-e 04-konvenció, hogy minden ábrára/táblára essék legalább egy szövegközi utalás a vonatkozó bekezdésben (signaling-előny), elfogadva a `07-3` bővítésének költségét? (Kapcsolódó: [Instructions §7.1](../../Instructions.md), [07_typesetter §3.4](07_typesetter.md).)
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
@@ -277,3 +278,6 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 | 2026-06-01 | 1.0 | Létrehozva (NLM 04+05 kiváltása, Claude-natív) |
 | 2026-06-05 | 1.2 | MinerU-first: §2 MinerU `.md` elsődleges szövegforrás; §3.4 új szekció (formulák+táblák MinerU-ból, ne kézzel); §3.5–3.9 átszámozva; §6 két új hibasor. |
 | 2026-06-03 | 1.1 | Sablon-sor: `📦 Összegző` → `💡 Összegzés` (`##` alfejezet végén); `🗺️ Fejezet összegfoglalása` placeholder a `#` fejezet zárásánál — kanonikus formátum a 06 skillben |
+| 2026-06-11 | 1.7 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |
+| 2026-06-11 | 1.8 | MSc-kivezetés: `<!-- MSc -->` mechanika + §3.8 MSc-tartalomkezelés eltávolítva; a worked-example elv megmarad (szint-semleges); Szint-mező + checklist/hibasor törölve. |
+| 2026-06-12 | 1.9 | Heading-hierarchia (P2.13, B-14): a `💡`/`🗺️` szint-hivatkozások a valós hierarchiához igazítva (`💡` per `###` szakasz, `🗺️` per `##` fejezet); Instructions §7 link. |

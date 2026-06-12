@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖+🐍
 status: active
-version: 1.8
-updated: 2026-06-08
+version: 1.11
+updated: 2026-06-12
 description: Approved mindmap és végleges jegyzet alapján MARP prezentáció és PPTX, KÉT variánsban (default fejléc-breadcrumb / mindmap oldalsáv-TOC) ugyanabból a navigációs modellből (_nav_util.py). Kötött dia-architektúra (Cím → Áttekintés → szakaszonként Nyitó/belső/Záró → Végső → Hivatkozásjegyzék); kötött `>` keret-blokk-rend (🧭/🔭/🎯/💡/🗺️) a jegyzet újrahasznosításával; belső diák tiszta tananyag; navigáció = SZÖVEG (TOC/breadcrumb), tartalmi diagramok = előrenderelt Mermaid-PNG (10-1); .potx idx-szerződés (idx0/idx1/idx5); kétoszlopos layout; beszédes diák; számozott feliratok.
 ---
 
@@ -18,7 +18,7 @@ A végleges jegyzetből és az approved mindmap-ből MARP-kompatibilis prezentá
 majd `10_pptx_gyarto.py`-val PPTX-re konvertálja.
 
 **Input:** `4_wip_outputs/N_Jegyzet.md` + `3_mindmap/mindmap.md`
-**Output:** `4_wip_outputs/N_Prezentacio.md` + `5_clean_outputs/N_Prezentacio.pptx`
+**Output:** `4_wip_outputs/N_Prezentacio.md` + `6_clean_outputs/N_Prezentacio.pptx`
 
 ## 2. Bemenetek
 
@@ -29,7 +29,7 @@ majd `10_pptx_gyarto.py`-val PPTX-re konvertálja.
 | `2_clean_inputs/figure_catalog.json` | 02_image_extraction | Ábrák diákba illesztéséhez |
 
 A `3_mindmap/mindmap.md`-t a [`_nav_util.py`](../../scripts/_nav_util.py) parse-olja
-**navigációs modellé** (ROOT → szakaszok → alszakaszok, `[MSc]` taggel) — ebből áll elő
+**navigációs modellé** (ROOT → szakaszok → alszakaszok) — ebből áll elő
 mindkét variáns tájékozódása (breadcrumb / TOC), nem renderelt képből.
 
 **Előfeltétel:** `08_quality_reviewer` döntése `PUBLIKÁLHATÓ`; MARP CLI telepítve.
@@ -205,7 +205,7 @@ python scripts/10_pptx_gyarto.py --week-dir <tárgy>/<N_het> --variant both
   a stílus a sablonból örökl, a script csak a placeholdereket (idx) tölti.
 - Sablonválasztás variáns szerint: `default` → `due_presentation_default_master.potx`;
   `mindmap` → `due_presentation_mindmap_master.potx`. (`--template` felülírja.)
-- Output: `5_clean_outputs/N_Prezentacio.pptx` (default) [+ `N_Prezentacio_mindmap.pptx`].
+- Output: `6_clean_outputs/N_Prezentacio.pptx` (default) [+ `N_Prezentacio_mindmap.pptx`].
 - Ellenőrzés: slide count; mindmap variánsban az `idx5` TOC kitöltve a content/keret diákon
   (ábra/tábla kivételével); default variánsban a content diák címe többsoros breadcrumb.
 
@@ -236,9 +236,16 @@ python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 | Fájl | Tartalom |
 |:-----|:---------|
 | `4_wip_outputs/N_Prezentacio.md` | MARP Markdown, minden dián vizuális elemmel |
-| `5_clean_outputs/N_Prezentacio.pptx` | Végleges PowerPoint |
+| `6_clean_outputs/N_Prezentacio.pptx` | Végleges PowerPoint |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — `1_Jegyzet.md`.
+- **Akció:** `10-1_mermaid_render.py` + `10-2_nav_inject.py` + `10_pptx_gyarto.py --variant {default,mindmap}`.
+- **Várt kimenet:** `6_clean_outputs/1_Prezentacio.pptx` (+ `_mindmap`), natív OMML képletek, FIT-képek.
+- **Eval:** PPTX megnyitható, képletek rendereltek; §6 ellenőrzőlista.
+
+## 6. Ellenőrzés
 
 - [ ] Dia-architektúra a §3.1 szerint: Cím → Áttekintés → szakaszonként (Nyitó → belső → Záró) → Végső → Hivatkozásjegyzék
 - [ ] A `>` keret-blokkok **csak** a keret-diákon, a §3.1 táblázat **kötött sorrendjében** (🧭→🔭→🎯 nyitó; 🔭→💡 záró)
@@ -257,7 +264,7 @@ python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 - [ ] A képes/ábrás diákon a kép **levágás nélkül** jelenik meg (FIT mód, §3.1a-ter) — a placeholder határolja, de nem vágja
 - [ ] mindmap variánsban a TOC-oldalsáv minden dián jelen van (képes/táblázatos diákon is)
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -271,17 +278,17 @@ python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 | PPTX kép hiányzik | Rossz relatív útvonal a MARP-ban | A `md_dir`-hez képest oldódik fel; abszolút vagy helyes relatív út |
 | Ábra-placeholder **levágja** a kép széleit | `ph.insert_picture()` fill/crop mód | `insert_img_fit()` alkalmaz — ha mégis vágás látszik: Pillow telepítve? (`pip install Pillow`); fallback a fill módra vált (§3.1a-ter) |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md)
 - [08_quality_reviewer.md](08_quality_reviewer.md) — upstream
 - [03_mindmap_builder.md](03_mindmap_builder.md) — navigátor dia forrása
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
@@ -294,3 +301,6 @@ python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 | 2026-06-06 | 1.2 | **Didaktikai metaprompt**: §3.1 arisztotelészi szillogizmus-váz (premissza→konklúzió) a body-ban; Bloom-igék a body-ban (cím marad a hierarchiából); rugalmas tömörség a merev 5/10 helyett (normál / forgatókönyv / ábra-dia, Mayer CTML signaling–segmenting–contiguity); §5 négy új checklist-sor. |
 | 2026-06-01 | 1.0 | Létrehozva (mint 09_presentation_maker) |
 | 2026-06-03 | 1.1 | Átszámozva 09→10; script 10_pptx_gyarto.py |
+| 2026-06-11 | 1.9 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |
+| 2026-06-11 | 1.10 | MSc-kivezetés: a navigációs modellből a `[MSc]` tag eltávolítva. |
+| 2026-06-12 | 1.11 | Mappa-migráció (P2.2): PPTX-kimenet `5_clean_outputs` → `6_clean_outputs` (§1/§3/§4 + `10_pptx_gyarto.py`). |

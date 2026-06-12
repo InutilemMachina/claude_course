@@ -4,10 +4,10 @@ title: 09b_MOODLE_EXPORT — Kérdésbank → Moodle XML konverzió
 type: skill
 tags: [meta, skill]
 role: 🐍
-status: active
-version: 1.0
-updated: 2026-06-07
-description: N_Kerdesbank.md → Moodle XML konverzió. Heti vagy aggregált mód, --level bsc|msc szűrő, --no-explanation kapcsoló. Script: scripts/09-1_moodle_export.py
+status: planned
+version: 1.3
+updated: 2026-06-12
+description: N_Kerdesbank.md → Moodle XML konverzió. Heti vagy aggregált mód, --no-explanation kapcsoló. Script: scripts/09b_moodle_export.py
 ---
 
 # 09b_MOODLE_EXPORT
@@ -15,26 +15,23 @@ description: N_Kerdesbank.md → Moodle XML konverzió. Heti vagy aggregált mó
 ## 1. Cél
 
 A `N_Kerdesbank.md` (emberi forrás) Moodle-kompatibilis XML-lé alakítása.
-Szűrhető szint (`bsc` / `msc`) és magyarázat-megjelenítés szerint.
+Szűrhető magyarázat-megjelenítés szerint.
 Futtatható hetente vagy az összes hétre aggregáltan (vizsgaidőszak előtt).
 
 **Input:** `4_wip_outputs/N_Kerdesbank.md` (egy vagy több hét)
-**Output:** `5_clean_outputs/N_Kerdesbank.xml` (heti) / `5_clean_outputs/vizsgabank.xml` (aggregált)
+**Output:** `6_clean_outputs/N_Kerdesbank.xml` (heti) / `6_clean_outputs/vizsgabank.xml` (aggregált)
 
 ## 2. Script hívása
 
 ```bash
-# Heti export — BSc szint, magyarázattal
-python scripts/09-1_moodle_export.py --subject atg --week 1 --level bsc
+# Heti export, magyarázattal
+python scripts/09b_moodle_export.py --subject atg --week 1
 
-# Heti export — MSc szint (BSc+MSc kérdések), magyarázat nélkül
-python scripts/09-1_moodle_export.py --subject atg --week 1 --level msc --no-explanation
+# Heti export, magyarázat nélkül
+python scripts/09b_moodle_export.py --subject atg --week 1 --no-explanation
 
-# Aggregált export — összes hét, BSc szint
-python scripts/09-1_moodle_export.py --subject atg --aggregate --level bsc
-
-# Aggregált export — MSc, magyarázat nélkül
-python scripts/09-1_moodle_export.py --subject atg --aggregate --level msc --no-explanation
+# Aggregált export — összes hét (vizsgaidőszak előtt)
+python scripts/09b_moodle_export.py --subject atg --aggregate
 ```
 
 ### 2.1 Paraméterek
@@ -44,7 +41,6 @@ python scripts/09-1_moodle_export.py --subject atg --aggregate --level msc --no-
 | `--subject` | pl. `atg` | Tantárgy neve (könyvtár) |
 | `--week N` | egész szám | Adott hét kérdésbankját dolgozza fel |
 | `--aggregate` | flag | Összes hét `N_Kerdesbank.md`-ját összevonja |
-| `--level` | `bsc` / `msc` | `bsc` = csak `(BSc)` kérdések; `msc` = `(BSc)` + `(MSc)` kérdések |
 | `--no-explanation` | flag | Kihagyja a magyarázatot a Moodle-feedbackből |
 
 ## 3. Bemenet-értelmezés (parsing)
@@ -53,16 +49,11 @@ A script a `N_Kerdesbank.md` struktúráját olvassa:
 
 ```
 ## {L1 szekció}           → Moodle kategória-tag
-**K{N}.** `(BSc|MSc)` `(2-5)` {kérdés}   → question text + tag-ek
+**K{N}.** `(2-5)` {kérdés}   → question text + tag-ek
 → *N_Jegyzet: §...*       → nem kerül Moodle-ba (belső review-mező)
 A) / B) / C) / D)         → answer choice-ok
 > *Helyes: {X} — ...*     → correct answer azonosítás + feedback szöveg
-<!-- MSc --> ... <!-- /MSc --> → MSc-only blokk határolók
 ```
-
-**Szint-szűrés:**
-- `--level bsc`: `<!-- MSc -->` blokkokat átugorja
-- `--level msc`: minden kérdést feldolgoz
 
 **Magyarázat:**
 - alapértelmezés: `generalfeedback` = a `> *Helyes: ...*` szövege
@@ -101,7 +92,6 @@ A) / B) / C) / D)         → answer choice-ok
     </answer>
     <!-- további hibás válaszok -->
     <tags>
-      <tag><text>{BSc|MSc}</text></tag>
       <tag><text>depth:{2|3|4|5}</text></tag>
       <tag><text>L1:{szekció neve}</text></tag>
       <tag><text>week:{N}</text></tag>
@@ -112,7 +102,6 @@ A) / B) / C) / D)         → answer choice-ok
 ```
 
 **Tagek magyarázata:**
-- `BSc` / `MSc` → szintszűréshez Moodle-oldalon
 - `depth:N` → nehézségi szint szerinti szűrés vizsgán
 - `L1:{szekció}` → témakör szerinti szűrés
 - `week:N` → hét szerinti szűrés aggregált bankban
@@ -121,8 +110,8 @@ A) / B) / C) / D)         → answer choice-ok
 
 | Fájl | Mód | Tartalom |
 |:-----|:----|:---------|
-| `5_clean_outputs/N_Kerdesbank.xml` | heti | Adott hét kérdésbankja Moodle XML-ben |
-| `5_clean_outputs/vizsgabank.xml` | aggregált | Összes hét kérdésbankja összevonva |
+| `6_clean_outputs/N_Kerdesbank.xml` | heti | Adott hét kérdésbankja Moodle XML-ben |
+| `6_clean_outputs/vizsgabank.xml` | aggregált | Összes hét kérdésbankja összevonva |
 
 ## 6. Ellenőrzés
 
@@ -136,9 +125,9 @@ A) / B) / C) / D)         → answer choice-ok
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
-| Parse hiba | `<!-- MSc -->` blokk nincs lezárva | `09_question_bank` §6 javítása után újrafuttatás |
+| Parse hiba | kérdés-blokk nem zárult le | `.md` manuális ellenőrzése, `09_question_bank` §6 |
 | Helyes válasz nem azonosítható | `> *Helyes: X*` sor formátuma eltér | Regex lazítása vagy `.md` manuális javítása |
-| Üres XML | `--level bsc` de csak MSc kérdések vannak | Ellenőrizni a `(BSc)` tageket a `.md`-ben |
+| Üres XML | nincs kérdés a `.md`-ben | Ellenőrizni a `**K{N}.**` tageket a `.md`-ben |
 | Kétszer annyi kérdés aggregáltban | Dupla futtatás | Script idempotens legyen: XML újraírja, nem appendálja |
 
 ## 8. Nyitott kérdések
@@ -147,14 +136,17 @@ A) / B) / C) / D)         → answer choice-ok
 |:--|:-------|:--------|
 | Q1 | **Képlet-renderelés:** Moodle számos math-motort támogat (MathJax `\(...\)`, TeX-filter `$$...$$`, MathML). Nem tudni, melyiket konfigurálja az adott intézmény. **Javaslat:** `--math-format` paraméter a scriptbe (`latex` / `mathjax` / `tex-filter` / `strip`); default: `latex` (változatlanul hagyja a `$...$` jelölést, a Moodle-adminnak kell a MathJax-szűrőt bekapcsolni). Addig, amíg ez tisztázatlan, a képletet tartalmazó kérdések XML-exportja kockázatos. | ❔ tisztázandó intézményi Moodle-konfiggal |
 
-## 10. Hivatkozások
+## 9. Hivatkozások
 
 - [09_question_bank.md](09_question_bank.md) — upstream, a `.md` forrás spec-je
 - [pipeline.md](../pipeline.md) — §2 kimeneti fázis
 - [Instructions.md](../../Instructions.md) — §6 mappastruktúra
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
 | 2026-06-07 | 1.0 | Létrehozva: markdown-first Moodle-export spec, heti+aggregált mód, BSc/MSc+depth tagek |
+| 2026-06-11 | 1.1 | status: active → planned (a `09b_moodle_export.py` még nem létezik — őszinte spec); §9/§10 (Hivatkozások/Változásjegyzék) számozás rendezve. |
+| 2026-06-12 | 1.2 | MSc-kivezetés (P2.1): `--level bsc/msc` és BSc/MSc szintszűrés eltávolítva; parsing formátumból `(BSc|MSc)` törölve; XML-tagekből BSc/MSc törölve. Mappa-migráció (P2.2): XML-kimenet `5_clean_outputs` → `6_clean_outputs`. |
+| 2026-06-12 | 1.3 | Névkonvenció (P2.7, 10. döntés): a planned script `09-1_moodle_export.py` → `09b_moodle_export.py` (1:1 a skill nevével; Instructions §5.1 betűs-alskill szabály). `status: planned` marad. |

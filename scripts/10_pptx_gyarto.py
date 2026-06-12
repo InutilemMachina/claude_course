@@ -635,7 +635,7 @@ def main():
             sys.exit(f"Nem található: {week_dir}")
         n = _detect_week(week_dir)
         md_path = week_dir / "4_wip_outputs" / f"{n}_Prezentacio.md"
-        out_base = week_dir / "5_clean_outputs" / f"{n}_Prezentacio.pptx"
+        out_base = week_dir / "6_clean_outputs" / f"{n}_Prezentacio.pptx"
         mindmap_path = args.mindmap or str(week_dir / "3_mindmap" / "mindmap.md")
         if args.output:
             out_base = Path(args.output)

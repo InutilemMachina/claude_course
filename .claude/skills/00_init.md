@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🐍
 status: active
-version: 1.2
-updated: 2026-06-03
+version: 1.3
+updated: 2026-06-12
 description: Új tantárgy mappastruktúrájának és subject_status.md-jének létrehozása; használd a pipeline legelején, amikor új tantárgyat (vagy annak heti bontását) indítasz.
 ---
 
@@ -29,7 +29,7 @@ dolgozzanak, Claude pedig session elején beolvashassa a tantárgy állapotát.
 | `--weeks` | Felhasználó | hetek száma (egész, default `1`) |
 | `--root` | Felhasználó | gyökér mappa (default `test_outputs`; éles tantárgyhoz `.`) |
 
-A szint (BSc/MSc), célok, stílus **nem CLI-argumentum** — ezeket a generált
+A célok, stílus **nem CLI-argumentum** — ezeket a generált
 `subject_status.md`-ben tölti ki a felhasználó.
 
 **Előfeltétel:** A `templates/subject_status_template.md` sablon létezik; a gyökér írható.
@@ -58,7 +58,8 @@ A script **idempotens**: meglévő `subject_status.md`-t és mappákat nem ír f
     2_clean_inputs/
     3_mindmap/
     4_wip_outputs/
-    5_clean_outputs/
+    5_asset_outputs/
+    6_clean_outputs/
 ```
 
 ### 3.3. subject_status.md kitöltése
@@ -73,7 +74,8 @@ A futás után **töltsd ki** a `subject_status.md` §1 (alapadatok), §4 (célo
 | `<tantárgy>/subject_status.md` | Tantárgy-szintű terv + heti pipeline-státusz (sablonból) |
 | `<tantárgy>/{N}_het/1_raw_inputs/` | Üres — forrásgyűjtésre vár (`01`) |
 | `<tantárgy>/{N}_het/3_mindmap/` | Üres — `03_mindmap_builder`-nek |
-| `<tantárgy>/{N}_het/5_clean_outputs/` | Üres — végleges outputoknak |
+| `<tantárgy>/{N}_het/5_asset_outputs/` | Üres — 12/13 gazdagítás (regiszter + overlay) |
+| `<tantárgy>/{N}_het/6_clean_outputs/` | Üres — camera-ready végleges outputoknak |
 
 ## 5. Teszt
 
@@ -116,3 +118,4 @@ A futás után **töltsd ki** a `subject_status.md` §1 (alapadatok), §4 (célo
 | 2026-06-01 | 1.0 | Létrehozva |
 | 2026-06-02 | 1.1 | Skill a script valóságához igazítva: `context.json` → `subject_status.md`, helyes argumentumok, 5 almappa, idempotencia |
 | 2026-06-03 | 1.2 | Sablonhoz igazítva: `role: 🐍`, triggerelő `description`, §5 Teszt (verifikált), upstream/downstream linkek; őszinte idempotencia-napló (a heti mappákat is számolja) |
+| 2026-06-12 | 1.3 | Mappa-migráció (P2.2): 6 almappa — `5_clean_outputs` → `5_asset_outputs` (12/13) + `6_clean_outputs` (camera-ready); §3.2 mappafa + §4 kimenetek frissítve; `PIPELINE_STEPS` `11 bsc_export` → `11 docx_export`. |

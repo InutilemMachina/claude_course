@@ -4,9 +4,9 @@ title: 13_jupyter_catalogizer -- A tananyag gazdagítása Jupyter notebook-okkal
 type: skill
 tags: [meta, skill]
 role: 😎+🤖
-status: planned
-version: 1.1
-updated: 2026-06-06
+status: active
+version: 2.0
+updated: 2026-06-12
 description: A publikálható jegyzet/prezentáció kijelölt ábráihoz/koncepcióihoz kész, animált Jupyter notebookokat rendel Predict–Observe–Explain (POE) struktúrával (nem programozást tanít), és csatolmányként regisztrálja; használd a 08_quality_reviewer PUBLIKÁLHATÓ döntése után, opcionális gazdagító lépésként. Didaktikai metaprompt előtöltve; regiszter-mechanika backlog.
 ---
 
@@ -22,11 +22,9 @@ A 😎 által kijelölt ábrákhoz/koncepciókhoz **kész, animált** Jupyter no
 csatolmányként (**📎🧪**) jelöli. A projekt **nem programozást tanít** — a notebook kész animáció,
 amelyet a hallgató paraméterez; ezért a klasszikus „Socratic Coding / skeleton code" helyett a
 POE-minta illik. A notebookok hosszú távon bővülnek, ezért **külön regiszterben** tartjuk
-nyilván — a regiszter-mechanika (fájlnév, csatolás) még **nyitott** (backlog).
+nyilván — **overlay + regiszter** modell a `5_asset_outputs/`-ban (§3.2, közös a 12-vel).
 
-**Ez a verzió a didaktikai metapromptot tölti elő; a `status: planned` marad.**
-
-**Input:** publikálható `N_Jegyzet.md` (+ `N_Prezentacio.md`) · **Output:** horgonyzott POE-feladat + (később) regiszter-bejegyzés
+**Input:** publikálható `N_Jegyzet.md` (+ `N_Prezentacio.md`) · **Output:** regiszter-bejegyzés (`5_asset_outputs/`) + stabil `<!-- ENRICH: <id> -->` horgony a wip-ben
 
 ## 2. Bemenetek
 
@@ -57,7 +55,7 @@ nyilván — a regiszter-mechanika (fájlnév, csatolás) még **nyitott** (back
 **Rugalmas horgonyzás:** a 😎 kijelölés dönti el, hogy a notebook **szakasz-** (a releváns `##`
 `💡 Összegzés` után) vagy **fejezet-szinten** (a `🗺️` után) kerül be.
 
-**Kimenet formátuma (csatolmány-jelölés a jegyzetben):**
+**A csatolmány-blokk formátuma (a regiszterben tárolva, lásd §3.2):**
 
 ```markdown
 > 📎🧪 **Interaktív notebook — {koncepció}** [link]
@@ -68,31 +66,42 @@ nyilván — a regiszter-mechanika (fájlnév, csatolás) még **nyitott** (back
 
 **Checkpoint (😎):** a notebook kiválasztása/elkészítése és a horgony helye 😎 jóváhagyással.
 
-### 3.2. Regiszter-mechanika — NYITOTT (backlog)
+### 3.2. Overlay + regiszter modell (közös a 12-vel)
 
-A notebookok **külön regiszterben** (táblázatos fájl) való nyilvántartása, a fájlnév-konvenció
-és a csatolmány stabil hivatkozása még tervezés alatt → [project_status.md](../project_status.md).
-Ez a skill addig csak a fenti didaktikai metapromptot szolgáltatja.
+Ugyanaz az overlay+regiszter mechanizmus, mint a [12_youtube_finder §3.2](12_youtube_finder.md)-ben —
+**egy közös** `5_asset_outputs/enrichment_register.md` tartja nyilván a videókat ÉS a notebookokat
+(Q-04 megoldása, nincs 6-fájlos visszaírás). A 13 sajátosságai:
+
+- **Típus:** `📎🧪`; **id:** `nb1`, `nb2`, … (a videók `v1`, `v2`).
+- **Horgony a wip-ben:** `<!-- ENRICH: nb1 -->` a 😎-kijelölt helyen; a wip egyébként érintetlen.
+- **A `meta` mező** a POE-blokk forrásmezőit hordozza (Jóslat / Állítható / Magyarázd meg).
+- A notebook-fájl a `5_asset_outputs/`-ban él (vagy külső link); a regiszter-sor `link` mezője mutat rá.
+
+A register-aware automatizált horgony-feloldás (10/11 konverzió) közös backlog a 12-vel.
 
 ## 4. Kimenetek
 
 | Fájl | Tartalom |
 |:-----|:---------|
-| `N_.../fajl` | leírás |
+| `5_asset_outputs/enrichment_register.md` | A notebook-bejegyzés (`nb<id>`, link, POE-blokk mezői) — közös regiszter a 12-vel |
+| `5_asset_outputs/*.ipynb` | A kész, animált notebook (vagy külső link a regiszterben) |
+| `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio*.md`) | `<!-- ENRICH: nb<id> -->` stabil horgony a 😎-kijelölt helyen |
 
 ## 5. Teszt
 
-Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12](../Instructions.md)).
-
-- **Fixture (bemenet):** melyik anyag — `test_sources/atg` (sok kis forrás) vagy `test_sources/dft` (1 könyv) — és hova kerül (`test_outputs/<tárgy>/N_het/...`).
-- **Akció:** a §3 konkrét parancsa / Claude-feladata.
-- **Várt kimenet:** a sikeres eredmény (fájl, struktúra, kulcsérték).
-- **Eval:** hogyan dől el, hogy jó (`08_quality_check.py`, Claude review, vagy `git diff`).
+- **Fixture:** `test_outputs/atg/1_het` — publikálható `1_Jegyzet.md` (📎🧪 kompresszortérkép-koncepció).
+- **Akció:** 😎 kijelöl egy ábrát/koncepciót; 🤖 a §3.1 POE-metaprompt szerint notebook-blokkot gyárt,
+  majd §3.2 szerint regisztrálja (`nb1` sor a közös `5_asset_outputs/enrichment_register.md`-ben) és
+  `<!-- ENRICH: nb1 -->` horgonyt tesz a wip kijelölt helyére.
+- **Várt kimenet:** a regiszter tartalmaz egy `nb1` sort (típus 📎🧪, link, POE-meta); a wipben a horgony a helyén.
+- **Eval:** §6 ellenőrzőlista; a horgony `<id>`-je 1:1 egyezik a regiszter `id`-jével.
 
 ## 6. Ellenőrzés
 
-- [ ] Ellenőrzési pont 1
-- [ ] Ellenőrzési pont 2
+- [ ] Minden `<!-- ENRICH: nb<id> -->` horgonyhoz pontosan egy regiszter-sor (és fordítva)
+- [ ] A notebook elérhető (a regiszter-link érvényes: `5_asset_outputs/*.ipynb` vagy külső URL)
+- [ ] A POE-szerkezet teljes (Jóslat + Állítható paraméter + Magyarázd meg)
+- [ ] A wip tartalma a horgony-soron kívül érintetlen (camera-ready elv)
 
 ## 7. Hibakezelés
 
@@ -111,7 +120,8 @@ Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12]
 
 ## 9. Visszajelzések 😎+🤖
 
-- 💬 A didaktikai metaprompt (§3.1, POE) előtöltve. A **regiszter-mechanika nyitott** (§3.2, backlog).
+- 💬 A didaktikai metaprompt (§3.1, POE) előtöltve. A **regiszter-mechanika rögzítve** (§3.2, közös
+  overlay+regiszter a 12-vel). A register-aware automatizált horgony-feloldás (10/11) még backlog.
 
 ## 10. Változásjegyzék
 
@@ -119,3 +129,4 @@ Reprodukálható teszteset — minden skillnek legyen (lásd [Instructions §12]
 |-------|--------|--------|
 | 2026-06-06 | 1.1 | §1 + §3.1 didaktikai metaprompt előtöltve (POE 3-cella: Predict–Observe–Explain, magyarázat-visszatartás, rugalmas horgony) — a Socratic Coding helyett, mert a projekt nem tanít programozást; §3.2 regiszter-mechanika backlogba. `status: planned` marad. |
 | YYYY-MM-DD | 1.0 | Létrehozva |
+| 2026-06-12 | 2.0 | **Véglegesítés (P2.6, 9. döntés):** §3.2 közös overlay+regiszter modell a 12-vel (`5_asset_outputs/enrichment_register.md`, `📎🧪`/`nb<id>`, stabil `<!-- ENRICH: nb<id> -->` horgony; Q-04 megoldása); §4/§5/§6 placeholderek kitöltve; `status: planned → active`. |

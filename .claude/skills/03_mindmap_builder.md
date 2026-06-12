@@ -3,11 +3,11 @@ name: 03_mindmap_builder
 title: 03_MINDMAP_BUILDER — Hierarchikus elmetérkép generálása
 type: skill
 tags: [meta, skill]
-role: ??
+role: 🤖
 status: active
-version: 1.4
-updated: 2026-06-05
-description: Claude elolvassa az összes forrást és fogalmi összefüggések alapján hierarchikus mindmapet generál. Ha 02_mineru_to_catalog futott, a strukturált MinerU markdown az elsődleges szövegforrás (raw PDF fallback). A felhasználó revideálja, MSc-ágakat jelöl. Ez a pipeline sarokköve.
+version: 1.7
+updated: 2026-06-11
+description: Claude elolvassa az összes forrást és fogalmi összefüggések alapján hierarchikus mindmapet generál. Ha 02_mineru_to_catalog futott, a strukturált MinerU markdown az elsődleges szövegforrás (raw PDF fallback). A felhasználó revideálja a struktúrát és metszi a célcsoportnak túl mély/erős ágakat. Ez a pipeline sarokköve.
 ---
 
 # 03_MINDMAP_BUILDER
@@ -19,7 +19,7 @@ alapján — nem merev fejezet-hierarchia szerint — hierarchikus mindmapet gen
 A mindmap az összes downstream output (04–10) vezérfonala.
 
 **Input:** `1_raw_inputs/*.pdf, *.pptx` (eredeti forrásanyagok)
-**Output:** `3_mindmap/mindmap.md` (Mermaid `flowchart LR`, ?? jóváhagyás után végleges)
+**Output:** `3_mindmap/mindmap.md` (Mermaid `flowchart LR`, 😎 jóváhagyás után végleges)
 **WIP Output:** `test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_horz.md` (LR) és `{N}_Mindmap_vert.md` (TD) — draft
 
 ## 2. Bemenetek
@@ -81,7 +81,7 @@ flowchart LR
 
     A --> A1["1.1. Alfogalom"]
     A --> A2["1.2. Alfogalom"]
-    A --> A3["[MSc] 1.3. MSc szintű alfogalom"]
+    A --> A3["1.3. Alfogalom"]
 
     B --> B1["2.1. Alfogalom"]
 ```
@@ -110,24 +110,22 @@ A3 (1.3): <forrás> Eq.X.Y — rövid leírás
    (`Eq.X.Y`), sem inline képlet-töredék. Ezek a **nem renderelt** kommentblokkba kerülnek (lásd §3.3.1).
    Indok: a 04_content_synthesizer az ábrát a `figure_catalog.json`-ból, a képletet a MinerU markdownból
    veszi — a node-ban csak zaj.
-3. **`[MSc]` jelölés egységes.** Pontosan `[MSc]` — szögletes zárójel, pont ezzel a kis-/nagybetűzéssel.
-   Tilos a `MSc`/`MsC`/`Msc` zárójel nélkül és a `(MSc)` kerek zárójel. (A 04 §3.8 szó szerint erre illeszt.)
-4. **Megnevezés igen, citáció nem.** Egy fogalomra/modellre a **nevével** hivatkozz; a hozzá tartozó
+3. **Megnevezés igen, citáció nem.** Egy fogalomra/modellre a **nevével** hivatkozz; a hozzá tartozó
    évszám és szerző-citáció a node-ból elhagyandó — a citáció a Jegyzetben, IEEE-vel jön (08 §8).
-5. **`<br>` csak indokolt esetben.** A renderer többnyire automatikusan tördel; `<br>`-t csak akkor
+4. **`<br>` csak indokolt esetben.** A renderer többnyire automatikusan tördel; `<br>`-t csak akkor
    használj, ha valódi logikai tagolást jelöl (fő fogalom + rövid pontosítás). Alapértelmezés: rövid,
    egysoros címke.
-6. **Idegen szavak óvatosan.** Ahol van bevett magyar megfelelő, azt használd; a meghonosodott vagy
+5. **Idegen szavak óvatosan.** Ahol van bevett magyar megfelelő, azt használd; a meghonosodott vagy
    lefordíthatatlan szakszavakat tartsd meg eredetiben. Ügyelj a nyíl→szó szivárgásra: a `→`/`->`-ból
    ne legyen `to`/`hoz` szó a címkében — a kapcsolatot **él** fejezi ki, nem szöveg.
-7. **Egyszerű node-cím.** Egy node = egy fogalom; ne pakold tele jelzővel/képlettel.
-8. **Egygyerekes node megengedett**, ha köztes fogalmi lépcsőként segíti a megértést.
-9. **Szigorú fa — csak szülő→gyermek él.** A mindmap `flowchart LR` **fa**: minden node-nak pontosan
+6. **Egyszerű node-cím.** Egy node = egy fogalom; ne pakold tele jelzővel/képlettel.
+7. **Egygyerekes node megengedett**, ha köztes fogalmi lépcsőként segíti a megértést.
+8. **Szigorú fa — csak szülő→gyermek él.** A mindmap `flowchart LR` **fa**: minden node-nak pontosan
    egy bejövő éle van (a szülőtől). **Tilos** minden egyéb él: kereszt-él (ágak közti), testvér-él,
    és bármely él, amely távoli node-okat köt össze vagy egy közös node-ba futtat — ezek átlósan
    átszelik a diagramot és törik az LR-elrendezést. A nem hierarchikus (ág-ág, fogalmi) kapcsolatokat
    a nem renderelt kísérőszövegben (§3.3.1) magyarázd, **ne éllel**.
-10. **Speciális karakterek:** kerüld a `"`, `'`, `(`, `)` jeleket a node-ban — cseréld szóra.
+9. **Speciális karakterek:** kerüld a `"`, `'`, `(`, `)` jeleket a node-ban — cseréld szóra.
 
 ### 3.4. Mentés
 
@@ -143,10 +141,10 @@ test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_vert.md    ‹ flowchart
 ```
 
 A wip_outputs verziókban:
-- Csak cím és mindmap Mermaid blokk marad (YAML frontmatter + referencia-tábla törlve)
-- lowchart LR › horz (horizontal/baloldali-jobboldali)
-- lowchart TD › ert (vertical/topdown)
-- Mindkét verzió ugyanazt az elemetérképet tartalmazza, csak más irányultságban
+- Csak cím és mindmap Mermaid blokk marad (YAML frontmatter + referencia-tábla törölve)
+- flowchart LR › horz (horizontal/baloldali-jobboldali)
+- flowchart TD › vert (vertical/topdown)
+- Mindkét verzió ugyanazt az elmetérképet tartalmazza, csak más irányultságban
 
 YAML frontmatter kötelező a fő fájlban:
 
@@ -158,39 +156,44 @@ tags: [prod/test, mindmap]
 subject: {tantárgy neve}
 week: N
 sources: [fájlnév1, fájlnév2, ...]
-msc_nodes: [csomópont1, csomópont2, ...]  ‹ Claude javaslata
 created: YYYY-MM-DD
-status: draft  ‹ ?? jóváhagyás után: approved
+status: draft  ‹ 😎 jóváhagyás után: approved
 ---
 ```
 
-### 3.5. Checkpoint — ?? felhasználói revízió
+### 3.5. Checkpoint — 😎 felhasználói revízió
 
 A draft mindmap elkészítése után:
 
 1. **Struktúra ellenőrzés:** az L1 ágak fedik a témát? Hiányzik valami? Felesleges valami?
-2. **MSc jelölés véglegesítése:** Claude javaslatai (`[MSc]`) elfogadva vagy módosítva?
+2. **Mélység/szkóp metszése:** mely ágak túl erősek vagy mélyek a célcsoportnak? (szint-semleges)
 3. **Forrás-lefedettség:** minden fontos forrásból bekerült a lényeg?
 4. **Vizuális egyensúly:** egy ág sem terhelt le 8+ csomóponttal?
 
 A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 
-**?? A 04_content_synthesizer csak `status: approved` mindmap alapján indul!**
+**🚦 A 04_content_synthesizer csak `status: approved` mindmap alapján indul!**
 
 ## 4. Kimenetek
 
 | Fájl | Tartalom |
 |:-----|:---------|
-| `3_mindmap/mindmap.md` | Mermaid flowchart LR, [MSc] jelölések, status: approved |
+| `3_mindmap/mindmap.md` | Mermaid flowchart LR, status: approved |
 | `test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_horz.md` | Draft LR verzió — cím + flowchart LR, metaadat nélkül |
 | `test_outputs/{tárgy}/{N}_het/4_wip_outputs/{N}_Mindmap_vert.md` | Draft TD verzió — cím + flowchart TD, metaadat nélkül |
 
-## 5. Ellenőrzés
+## 5. Teszt
+
+- **Fixture:** `test_outputs/atg/1_het` — MinerU markdown + `figure_catalog.json` (v4) + `citations.json`.
+- **Akció:** §3 — Claude beolvassa a forrásokat és fogalmi hierarchiát épít.
+- **Várt kimenet:** `3_mindmap/mindmap.md` (Mermaid `flowchart LR`, 3–6 L1 ág, `status: draft`) + WIP horz/vert másolatok.
+- **Eval:** §6 ellenőrzőlista + 🚦 😎 checkpoint (struktúra/lefedettség).
+
+## 6. Ellenőrzés
 
 - [ ] Minden L1 ág azonosítható az `1_raw_inputs/` forrásokban?
 - [ ] Minden L1/L2 szám után pont (`5.`, `1.1.`)?
 - [ ] Nincs `Fig.X.Y`, `Eq.X.Y` vagy inline matek a renderelt node-ban (csak a nem renderelt blokkban)?
-- [ ] `[MSc]` egységes (szögletes zárójel, nincs `MsC`/`(MSc)` variáns)? Szülő [MSc] › gyerek is [MSc]?
 - [ ] Indokolatlan idegen szó (van magyar megfelelője) vagy nyíl→szó (`to`/`hoz`) szivárgás a címkékben?
 - [ ] `<br>` csak indokolt logikai tagolásnál?
 - [ ] Szigorú fa: csak szülő→gyermek él (nincs kereszt-/testvér-él, nincs közös node-ba futtatás)?
@@ -198,7 +201,7 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 - [ ] `status: approved` a YAML-ban?
 - [ ] A nem renderelt ábra/képlet-hivatkozások egyeznek a `figure_catalog.json`-nel?
 
-## 6. Hibakezelés
+## 7. Hibakezelés
 
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
@@ -211,13 +214,13 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
 | Fig/Eq vagy inline matek a renderelt node-ban | Forrás-zaj a vázlatban | Áthelyezés a nem renderelt blokkba (§3.3.1); a node csak fogalmat tartalmaz |
 | `to`/`hoz` szó a node-címben | `→` nyíl szövegként szivárgott be | A kapcsolatot éllel fejezd ki; a címkéből töröld |
 
-## 7. Hivatkozások
+## 8. Hivatkozások
 
 - [pipeline.md](../pipeline.md) — §3 Checkpoint táblázat
 - [04_content_synthesizer.md](04_content_synthesizer.md) — downstream skill
 - [Instructions.md](../../Instructions.md) — §7 Vizuális gazdagítás szabályok
 
-## 8. Visszajelzések
+## 9. Visszajelzések
 
 - 💡 **2. sprint — háttér-RAG / láthatatlan metaadat:** a MinerU-ból nyert többletinformáció
   (`text_context`, `caption`, `keywords`, oldal- és Fig/Eq-azonosítók) node-onként strukturált,
@@ -225,16 +228,15 @@ A felhasználó módosítja a fájlt közvetlenül, majd: `status: approved`.
   alapja lehet (04 szintézis és 09 kérdésbank célzottan a releváns forrásrészre hivatkozhat a
   teljes PDF újraolvasása helyett). Részletek: [project_status.md](../project_status.md) „Ötletek".
 
-## 9. Változásjegyzék
+## 10. Változásjegyzék
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-05 | 1.4 | §3.3 Szabályok újraírva 😎 visszajelzés alapján: minden szám után pont; Fig/Eq/inline matek tilos a renderelt node-ban (→ új §3.3.1 nem renderelt réteg); `[MSc]` egységes forma; modellnév évszám nélkül; `<br>` csak indokolt; idegen szavak óvatosan + nyíl→szó szivárgás tiltva; egyszerű/egygyerekes node OK; szigorú fa — csak szülő→gyermek él (kereszt-/testvér-él, közös node-ba futtatás tiltva). §5 checklist + §6 két hibasor + §8 RAG-ötlet. |
 | 2026-06-01 | 1.0 | Létrehozva (claude_play 08_mindmap_manager alapján, Claude-natív) |
 | 2026-06-03 | 1.1 | §2 input javítva: `2_clean_inputs/**/*.md` › `1_raw_inputs/` (02 skill csak képet termel, szöveg-szintézis Claude direkt PDF-olvasással); §3.1 + §5 igazítva |
+| 2026-06-03 | 1.2 | §3.4, §4 bővítve: WIP draft verziók (`1_Mindmap_horz.md` LR + `1_Mindmap_vert.md` TD) a `4_wip_outputs/` alatt |
 | 2026-06-05 | 1.3 | MinerU-first pipeline: §2 MinerU `.md` elsődleges szövegforrás (raw PDF fallback); §3.1 kettéválasztva standard/fallback; §6 új hibasor. Gain: heading-struktúra, LaTeX formulák, tábla-MD, kéthasábos olvasási sorrend. |
-| 2026-06-03 | 1.2 | §3.4, §4 bővítve: WIP draft verziók (1_Mindmap_horz.md LR + 1_Mindmap_vert.md TD) wip_outputs/atg/ alatt
-
-
-
-
+| 2026-06-05 | 1.4 | §3.3 Szabályok újraírva 😎 visszajelzés alapján: minden szám után pont; Fig/Eq/inline matek tilos a renderelt node-ban (→ új §3.3.1 nem renderelt réteg); `[MSc]` egységes forma; modellnév évszám nélkül; `<br>` csak indokolt; idegen szavak óvatosan + nyíl→szó szivárgás tiltva; egyszerű/egygyerekes node OK; szigorú fa — csak szülő→gyermek él (kereszt-/testvér-él, közös node-ba futtatás tiltva). §5 checklist + §6 két hibasor + §8 RAG-ötlet. |
+| 2026-06-11 | 1.5 | Higiénia: 😎-emoji helyreállítva (mojibake `??`→😎); typók javítva (`flowchart`/`vert`/`elmetérkép`/`törölve`); changelog kronológiai sorrendbe (legfrissebb alul) + lezáratlan 1.2 sor zárva. |
+| 2026-06-11 | 1.6 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |
+| 2026-06-11 | 1.7 | MSc-kivezetés (szint-semleges): `[MSc]` szabály/példa/checkpoint/checklist/`msc_nodes` eltávolítva; a 03-gate mostantól szkóp/mélység-metszés. |

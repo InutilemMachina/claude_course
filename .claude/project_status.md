@@ -2,7 +2,7 @@
 title: Project Status — claude_course
 type: project_status
 tags: [meta]
-updated: 2026-06-11
+updated: 2026-06-12
 ---
 
 # Project Status — claude_course
@@ -64,14 +64,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - ✅ B-17: **Ábra/táblázatfelirat-kaszkád** — beszúráskor a kézi feliratszámozás elcsúszik. **Megoldva** (2026-06-07): új `scripts/07-3_figure_numberer.py` (determinista, idempotens, külön ábra/tábla-sorozat, előfordulási sorrend). Feltétel: nincs szövegközi ábrahivatkozás (lásd [04 §8] megfigyelés). 07 skill §3.3 + pipeline §2. — **kész**
 - ✅ B-18: **CRLF sortörés-duplázódás md-író scriptekben** — a `07-3` `read_bytes().decode()` + `splitlines(keepends=True)` + `write_text` kombinációja `\r\r\n`-t gyártott, amit egy univerzális-newline olvasás `\n\n`-re tágított → a jegyzet üres sorai megduplázódtak (616→1232). **Megoldva** (2026-06-07): olvasás-normalizálás LF-re (mint `07-1`); a sérült fájl helyreállítva a newline-futamok felezésével. **Generalizált szabály** (07 §8): minden md-író script normalizáljon LF-re olvasáskor. — **kész**
 - ✅ B-19: **Forrásgyűjtési elvek (01)** — (1) több jelölt + 😎-egyeztetés (ne az első/sovány forrást ragadd meg); (2) 😎 saját fájlt is betehet a `1_raw_inputs/`-ba (retroaktív kezelés); (3) **weblap→PDF képekkel**: a *general* megoldás a **headless Chromium `--print-to-pdf`** (csak böngésző-bináris kell — Edge/Chrome/chrome-headless-shell; nincs Python-csomag, nincs site-API). A Wikipedia REST endpoint és a sovány szöveg-PDF **nem** általános — kizárva. Edge headless-szel bizonyítva (10 oldal, 9 kép). 01 §3.3–3.4. — **kész**
-- ❔ B-20: **BSc/MSc szintszétválasztás — strukturális nyitott kérdés.** A teljes tananyagnak
-  külön **BSc** és **MSc** clean exportja lesz. Az eredeti ötlet: egy tárgyat rögtön két szintre
-  dolgozunk ki (`[MSc]` taggel a mindmapben/jegyzetben). Probléma: az MSc-szakaszok önmagukban
-  túl rövidek, és furcsa, ha az MSc-képzésen a teljes BSc-tananyag is benne van — viszont a
-  hallgatók alacsony belépő szintje miatt benne KELL lennie. Kérdés: az `[MSc]` szétválás már
-  **wip-szinten** (04/06) történjen-e, vagy maradjon export-szintű szűrés (11). Kapcsolódik:
-  10 navigáció `[MSc]` jelölés (most megjelenik), 11_bsc_export szűrő. Eldöntendő.
-  - **Strukturális következmény (2026-06-08):** a BSc-exportot (11_bsc_export) **korábbra kell helyezni a pipeline-ban**, mert jelenleg a prezentációk (`1_Prezentacio.pptx`, `1_Prezentacio_mindmap.pptx`) is differenciálatlanok — nincs `_bsc` / `_msc` variánsuk. A 10_presentation_maker (PPTX-gyártás) csak az összevont wip-ből dolgozik, így a clean PPTX-ek MSc-tartalmat is hordoznak. Szükséges lépés: a BSc-szűrés (MSc-blokkok elhagyása) a 10-es lépés **előtt** fusson, különben a BSc prezi soha nem készül el MSc-tartalom nélkül.
+- ✅ B-20: **BSc/MSc szintszétválasztás** — **Megoldva** (2026-06-12, P2.1): a BSc/MSc szintfogalom teljesen kivezetésre került; a tananyag szint-semleges, nincs `[MSc]` tagelés, nincs BSc-szűrés; `11_bsc_export` → `11_docx_export` (egyetlen output). — **kész**
 - 🔲 B-14: **`#`/`##` elnevezési csúszás** — a `06_summarize_box_injector` `#`-et nevez „fejezetnek", a `04` viszont `##`-et; a `🗺️` per-`#` (egy db) vs `💡`/`❓` per-`##`. A tényleges struktúrában `#` = dokumentumcím, `##` = fejezet. Tisztázni a terminológiát a 04/06/Instructions §7 között (kozmetikai, de zavaró). Opcionális.
 
 ## Ötletek — jövőbeni megfontolásra (💡)
@@ -79,7 +72,7 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - 💡 **Natív egyenletek (OMML / Cambria Math) a teljes kimeneti rétegben — közös `_omml.py`.**
   A 10-es lépésben bevált a LaTeX→MathML→**OMML** lánc ([`_omml.py`](../scripts/_omml.py)):
   `$...$` szövegközi, `$$...$$` block, **szerkeszthető** natív egyenletként (nem kép). Ez **kihat
-  a camera-ready DOCX-re (11_bsc_export) is**:
+  a camera-ready DOCX-re (11_docx_export) is**:
   - A WordprocessingML a `m:oMath`-ot **közvetlenül** a bekezdésbe ágyazza (egyszerűbb, mint a
     DrawingML `a14:m` wrapper a PPTX-ben) — a `_omml.py` `tex_to_omath()` változatlanul használható.
   - A **pandoc** (11-2) a `$...$`/`$$...$$`-t alapból **natív Word-egyenletté** (OMML) konvertálja,
@@ -115,10 +108,10 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
 - 🔲 **B-24 [PRIORITÁS]**: **BSc/MSc szintelkülönítés a kérdésbankban** — BSc-exportban csak BSc kérdések, MSc-exportban BSc+MSc kérdések szerepelnek. Strukturális döntés: (1) explicit szintjelzés a `.md`-ben (a jelenlegi `<!-- MSc -->` blokk kiterjesztése: minden kérdésnek legyen `<!-- BSc -->` / `<!-- MSc -->` jelölője); (2) a `09_moodle_export.py` `--level bsc|msc` paramétere szűr; (3) a `subject_status.md §5`-be tantárgyankénti BSc/MSc konfig. Kapcsolódó: `09_question_bank` skill és a tervezett `09_moodle_export.py`.
 - ✅ **B-21**: **09 skill + 09b_moodle_export spec** — kész (2026-06-07): 09_question_bank v1.3 (Jegyzet-first, L1 min. 10, mélységrendszer (2)–(5), BSc/MSc tag, fejezethivatkozás kötelező, „mindegyik/egyik sem" engedélyezett); 09b_moodle_export v1.0 (markdown→XML spec, heti+aggregált, --level, --no-explanation, --math-format). ❔ Nyitott: Moodle képlet-renderelés (Q1 a 09b §8-ban).
 - ❔ B-25: **„Sok kép / sok szöveg" dia-redesign — strukturális tervezési elv.** A 10-es prezi-diák hagyományosan zsúfoltak (sok kép + sok szöveg egy dián). Elv a továbbiakra: **egy gondolat / dia** (Mayer-féle coherence + segmenting), a content-igényes részek (k/n) többrészes diákra bontva (lásd 10 skill §3.1c-bis). Folyamatos finomítás, nem egyszeri javítás.
-- 🔲 **B-22**: **Moodle képlet-renderelés tisztázása** — melyik math-motort konfigurálja az intézményi Moodle (MathJax / TeX-filter / MathML)? Addig a képletes kérdések XML-exportja kockázatos. Megoldás: `--math-format` paraméter a `09-1_moodle_export.py`-ban (`latex` default, `mathjax`, `tex-filter`, `strip`). Prioritás: export-script megírása előtt tisztázni. — a skill és a Moodle-export script teljeskörű specifikációja a fenti döntések alapján: (1) L1 áganként min. 10 MCQ (volt: 3); (2) „mindegyik helyes" / „egyik sem helyes" engedélyezett; (3) mélységrendszer `(2)`–`(5)` taggel minden kérdésen — `(2)` csak Fejezet összefoglaló-alapú, `(3)` Összegzés-alapú, `(4)` teljes jegyzet, `(5)` mélyebb; (4) magyarázat + `[N]` hivatkozás a megfelelő fejezetszakaszra (review miatt); (5) számítási feladatok az MCQ részei; (6) `09_moodle_export.py` markdown-first konverzió, `--no-explanation` + `--level bsc|msc` kapcsolókkal, heti és aggregált módban.
+- 🔲 **B-22**: **Moodle képlet-renderelés tisztázása** — melyik math-motort konfigurálja az intézményi Moodle (MathJax / TeX-filter / MathML)? Addig a képletes kérdések XML-exportja kockázatos. Megoldás: `--math-format` paraméter a `09-1_moodle_export.py`-ban (`latex` default, `mathjax`, `tex-filter`, `strip`). Prioritás: export-script megírása előtt tisztázni. — a skill és a Moodle-export script teljeskörű specifikációja a fenti döntések alapján: (1) L1 áganként min. 10 MCQ (volt: 3); (2) „mindegyik helyes" / „egyik sem helyes" engedélyezett; (3) mélységrendszer `(2)`–`(5)` taggel minden kérdésen; (4) magyarázat + `[N]` hivatkozás a megfelelő fejezetszakaszra (review miatt); (5) számítási feladatok az MCQ részei; (6) `09-1_moodle_export.py` markdown-first konverzió, `--no-explanation` kapcsolóval, heti és aggregált módban.
 
 - 🔲 B-23: **Új DUE template-ek** — a jelenlegi `due_jegyzet_template.docx` és `due_presentation_template.pptx` ideiglenes placeholderek. Amikor az intézményi arculati template-ek elkészülnek, cseréld le:
-  - `templates/due_jegyzet_template.docx` — Jegyzet DOCX (11_bsc_export használja)
+  - `templates/due_jegyzet_template.docx` — Jegyzet DOCX (11_docx_export használja)
   - `templates/due_presentation_template_default.potx` — Prezentáció default variáns (10_presentation_maker)
   - `templates/due_presentation_template_mindmap.potx` — Prezentáció mindmap variáns (10_presentation_maker)
   Az új template-ek bevezetésekor a `10_pptx_gyarto.py --variant` és `11-2_pandoc_export.py` `find_template()` keresési logikáját is frissíteni kell.
@@ -132,16 +125,14 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
   - **Konkrét tünet (2026-06-08, atg/1_het):** a YouTube visszaregisztráció csak `4_wip_outputs/1_Jegyzet.md`-be történt meg. Hiányzik még (feladat):
     - `4_wip_outputs/1_Prezentacio_default.md`
     - `4_wip_outputs/1_Prezentacio_mindmap.md`
-    - `5_clean_outputs/1_Jegyzet.docx` *(utólagos python-docx patch — részleges kísérlet volt, ellenőrizni)*
-    - `5_clean_outputs/1_Jegyzet_bsc.docx`
-    - `5_clean_outputs/1_Prezentacio.pptx`
-    - `5_clean_outputs/1_Prezentacio_mindmap.pptx`
-  - **BSc/MSc szűrési feltétel:** MSc-szintű videó ne kerüljön BSc-outputba (a `<!-- MSc -->` blokkon belüli bekezdéshez rendelt videókat BSc clean exportból ki kell hagyni).
+    - `6_clean_outputs/1_Jegyzet.docx` *(utólagos python-docx patch — részleges kísérlet volt, ellenőrizni)*
+    - `6_clean_outputs/1_Prezentacio.pptx`
+    - `6_clean_outputs/1_Prezentacio_mindmap.pptx`
   - **Notebook visszaregisztrálás (2026-06-08, atg/1_het):** a `📎🧪` csatolmány bekerült `4_wip_outputs/1_Jegyzet.md`-be (2. Kompresszortérkép összegzés után), de hiányzik (feladat — ugyanaz a lista mint YouTube-nál):
     - `4_wip_outputs/1_Prezentacio_default.md`
     - `4_wip_outputs/1_Prezentacio_mindmap.md`
-    - `5_clean_outputs/1_Jegyzet.docx`, `1_Jegyzet_bsc.docx`
-    - `5_clean_outputs/1_Prezentacio.pptx`, `1_Prezentacio_mindmap.pptx`
+    - `6_clean_outputs/1_Jegyzet.docx`
+    - `6_clean_outputs/1_Prezentacio.pptx`, `1_Prezentacio_mindmap.pptx`
   - **6_assets mappa-konvenció (döntés, 2026-06-08):** notebookok (`📎🧪`) és regiszterek (YouTube + notebook lista) a `<hét>/6_assets/` mappában laknak — ez a 12/13 lépések kimeneti helye. YouTube regiszter is heti szintű, ugyanitt. A `6_assets/` a mappastruktúra új, 6. eleme (lásd Instructions §6).
 
 ## Változásjegyzék

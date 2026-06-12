@@ -29,7 +29,7 @@ dolgozzanak, Claude pedig session elején beolvashassa a tantárgy állapotát.
 | `--weeks` | Felhasználó | hetek száma (egész, default `1`) |
 | `--root` | Felhasználó | gyökér mappa (default `test_outputs`; éles tantárgyhoz `.`) |
 
-A szint (BSc/MSc), célok, stílus **nem CLI-argumentum** — ezeket a generált
+A célok, stílus **nem CLI-argumentum** — ezeket a generált
 `subject_status.md`-ben tölti ki a felhasználó.
 
 **Előfeltétel:** A `templates/subject_status_template.md` sablon létezik; a gyökér írható.

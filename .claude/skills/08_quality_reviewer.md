@@ -66,7 +66,7 @@ Eredmény: **átlag pontszám** (1–5) a **6 szempontból**, szöveges indoklá
 ### 3.3. Döntési logika
 
 ```
-Átlag (6 szempont) ≥ 3.0 → Publikálható → 09_question_bank + 10_presentation_maker + 11_bsc_export
+Átlag (6 szempont) ≥ 3.0 → Publikálható → 09_question_bank + 10_presentation_maker + 11_docx_export
                                             (+ 12_youtube_finder, 13_jupyter_catalogizer opcionális) indul
 Átlag (6 szempont) < 3.0 → Visszaküldés → 04_content_synthesizer kap revision note-ot
 PUBLIKÁLHATÓ, DE 😎 a checkpointon célzott revíziót kér → §3.5 csatorna → 04 (vagy 01) → 07 → 08 újra

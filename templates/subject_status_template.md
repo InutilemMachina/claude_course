@@ -20,7 +20,6 @@ A projekt-szintű `project_status.md` tantárgy-szintű megfelelője.
 
 ## 1. Alapadatok 😎
 
-- **Szint:** BSc / MSc / mindkettő
 - **Félév:** heti óraszám, struktúra
 - **Célcsoport:** szak, évfolyam
 
@@ -35,8 +34,7 @@ A projekt-szintű `project_status.md` tantárgy-szintű megfelelője.
 
 ## 3. Célok 😎
 
-- **BSc szint:**
-- **MSc szint:**
+- **Tanulási célok:**
 
 ## 4. Stílusirányelvek 😎
 
@@ -64,6 +62,6 @@ A projekt-szintű `project_status.md` tantárgy-szintű megfelelője.
 | 08 quality_reviewer 🚦     | ✅          | ❌          | ❌          |
 | 09 question_bank           | ✅          | ❌          | ❌          |
 | 10 presentation_maker      | ✅          | ❌          | ❌          |
-| 11 bsc_export              | ✅          | ❌          | ❌          |
+| 11 docx_export             | ✅          | ❌          | ❌          |
 | 12 youtube_finder          | ❌          | ❌          | ❌          |
 | 13 jupyter_catalogizer     | ❌          | ❌          | ❌          |

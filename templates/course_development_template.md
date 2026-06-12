@@ -12,7 +12,6 @@ _Másold a tantárgy `.claude/context.md`-jébe, és töltsd ki. Session elején
 
 ## 1. Alapadatok
 - **Tantárgy neve:**
-- **Szint:** BSc / MSc / mindkettő
 - **Félév:** X hetes, heti X óra
 - **Célcsoport:** (szak, év)
 
@@ -32,7 +31,7 @@ _Státuszok: ❌ TODO · ⚙️ folyamatban · ✅ kész_
 - `05-07`: Assemble + Excerpt + Citations
 - `08-10`: Mindmap + Képek + ToC
 - `11-12`: Typesetter + 11b minőség + Prezentáció
-- `13-14`: Kérdésbank + BSc filter → 5_clean_outputs
+- `13-14`: Kérdésbank + DOCX export → 6_clean_outputs
 
 ## 3. Aktuális állapot (session-szintű)
 - **Utolsó kész lépés:**
@@ -41,8 +40,7 @@ _Státuszok: ❌ TODO · ⚙️ folyamatban · ✅ kész_
 - **Legutóbbi döntések:** (nincs)
 
 ## 4. Célok
-- BSc szint:
-- MSc szint:
+- Tanulási célok:
 
 ## 5. Stílusirányelvek
 - Nyelv: magyar szöveg, kétnyelvű terminológia (pl. "termogram / thermogram")
@@ -63,9 +61,8 @@ _Státuszok: ❌ TODO · ⚙️ folyamatban · ✅ kész_
 
 ## 1. Alapadatok
 - **Tantárgy neve:** Műszaki Diagnosztika
-- **Szint:** BSc + MSc (kétszintű)
 - **Félév:** 14 hetes, heti 2 × 90 perc (előadás + labor)
-- **Célcsoport:** Gépészmérnök BSc/MSc, 3-4. év
+- **Célcsoport:** Gépészmérnök, 3-4. év
 
 ## 2. Tematika és pipeline státusz
 
@@ -82,8 +79,7 @@ _Státuszok: ❌ TODO · ⚙️ folyamatban · ✅ kész_
 - **Legutóbbi döntések:** Rezgésdiagnosztika külön notebookba
 
 ## 4. Célok
-- BSc szint: Diagnosztikai módszerek felismerése, alapvető mérési elvek, tipikus hibamódok.
-- MSc szint: Mérési adatok kiértékelése, statisztikai módszerek, rendszerszintű diagnosztika.
+- Tanulási célok: Diagnosztikai módszerek felismerése, alapvető mérési elvek, tipikus hibamódok; mérési adatok kiértékelése, rendszerszintű diagnosztika.
 
 ## 5. Stílusirányelvek
 - Nyelv: magyar, kétnyelvű terminológia

@@ -74,7 +74,7 @@ Ha 😎 kéri, Claude `WebSearch`-csel keres:
 
 **Több jelölt + 😎-egyeztetés (kötelező elv):** ne ragadd meg automatikusan az első
 találatot. Gyűjts **több jelöltet**, és tisztázd 😎-val, *mire van valójában szüksége*
-(mélység, BSc/MSc-fókusz, áttekintés vs. mélyfúrás, hazai nyelv). A 😎 dönt — egy
+(mélység, áttekintés vs. mélyfúrás, hazai nyelv). A 😎 dönt — egy
 gyenge/sovány forrás egyoldalú felvétele helyett kérj megerősítést vagy kínálj választást.
 
 **😎 által betett fájl:** a 😎 maga is bedobhat fájlt a `1_raw_inputs/`-ba. Az ilyen

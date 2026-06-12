@@ -1,9 +1,8 @@
 """
 11-2_pandoc_export.py -- Camera-ready DOCX export Pandoc-kal.
 
-A 4_wip_outputs/N_Jegyzet.md (vagy 5_clean_outputs/N_Jegyzet_bsc.md) Markdown
-fájlt Word DOCX-be konvertálja a templates/due_jegyzet_template.docx
-reference-dokumentum stílusaival.
+A 4_wip_outputs/N_Jegyzet.md Markdown fájlt Word DOCX-be konvertálja a
+templates/due_jegyzet_template.docx reference-dokumentum stílusaival.
 
 Előfeltétel: pandoc telepítve (https://pandoc.org/installing.html).
   Windows: winget install --id JohnMacFarlane.Pandoc
@@ -15,7 +14,6 @@ Ha az mmdc / node nincs elérhető, a blokkok kódként maradnak + figyelmeztet�
 
 Usage:
     python scripts/11-2_pandoc_export.py --week-dir <path/to/N_het>
-    python scripts/11-2_pandoc_export.py --week-dir <path> --bsc   # a _bsc verziót
     python scripts/11-2_pandoc_export.py --week-dir <path> --no-template
 """
 
@@ -168,8 +166,6 @@ def main():
     parser = argparse.ArgumentParser(description="Camera-ready DOCX export Pandoc-kal")
     parser.add_argument("--week-dir", required=True, type=Path)
     parser.add_argument("--week", default=None, type=int)
-    parser.add_argument("--bsc", action="store_true",
-                        help="A 5_clean_outputs/N_Jegyzet_bsc.md-t konvertálja")
     parser.add_argument("--no-template", action="store_true",
                         help="Reference template nélkül (Pandoc alapstílus)")
     parser.add_argument("--no-toc", action="store_true",
@@ -194,22 +190,18 @@ def main():
     week = resolve_week(week_dir, args.week)
 
     # 2. Input Markdown
-    if args.bsc:
-        src = week_dir / "5_clean_outputs" / f"{week}_Jegyzet_bsc.md"
-    else:
-        src = week_dir / "4_wip_outputs" / f"{week}_Jegyzet.md"
+    src = week_dir / "4_wip_outputs" / f"{week}_Jegyzet.md"
     if not src.exists():
         sys.exit(f"[HIBA] nem található: {src}")
 
     # 3. Output
-    clean_dir = week_dir / "5_clean_outputs"
+    clean_dir = week_dir / "6_clean_outputs"
     clean_dir.mkdir(parents=True, exist_ok=True)
-    suffix = "_bsc" if args.bsc else ""
-    out = clean_dir / f"{week}_Jegyzet{suffix}.docx"
+    out = clean_dir / f"{week}_Jegyzet.docx"
 
     # 4. Mermaid pre-render (→ módosított szöveg átmeneti fájlba)
     text = src.read_bytes().decode("utf-8-sig").replace("\r\n", "\n")
-    tmp_md = src.parent / f"_tmp_docx_{week}{suffix}.md"
+    tmp_md = src.parent / f"_tmp_docx_{week}.md"
     mermaid_pngs: list[Path] = []
 
     if not args.no_mermaid and _RE_MERMAID.search(text):
@@ -255,17 +247,16 @@ def main():
     print(f"OK: {out} ({size_kb} KB)")
 
     if args.pdf:
-        _generate_pdf(pandoc, src, clean_dir, week, args.bsc)
+        _generate_pdf(pandoc, src, clean_dir, week)
 
 
-def _generate_pdf(pandoc: str, src: Path, clean_dir: Path, week: int, bsc: bool):
+def _generate_pdf(pandoc: str, src: Path, clean_dir: Path, week: int):
     """Generate PDF via xelatex. Runs pandoc from src.parent for relative image paths."""
-    suffix = "_bsc" if bsc else ""
-    out_pdf = clean_dir / f"{week}_Jegyzet{suffix}.pdf"
+    out_pdf = clean_dir / f"{week}_Jegyzet.pdf"
 
     text = src.read_text(encoding="utf-8")
     text_clean = re.sub(r'[\U0001F000-\U0001FFFF\U00002600-\U000027BF️]', '', text)
-    tmp = src.parent / f"_pdf_tmp_{src.name}"
+    tmp = src.parent / f"_pdf_tmp_{week}_Jegyzet.md"
     tmp.write_text(text_clean, encoding="utf-8")
 
     cmd = [pandoc, str(tmp.name), "-o", str(out_pdf.resolve()),

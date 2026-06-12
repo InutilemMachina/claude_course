@@ -47,7 +47,7 @@ description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 | `4_wip_outputs/N_Jegyzet.md` | 🐍+🤖 | [`08_quality_reviewer`](skills/08_quality_reviewer.md) — `08_quality_check.py` | 🐍+🤖 🚦😎 | `4_wip_outputs/N_Review.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`09_question_bank`](skills/09_question_bank.md) — mindmap-alapú MCQ | 🤖 | `4_wip_outputs/N_Kerdesbank.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`10_presentation_maker`](skills/10_presentation_maker.md) — tartalmi Mermaid→PNG (`10-1_mermaid_render.py`) + navigáció-injektálás (`10-2_nav_inject.py`) + `.potx`-natív PPTX (`10_pptx_gyarto.py --variant`). Két variáns: **default** (fejléc-breadcrumb) / **mindmap** (oldalsáv-TOC), közös navigációs modellből (`_nav_util.py`); a PPTX a `.potx` mesterekből (Garamond cím + Aptos body) készül, valódi táblákkal és LaTeX→PNG képletekkel | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` (+ `_default`/`_mindmap`) + `5_clean_outputs/N_Prezentacio.pptx` (+ `_mindmap`) |
-| `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`11_bsc_export`](skills/11_bsc_export.md) — `11-1_bsc_filter.py` + pandoc (`11-2`) | 🐍 | `5_clean_outputs/N_Jegyzet[_bsc].docx` |
+| `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`11_docx_export`](skills/11_docx_export.md) — pandoc (`11-2`) | 🐍 | `6_clean_outputs/N_Jegyzet.docx` |
 | `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`12_youtube_finder`](skills/12_youtube_finder.md) — videó-csatolmányok 🔲 *tervezett* | 🤖+😎 | videó-katalógus + csatolmány-jelölés |
 | `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`13_jupyter_catalogizer`](skills/13_jupyter_catalogizer.md) — notebook-csatolmányok 🔲 *tervezett* | 🤖+😎 | notebook-katalógus + csatolmány-jelölés |
 
@@ -74,7 +74,7 @@ flowchart TD
     subgraph UNDERSTAND["③ Megértés — sarokkő"]
         direction TB
         U1["03 mindmap_builder<br>🤖<br>források olvasása<br>→ mindmap draft"]
-        U2{"😎 Checkpoint<br>Revízió + MSc jelölés<br>→ 3_mindmap/mindmap.md"}
+        U2{"😎 Checkpoint<br>Revízió: szkóp+mélység<br>→ 3_mindmap/mindmap.md"}
         U1 --> U2
     end
 
@@ -98,7 +98,7 @@ flowchart TD
         direction TB
         O1["09 question_bank<br>🤖<br>Moodle MCQ (A–D)"]
         O2["10 presentation_maker<br>🤖 + 🐍<br>PPTX — 2 variáns<br>default / mindmap"]
-        O3["11 bsc_export<br>🐍<br>11-1_bsc_filter<br>→ 5_clean_outputs/ .docx"]
+        O3["11 docx_export<br>🐍<br>pandoc<br>→ 6_clean_outputs/ .docx"]
         O4["12 youtube_finder<br>🤖 + 😎<br>videó-csatolmányok<br>🔲 tervezett"]
         O5["13 jupyter_catalogizer<br>🤖 + 😎<br>notebook-csatolmányok<br>🔲 tervezett"]
     end
@@ -109,11 +109,10 @@ flowchart TD
 ```
 
 ## 3. Checkpointok
-TODO az MSc demarkációt teljesen feleslegesnek tartom. de a mindmap az egyik legfontosabb alapkő, amit mindenképp át kell nézni. És innen kéne egy visszacsatolás, hogy hol milyen új forrásokkal tudnánk erősíteni a tananyagot. VISZONT ez legtöbbször csak az első wip jegyzet létrejöttekor látható igazán. Ez komoly tervezési kérdés.
 
 | Checkpoint | Feltétel | Következő lépés |
 |:-----------|:---------|:----------------|
-| 03 után 🚦 | Mindmap revideálva, [MSc] jelölés kész, struktúra jóváhagyva | 04 content_synthesizer |
+| 03 után 🚦 | Mindmap revideálva, szkóp+mélység metszés kész, struktúra jóváhagyva | 04 content_synthesizer |
 | 08 után 🚦 | Publikálhatóság ≥ 3/5, N_Review.md jóváhagyva | 09 + 10 + 11 (opc. 12, 13) párhuzamosan |
 
 A 08-checkpointon a 😎 a PUBLIKÁLHATÓ döntés ellenére is kérhet **célzott revíziót** (a Review
@@ -155,8 +154,6 @@ TODO: ez itt inkább egy human-in-the-loop és Agent architektúra, csak nem vil
 TODO: Tulajdonképpen minden lépés után meg kell néznem az eredményeket.
 
 TODO: 12 és 13 szinte biztos nem automatikusak. Gyakorlatilag nekem kell kijelölni, hogy mihez keress videókat és mihez gyárts notebook-ok.
-
-TODO: A Bsc filter ki fog esni, mert az MSc jelölésektől megválunk: A user a mindmap-et szerkeszti és eldönti, hogy túl erős-e egy-egy rész.
 
 TODO: Erősen kételkedem, hogy itt lesznek párhuzamos lépések. 
 

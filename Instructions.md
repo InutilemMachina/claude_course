@@ -2,8 +2,8 @@
 title: Instructions
 type: project_constitution
 tags: [meta]
-version: 1.2
-updated: 2026-06-03
+version: 1.3
+updated: 2026-06-12
 description: Projekt-szintű elvek, jelölések és dokumentációs szabványok.
 ---
 
@@ -123,6 +123,20 @@ claude_course/
         ├── 5_asset_outputs/   # 12/13 gazdagítás: videó/notebook regiszter + overlay
         └── 6_clean_outputs/   # camera-ready: a véglegesített wip tiszta konverziója
 ```
+
+### 6.1. Camera-ready elv (kötelező)
+
+A **tartalom egyetlen kanonikus helye a `4_wip_outputs/`** (a wip jegyzet/prezi/kérdésbank). A
+`6_clean_outputs/` a véglegesített wip **tiszta, determinisztikus konverziója** — sablon-alkalmazás
+és formátum-váltás (DOCX/PPTX/XML), **semmi tartalmi szerkesztés**.
+
+- A `6_clean_outputs/` bármikor **újragenerálható** a wip-ből (`10_pptx_gyarto.py`,
+  `11-2_pandoc_export.py`, `09b_moodle_export.py`) — soha ne szerkeszd kézzel.
+- A 08-gate (publikálhatóság) **előtt** minden tartalmi munka a wip-ben történik; a konverzió csak utána.
+- A gazdagítás (12/13) sem patcheli a clean fájlokat: a wip kap egy stabil `<!-- ENRICH: <id> -->`
+  horgonyt, a tartalom az `5_asset_outputs/`-regiszterben él, és a `6_clean` ezekből **újrakonvertál**
+  (lásd [pipeline §0](.claude/pipeline.md), 12/13 §3.2).
+- **Őszinteség:** ha egy clean output nem áll elő a wip-ből a scripttel, az hibajelzés — nem kézi javítás.
 
 ## 7. Vizuális gazdagítás — kötelező szabály
 

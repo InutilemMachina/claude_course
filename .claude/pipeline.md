@@ -158,6 +158,8 @@ A kötelező vizuális rétegek és a diagram-típus döntési fa **kanonikus he
 ## 5. Mappastruktúra
 
 → Kanonikus: [Instructions.md §6](../Instructions.md) (`1_raw_inputs` … `5_asset_outputs`, `6_clean_outputs`).
+A **camera-ready elv** ([Instructions §6.1](../Instructions.md)): a tartalom egyetlen helye a wip; a
+`6_clean_outputs/` a véglegesített wip tiszta, determinisztikus konverziója — sosem szerkesztjük kézzel.
 
 ## 6. Citáció-rendszer
 

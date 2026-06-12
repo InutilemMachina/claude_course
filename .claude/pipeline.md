@@ -2,7 +2,7 @@
 title: Pipeline.md — claude_course
 type: meta
 status: active
-version: 2.0
+version: 2.1
 updated: 2026-06-12
 description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 ---
@@ -77,7 +77,7 @@ csak stabil horgonyt kap), a `6_clean_outputs` ebből + a wip-ből **újrakonver
 | `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`07_typesetter`](skills/07_typesetter.md) — Claude terminológia-pass + `07-2_heading_numberer.py` + `07-3_figure_numberer.py` | 🤖+🐍 | `4_wip_outputs/N_Jegyzet.md` (egységesítés + fejezet/ábra-számozás) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍+🤖 | [`08_quality_reviewer`](skills/08_quality_reviewer.md) — `08_quality_check.py` | 🐍+🤖 🚦😎 | `4_wip_outputs/N_Review.md` |
 | `4_wip_outputs/N_Jegyzet.md` | 🤖 | [`09_question_bank`](skills/09_question_bank.md) — mindmap-alapú MCQ | 🤖 | `4_wip_outputs/N_Kerdesbank.md` |
-| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`10_presentation_maker`](skills/10_presentation_maker.md) — tartalmi Mermaid→PNG (`10-1_mermaid_render.py`) + navigáció-injektálás (`10-2_nav_inject.py`) + `.potx`-natív PPTX (`10_pptx_gyarto.py --variant`). Két variáns: **default** (fejléc-breadcrumb) / **mindmap** (oldalsáv-TOC), közös navigációs modellből (`_nav_util.py`); a PPTX a `.potx` mesterekből (Garamond cím + Aptos body) készül, valódi táblákkal és LaTeX→PNG képletekkel | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` (+ `_default`/`_mindmap`) + `6_clean_outputs/N_Prezentacio.pptx` (+ `_mindmap`) |
+| `4_wip_outputs/N_Jegyzet.md` | 🤖+🐍 | [`10_presentation_maker`](skills/10_presentation_maker.md) — tartalmi Mermaid→PNG (`10-1_mermaid_render.py`) + navigáció-injektálás (`10-2_nav_inject.py`) + `.potx`-natív PPTX (`10_pptx_gyarto.py --variant`). Két variáns: **default** (fejléc-breadcrumb) / **mindmap** (oldalsáv-TOC), közös navigációs modellből (`_nav_util.py`); a PPTX a `.potx` mesterekből (Garamond cím + Aptos body) készül, valódi táblákkal és **natív OMML-egyenletekkel** (Cambria Math, `_omml.py` — nem kép) | 🤖+🐍 | `4_wip_outputs/N_Prezentacio.md` (+ `_default`/`_mindmap`) + `6_clean_outputs/N_Prezentacio.pptx` (+ `_mindmap`) |
 | `4_wip_outputs/N_Jegyzet.md` | 🐍 | [`11_docx_export`](skills/11_docx_export.md) — pandoc (`11-2`) | 🐍 | `6_clean_outputs/N_Jegyzet.docx` |
 | `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`12_youtube_finder`](skills/12_youtube_finder.md) — videó-overlay (😎-kijelölt) | 🤖+😎 | `5_asset_outputs/enrichment_register.md` (📎▶) + `<!-- ENRICH: v* -->` horgony |
 | `4_wip_outputs/N_Jegyzet.md` (+ `N_Prezentacio.md`) | 🤖+😎 | [`13_jupyter_catalogizer`](skills/13_jupyter_catalogizer.md) — notebook-overlay (😎-kijelölt) | 🤖+😎 | `5_asset_outputs/enrichment_register.md` (📎🧪) + `<!-- ENRICH: nb* -->` horgony |
@@ -123,7 +123,7 @@ flowchart TD
         Q1 --> Q2 --> Q3
     end
 
-    subgraph OUTPUT["⑥ Kimenetek — párhuzamosan"]
+    subgraph OUTPUT["⑥ Kimenetek — a gate után, egymástól függetlenül"]
         direction TB
         O1["09 question_bank<br>🤖<br>Moodle MCQ (A–D)"]
         O2["10 presentation_maker<br>🤖 + 🐍<br>PPTX — 2 variáns<br>default / mindmap"]
@@ -142,7 +142,7 @@ flowchart TD
 | Checkpoint | Feltétel | Következő lépés |
 |:-----------|:---------|:----------------|
 | 03 után 🚦 | Mindmap revideálva, szkóp+mélység metszés kész, struktúra jóváhagyva | 04 content_synthesizer |
-| 08 után 🚦 | Publikálhatóság ≥ 3/5, N_Review.md jóváhagyva | 09 + 10 + 11 (opc. 12, 13) párhuzamosan |
+| 08 után 🚦 | Publikálhatóság ≥ 3/5, N_Review.md jóváhagyva | 09 + 10 + 11 egymástól függetlenül (opc. 12, 13 overlay) |
 
 A 08-checkpointon a 😎 a PUBLIKÁLHATÓ döntés ellenére is kérhet **célzott revíziót** (a Review
 `## 6` csatornáján, [08 §3.5](skills/08_quality_reviewer.md)). Forrás-stratégia szerinti routing:
@@ -152,8 +152,9 @@ A 08-checkpointon a 😎 a PUBLIKÁLHATÓ döntés ellenére is kérhet **célzo
 
 A kötelező vizuális rétegek és a diagram-típus döntési fa **kanonikus helye**:
 [Instructions.md §7](../Instructions.md). A pipeline-ban ezt a `04`, `05` (ábrák a
-`figure_catalog.json`-ból) és `06` lépések valósítják meg (06: `💡 Összegzés` per `##`,
-`🗺️ Fejezet összegfoglalása` per `#` — formátum: [06 §3](skills/06_summarize_box_injector.md)).
+`figure_catalog.json`-ból) és `06` lépések valósítják meg (06: `💡 Összegzés` per `###` szakasz,
+`🗺️ Fejezet összegfoglalása` per `##` fejezet — heading-hierarchia: [Instructions §7](../Instructions.md);
+formátum: [06 §3](skills/06_summarize_box_injector.md)).
 
 ## 5. Mappastruktúra
 
@@ -200,3 +201,4 @@ a sorrendet és a gate-eket rögzíti.
 | 2026-06-05 | 1.5 | **image_rag_OCR sprint**: 02c_mineru_layout opcionális lépés (MinerU layout/formula/képpárosítás) `02 → 02c → 02b` chain-ben. 02b_figure_enricher v1.1: backend-preferencia chain (MinerU > PyMuPDF4LLM > Tesseract > Claude Read). Komparatív kutatás: [.claude/sprints/image_rag/ocr_lab/decision.md](sprints/image_rag/ocr_lab/decision.md). |
 | 2026-06-05 | 1.6 | **MinerU-first pipeline**: `02_mineru_to_catalog.py` a standard 02 lépés (caption+text_context+keywords draft gépileg auto-kitöltve MinerU _content_list.json-ból); `02_image_extraction.py` fallback marad. `02b_figure_enricher` csak `visual_content` + keywords finomítás = Claude-only minimális munka. Sprint: [ocr_lab/decision.md](sprints/image_rag/ocr_lab/decision.md). |
 | 2026-06-12 | 2.0 | **„Egyetlen igazság" átfésülés (P2.8, 17. döntés):** §0 amatőr-áttekintés + HITL-szereptábla az elejére; §7 „Agent architektúra" → őszinte human-in-the-loop modell (nincs „background agent"); §2 IO-tábla 02-duplikáció összevonva (MinerU-only) + 10 kimenet `6_clean`; §4/§5/§6 redundancia → kanonikus pointerek (Instructions §6/§7/§8); minden inline TODO megválaszolva/törölve; 12/13 „tervezett" → 😎-overlay; changelog sorrend növekvőre; verzió 1.6 → 2.0. |
+| 2026-06-12 | 2.1 | **Aktualizálás a P2/B-14 után:** §4 heading-modell `💡` per `###` szakasz / `🗺️` per `##` fejezet (B-14); §2 IO 10-es lépés „LaTeX→PNG" → **natív OMML** (a `_latex_png.py` törlése után); a „párhuzamosan" szóhasználat „egymástól függetlenül"-re (§2.1 gráf + §3) a §7 őszinte modelljéhez igazítva. |

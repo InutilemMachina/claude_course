@@ -3,22 +3,23 @@ name: 07_typesetter
 title: 07_TYPESETTER — Lint és tipográfiai normalizálás
 type: skill
 tags: [meta, skill]
-role: 🐍
+role: 🤖+🐍
 status: active
-version: 1.4
-updated: 2026-06-11
-description: Tipográfiai szabályok alkalmazása, fejezet- és ábra/táblázatfelirat-számozás a WIP jegyzeten (07-1 lint + 07-2 heading + 07-3 figure numberer).
+version: 2.0
+updated: 2026-06-12
+description: Tipográfiai/terminológiai egységesítés (🤖, subject_status §5 alapján) + determinisztikus fejezet- és ábra/táblázatfelirat-számozás (🐍: 07-2 heading + 07-3 figure numberer) a WIP jegyzeten.
 ---
 
 # 07_TYPESETTER
 
 ## 1. Cél
 
-A `4_wip_outputs/N_Jegyzet.md` tipográfiáját normalizálja: dash cleanup, LaTeX párosítás,
-terminológia-egységesítés, tábla szeparátor javítás, majd automatikus fejezetszámozás.
+A `4_wip_outputs/N_Jegyzet.md` tipográfiáját és terminológiáját egységesíti (Claude, a
+`subject_status.md §5` alapján), majd determinisztikusan számozza a fejezeteket és az
+ábra/táblázat-feliratokat (07-2 + 07-3 script).
 
 **Input:** `4_wip_outputs/N_Jegyzet.md`
-**Output:** `4_wip_outputs/N_Jegyzet.md` (normalizálva, in-place)
+**Output:** `4_wip_outputs/N_Jegyzet.md` (normalizálva + számozva, in-place)
 
 ## 2. Bemenetek
 
@@ -30,22 +31,22 @@ terminológia-egységesítés, tábla szeparátor javítás, majd automatikus fe
 
 ## 3. Eljárás
 
-### 3.1. Tipográfiai normalizáló
+### 3.1. Tipográfiai/terminológiai egységesítés 🤖
 
-```powershell
-python scripts/07-1_typesetter.py --week-dir test_outputs/<tárgy>/N_het
-```
-
-**Alkalmazott szabályok:**
+Claude beolvassa a `4_wip_outputs/N_Jegyzet.md`-t és a `subject_status.md §5` terminológia-listát,
+majd **célzottan** egységesít. **Nincs vakon futó regex-script** (a korábbi `07-1_typesetter.py`
+NLM-artefakt-linter volt, tárgyra hardkódolt terminológiával — törölve, P2.4):
 
 | Szabály | Minta | Javítás |
 |:--------|:------|:--------|
-| Dash cleanup | `--`, `—` (rossz kontextus) | `–` (en-dash) vagy `—` (em-dash) egységesen |
-| LaTeX párosítás | páratlan `$` jelek | párosítás ellenőrzése, hibás sorok flagelése |
-| Terminológia | `digitális jel feldolgozás` | `digitális jelfeldolgozás` (subject_status.md §5 terminológia) |
-| Tábla szeparátor | `|---|` `|:--|` vegyes | `|:---|` egységes bal-igazítás |
-| Whitespace | trailing space, dupla üres sor | törlés |
+| Terminológia | `subject_status §5` szinonima-párok | a kanonikus alakra egységesítve (kontextus-érzékenyen) |
+| LaTeX párosítás | páratlan `$` jelek | párosítás ellenőrzése, hibás sorok jelzése |
 | Idézőjel | `"szó"` | `„szó"` (magyar) |
+| Whitespace | trailing space, dupla üres sor | törlés |
+
+**Elv:** Claude csak azt írja át, amit a `subject_status §5` vagy a magyar tipográfia indokol; a
+LaTeX-blokkokat és kódblokkokat nem érinti. (A determinisztikus, biztonságos átalakítások —
+számozás — a 07-2/07-3 scriptek dolga.)
 
 ### 3.2. Fejezet-számozó
 
@@ -86,7 +87,7 @@ Claude vizuálisan átnézi a diff-et (git diff):
 ## 5. Teszt
 
 - **Fixture:** `test_outputs/atg/1_het` — `1_Jegyzet.md`.
-- **Akció:** `07-2_heading_numberer.py` + `07-3_figure_numberer.py` (a 07-1 lint Fázis 2-ben törlődik).
+- **Akció:** Claude terminológia-pass (§3.1) + `07-2_heading_numberer.py` + `07-3_figure_numberer.py`.
 - **Várt kimenet:** Számozott fejezetek (`1.`/`1.1.`), folytonos külön ábra/tábla-sorozat.
 - **Eval:** §6 ellenőrzőlista + `git diff` (nincs nem szándékos változás).
 
@@ -118,7 +119,7 @@ Claude vizuálisan átnézi a diff-et (git diff):
 <!-- Tesztelés során felmerülő megfigyelések, TODO-k, kérdések. -->
 - ✅ Rule H gyökérhiba javítva: korábban az en-dash tartományt (`1–35`→`1, 35`), a `---` HR-t (`, -`) és a GFM tábla-szeparátort is elrontotta. Mostantól csak ASCII `--`-t cserél vesszőre; `–`/`—`, HR- és tábla-sorok érintetlenek. (project_status B-11)
 - ✅ CLI doc-drift JAVÍTVA (2026-06-07): a §3.1/§3.2 most a tényleges `--week-dir` / pozicionális fájl-formát mutatja (korábban hibás `--week/--subject`).
-- ⚡ CRLF/sortörés gyökérhiba JAVÍTVA (2026-06-07): a `07-3` korábban `read_bytes().decode()` után `splitlines(keepends=True)`-zal megőrizte a `\r\n`-t, a `write_text` OS-fordítása pedig `\r\r\n`-t gyártott; egy következő univerzális-newline olvasás ezt `\n\n`-re tágította → **minden üres sor megduplázódott** (a jegyzet 616→1232 sor). **Szabály minden md-író scriptre:** olvasáskor normalizálj LF-re (`.replace("\r\n","\n").replace("\r","\n")`, mint a `07-1`), és ne írj újra már `\r\n`-t tartalmazó stringet OS-fordítással. (atg/1_het: helyreállítva a newline-futamok felezésével.)
+- ⚡ CRLF/sortörés gyökérhiba JAVÍTVA (2026-06-07): a `07-3` korábban `read_bytes().decode()` után `splitlines(keepends=True)`-zal megőrizte a `\r\n`-t, a `write_text` OS-fordítása pedig `\r\r\n`-t gyártott; egy következő univerzális-newline olvasás ezt `\n\n`-re tágította → **minden üres sor megduplázódott** (a jegyzet 616→1232 sor). **Szabály minden md-író scriptre:** olvasáskor normalizálj LF-re (`.replace("\r\n","\n").replace("\r","\n")`), és ne írj újra már `\r\n`-t tartalmazó stringet OS-fordítással. (atg/1_het: helyreállítva a newline-futamok felezésével.)
 - ✅ `07-2` Megoldókulcs-számozás JAVÍTVA (2026-06-07): a `## 🔑 Megoldókulcs` függeléket korábban `## 7.`-ként számozta, mert (a) `megoldokulcs` nem volt az `UNNUMBERED`-ben, és (b) a `_normalize` nem tűrte a vezető `🔑` emojit. Most az `UNNUMBERED` bővült (`megoldokulcs`, `fuggelek`), a `_normalize` pedig minden nem-alfanumerikus jelet (emoji is) eldob.
 
 ## 10. Változásjegyzék
@@ -130,3 +131,4 @@ Claude vizuálisan átnézi a diff-et (git diff):
 | 2026-06-06 | 1.2 | `07-1` Rule H gyökérjavítás: csak ASCII `--` kezelése; en/em-dash, HR és tábla-sorok védve (adatromlás megszüntetve) |
 | 2026-06-07 | 1.3 | Új **07-3_figure_numberer.py** (§3.3): ábra/táblázatfelirat folytonos újraszámozása beszúrás után. §3.1/§3.2 CLI doc-fix (`--week-dir`). `07-2` javítás: `🔑 Megoldókulcs`/`Függelék` számozatlan (emoji-tűrő `_normalize`). `07-3` CRLF-gyökérhiba javítva (olvasás-normalizálás). Frontmatter-verzió szinkronizálva. |
 | 2026-06-11 | 1.4 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |
+| 2026-06-12 | 2.0 | **07-1 törlés + NLM-irtás (P2.4, 6. döntés):** a `07-1_typesetter.py` (NLM-artefakt-linter, tárgyra hardkódolt `_TERM_MAP`) törölve; §3.1 a tipográfiai/terminológiai egységesítés Claude-feladat lett (`subject_status §5` alapján, kontextus-érzékenyen); marad 07-2 (heading) + 07-3 (figure) determinisztikus számozó; role 🐍 → 🤖+🐍. |

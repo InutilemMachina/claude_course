@@ -76,11 +76,11 @@ A `#` szintű fejezet utolsó `##` alfejezete (és annak `💡 Összegzés` blok
 > 2. [Akár több kérdés a fejezet kulcsfogalmaira / képleteire.]
 ```
 
-⚠️ **Formátum-szabály (07 typesetter Rule D kompatibilitás):** a blockquote-on belül **minden
+⚠️ **Formátum-szabály (blockquote-integritás):** a blockquote-on belül **minden
 tartalmi sort `>` üres sor válasszon el** — a számozott kérdéseket és a `🧱 Előfeltételek`
-bulletjeit is. Ha két `>` tartalmi sor `>` üres sor nélkül követi egymást, a 07-1_typesetter
-valódi (nem `>`-prefixű) üres sort szúr közéjük, ami a blokkot külön blockquote-okra darabolja.
-A folyó prózát (pl. `🔭 A Nagykép`) egyetlen `>` sorba írd, ne tördeld kézzel.
+bulletjeit is. Ha két `>` tartalmi sor `>` üres sor nélkül követi egymást, a renderelők egy része
+külön blockquote-okra darabolja a blokkot. A folyó prózát (pl. `🔭 A Nagykép`) egyetlen `>` sorba
+írd, ne tördeld kézzel.
 
 A **válasz itt nem jelenik meg.** A válaszok elkülönítve, a dokumentum végén (a
 `## Hivatkozásjegyzék` **elé**) gyűlnek össze egyetlen szekcióban, fejezetenként, a

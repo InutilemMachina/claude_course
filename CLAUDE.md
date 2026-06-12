@@ -28,7 +28,7 @@ Minden session elején ezt a két fájlt olvasd be:
 **Tantárgyon dolgozva** (ha a feladat egy konkrét `test_outputs/<tárgy>/` vagy `<tárgy>/` alá esik):
 
 3. Olvasd be a tárgy `subject_status.md` §2 tábláját, hogy lásd a heti pipeline állapotát — ebből veszed fel a fonalat.
-4. Minden pipeline-lépés futtatásakor frissítsd a tábla megfelelő `(lépés, hét)` celláját: belépéskor `⚙️`, sikeres befejezéskor `✅`. Checkpoint-lépésnél (🚦) a `✅` csak 😎 jóváhagyás után írható. Ez a szabály minden skillre kötelező, felülírja a skillek saját §3 eljárását, ha az nem említi.
+4. A tábla **mérföldkő-granularitású** (checkpoint, **nem lépésenként**): a `(mérföldkő, hét)` cellát a fázis elérésekor frissítsd — `⚙️` amikor a fázis elkezdődik, `✅` amikor lezárul. A két 🚦-gate (Elmetérkép/03, Publikálható/08) cellája `✅`-t **csak 😎-jóváhagyás után** kap. A köztes lépéseket nem kell cellánként vezetni; a részletes lépés-protokoll a skillek §3-ában van. Ez a szabály felülírja a skillek saját §3 tábla-frissítését.
 
 ## 3. Olvasási szabály
 

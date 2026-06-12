@@ -36,13 +36,16 @@ TEMPLATE = PROJECT_ROOT / "templates" / "subject_status_template.md"
 WEEK_SUBDIRS = ["1_raw_inputs", "2_clean_inputs", "3_mindmap",
                 "4_wip_outputs", "5_asset_outputs", "6_clean_outputs"]
 
-# A subject_status.md §2 táblájának sorai = pipeline-lépések (🚦 = checkpoint).
-PIPELINE_STEPS = [
-    "00 init", "01 source_collector", "02 image_extraction",
-    "03 mindmap_builder 🚦", "04 content_synthesizer", "05 figure_integrator",
-    "06 summarize_box_injector", "07 typesetter", "08 quality_reviewer 🚦",
-    "09 question_bank", "10 presentation_maker", "11 docx_export",
-    "12 youtube_finder", "13 jupyter_catalogizer",
+# A subject_status.md §2 táblájának sorai = MÉRFÖLDKÖVEK (checkpoint-granularitás,
+# nem lépésenként; 🚦 = gate). A részletes lépés-protokoll a skillek §3-ában.
+MILESTONES = [
+    "Setup (00–01)",
+    "Feldolgozás (02–02b)",
+    "Elmetérkép 🚦 (03)",
+    "WIP jegyzet (04–07)",
+    "Publikálható 🚦 (08)",
+    "Kimenetek (09–11)",
+    "Gazdagítás (12–13)",
 ]
 
 
@@ -57,12 +60,12 @@ def _pad(s: str, width: int) -> str:
 
 
 def render_status_table(weeks: int) -> str:
-    """Markdown státusz-tábla: sorok = pipeline-lépések, oszlopok = hetek.
+    """Markdown státusz-tábla: sorok = mérföldkövek, oszlopok = hetek.
     A `|` karakterek megjelenítési szélesség szerint igazítva, hogy az
     emoji-soroknál is egybeessenek a fejléccel."""
-    head = "Lépések (↓) / Hetek (→)"
+    head = "Mérföldkő (↓) / Hetek (→)"
     week_nums = [str(w) for w in range(1, weeks + 1)]
-    w0 = max(_dwidth(head), _dwidth("*Téma*"), max(_dwidth(s) for s in PIPELINE_STEPS))
+    w0 = max(_dwidth(head), _dwidth("*Téma*"), max(_dwidth(s) for s in MILESTONES))
     wk = max(2, _dwidth("❌"), max((_dwidth(n) for n in week_nums), default=2))
 
     def row(label, cells):
@@ -70,7 +73,7 @@ def render_status_table(weeks: int) -> str:
 
     sep = "| " + " | ".join([":" + "-" * (w0 - 1)] + [":" + "-" * (wk - 1) for _ in week_nums]) + " |"
     lines = [row(head, week_nums), sep, row("*Téma*", ["" for _ in week_nums])]
-    lines += [row(step, ["❌" for _ in week_nums]) for step in PIPELINE_STEPS]
+    lines += [row(step, ["❌" for _ in week_nums]) for step in MILESTONES]
     return "\n".join(lines)
 
 

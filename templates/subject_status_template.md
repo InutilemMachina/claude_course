@@ -48,20 +48,16 @@ A projekt-szintű `project_status.md` tantárgy-szintű megfelelője.
 
 ## Mintatáblázat — így néz ki kitöltve (példa, 3 hét)
 
-| Lépések (↓) / Hetek (→) | 1           | 2           | 3           |
-| :---------------------- | :---------- | :---------- | :---------- |
-| *Téma*                  | Surge       | Stall       | Aktív szab. |
-| 00 init                    | ✅          | ✅          | ✅          |
-| 01 source_collector        | ✅          | ✅          | ⚙️          |
-| 02 image_extraction        | ✅          | ✅          | ❌          |
-| 03 mindmap_builder 🚦      | ✅          | ✅          | ❌          |
-| 04 content_synthesizer     | ✅          | ✅          | ❌          |
-| 05 figure_integrator       | ✅          | ⚙️          | ❌          |
-| 06 summarize_box_injector  | ✅          | ❌          | ❌          |
-| 07 typesetter              | ✅          | ❌          | ❌          |
-| 08 quality_reviewer 🚦     | ✅          | ❌          | ❌          |
-| 09 question_bank           | ✅          | ❌          | ❌          |
-| 10 presentation_maker      | ✅          | ❌          | ❌          |
-| 11 docx_export             | ✅          | ❌          | ❌          |
-| 12 youtube_finder          | ❌          | ❌          | ❌          |
-| 13 jupyter_catalogizer     | ❌          | ❌          | ❌          |
+A tábla **mérföldkő-granularitású** (checkpoint, nem lépésenként): a cellát a fázis elérésekor
+frissítjük, a két 🚦-gate `✅`-ját csak 😎-jóváhagyás után (lásd CLAUDE.md §2).
+
+| Mérföldkő (↓) / Hetek (→) | 1     | 2     | 3           |
+| :------------------------ | :---- | :---- | :---------- |
+| *Téma*                    | Surge | Stall | Aktív szab. |
+| Setup (00–01)             | ✅    | ✅    | ⚙️          |
+| Feldolgozás (02–02b)      | ✅    | ✅    | ❌          |
+| Elmetérkép 🚦 (03)        | ✅    | ✅    | ❌          |
+| WIP jegyzet (04–07)       | ✅    | ⚙️    | ❌          |
+| Publikálható 🚦 (08)      | ✅    | ❌    | ❌          |
+| Kimenetek (09–11)         | ✅    | ❌    | ❌          |
+| Gazdagítás (12–13)        | ❌    | ❌    | ❌          |

@@ -31,6 +31,11 @@ try:
 except ImportError:
     from scripts._citations_util import resolve_week  # type: ignore
 
+try:
+    import _enrich_util as _eu
+except ImportError:
+    from scripts import _enrich_util as _eu  # type: ignore
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -174,6 +179,9 @@ def main():
                         help="Mermaid-renderelés kihagyása (blokkok kódként maradnak)")
     parser.add_argument("--pdf", action="store_true",
                         help="PDF exportálás is (xelatex, 6_clean_outputs/-ba)")
+    parser.add_argument("--enrich", action="store_true",
+                        help="A `<!-- ENRICH: id -->` horgonyokat feloldja a "
+                             "5_asset_outputs/enrichment_register.md-ből + `## Verziójegyzék` (12/13)")
     args = parser.parse_args()
 
     week_dir = args.week_dir.resolve()
@@ -201,6 +209,18 @@ def main():
 
     # 4. Mermaid pre-render (→ módosított szöveg átmeneti fájlba)
     text = src.read_bytes().decode("utf-8-sig").replace("\r\n", "\n")
+
+    # 4a. Gazdagítás-overlay feloldása (12/13) — opcionális
+    if args.enrich:
+        reg_path = week_dir / "5_asset_outputs" / "enrichment_register.md"
+        rows = _eu.parse_register(reg_path)
+        text, resolved, unresolved = _eu.resolve_anchors(text, rows)
+        if resolved:
+            print(f"  Enrich: {len(resolved)} horgony feloldva ({', '.join(resolved)})")
+        if unresolved:
+            print(f"  WARN  feloldatlan ENRICH horgony (nem ✅?): {', '.join(unresolved)}")
+        text = text.rstrip() + "\n\n" + _eu.render_version_log(rows)
+
     tmp_md = src.parent / f"_tmp_docx_{week}.md"
     mermaid_pngs: list[Path] = []
 

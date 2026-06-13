@@ -2,8 +2,8 @@
 title: Instructions
 type: project_constitution
 tags: [meta]
-version: 1.4
-updated: 2026-06-12
+version: 1.5
+updated: 2026-06-13
 description: Projekt-szintű elvek, jelölések és dokumentációs szabványok.
 ---
 
@@ -137,6 +137,19 @@ A **tartalom egyetlen kanonikus helye a `4_wip_outputs/`** (a wip jegyzet/prezi/
   horgonyt, a tartalom az `5_asset_outputs/`-regiszterben él, és a `6_clean` ezekből **újrakonvertál**
   (lásd [pipeline §0](.claude/pipeline.md), 12/13 §3.2).
 - **Őszinteség:** ha egy clean output nem áll elő a wip-ből a scripttel, az hibajelzés — nem kézi javítás.
+
+### 6.2. Termék-verziózás + archív (gazdagítási kör)
+
+A 12/13 gazdagítás **időben bővül** (negyedéves körök) — a kész termékek ezért **verziózottak**:
+
+- **`product_version`** (MAJOR.MINOR) a wip frontmatterben. **v1.0** = első kiadás (08-gate után);
+  minden **gazdagítási kör** → MINOR bump (v1.1…); a wip **tartalmi** revíziója → MAJOR (v2.0).
+- A `6_clean_outputs/{N}_…` **mindig a legfrissebb** (kanonikus, verzió nélküli név). A leváltott
+  verziók **fizikailag megmaradnak**: `6_clean_outputs/archive/{N}_…_v{előző}.{ext}`.
+- A gazdagítás **post-publikációs overlay**: egy `<!-- ENRICH: id -->` horgony hozzáadása a
+  véglegesített wip-hez **nem nyitja újra a 08-gate-et** (nem tartalom), csak MINOR verziót emel.
+- A kört a **`scripts/_republish.py`** futtatja (bump + regiszter-stamp + archív + `--enrich`
+  újra-export); a 😎 lépés-utasítása: [subject_working_method.md](subject_working_method.md) „Gazdagítási kör".
 
 ## 7. Vizuális gazdagítás — kötelező szabály
 

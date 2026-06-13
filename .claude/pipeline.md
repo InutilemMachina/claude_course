@@ -2,8 +2,8 @@
 title: Pipeline.md — claude_course
 type: meta
 status: active
-version: 3.0
-updated: 2026-06-12
+version: 3.1
+updated: 2026-06-13
 description: Claude-natív tananyagfejlesztési pipeline, NotebookLM mentesen.
 ---
 
@@ -170,7 +170,7 @@ flowchart TD
       O12["12 youtube 😎+🤖"]
       O13["13 jupyter 😎+🤖"]
     end
-    ENR -.->|"regiszter + ENRICH-horgony<br>újrakonverzió: ⏳ B-26 (ma kézi)"| CONV
+    ENR -.->|"regiszter + ENRICH-horgony<br>újrakonverzió: 🐍✅ _republish.py (bump+archív+--enrich)"| CONV
 ```
 
 **Spot-check** (😎 ránéz, **nem** gate): 02/02b, 04, 05, 06, 07 — a folyam nem áll meg, csak a 2 🚦-gate-nél (03, 08).
@@ -188,10 +188,10 @@ flowchart TD
 | 5_asset overlay+regiszter modell | ✅ | P2.6 |
 | heading-hierarchia / 06 szintek | ✅ | B-14 |
 | **09b Moodle** | ⏳ `planned` | a CÉL maga is így tervezte (10. döntés) |
-| **register-aware újrakonverzió** | ⏳ B-26 | a CÉL a modellt kérte, az auto-konverziót nem |
+| register-aware újrakonverzió + verziózás | ✅ | B-26 megépítve: `_republish.py` + `--enrich` |
 
-→ **A VALÓS lefedi a CÉL-t.** A két `⏳` nem rés, hanem a CÉL által szándékosan későbbre tett tétel
-(09b planned, B-26 backlog) — a tervezett scope teljesült.
+→ **A VALÓS lefedi a CÉL-t.** Az egyetlen maradék `⏳` a 09b (Moodle-script, a CÉL maga is `planned`-nek
+tervezte). A gazdagítási újra-export (B-26) időközben megépült (`_republish.py`).
 
 ## 3. Checkpointok
 
@@ -259,3 +259,4 @@ a sorrendet és a gate-eket rögzíti.
 | 2026-06-12 | 2.0 | **„Egyetlen igazság" átfésülés (P2.8, 17. döntés):** §0 amatőr-áttekintés + HITL-szereptábla az elejére; §7 „Agent architektúra" → őszinte human-in-the-loop modell (nincs „background agent"); §2 IO-tábla 02-duplikáció összevonva (MinerU-only) + 10 kimenet `6_clean`; §4/§5/§6 redundancia → kanonikus pointerek (Instructions §6/§7/§8); minden inline TODO megválaszolva/törölve; 12/13 „tervezett" → 😎-overlay; changelog sorrend növekvőre; verzió 1.6 → 2.0. |
 | 2026-06-12 | 2.1 | **Aktualizálás a P2/B-14 után:** §4 heading-modell `💡` per `###` szakasz / `🗺️` per `##` fejezet (B-14); §2 IO 10-es lépés „LaTeX→PNG" → **natív OMML** (a `_latex_png.py` törlése után); a „párhuzamosan" szóhasználat „egymástól függetlenül"-re (§2.1 gráf + §3) a §7 őszinte modelljéhez igazítva. |
 | 2026-06-12 | 3.0 | **§2.1 EREDETI → CÉL → VALÓS:** az egyetlen idealizált gráf helyett három állapot-gráf (EREDETI naiv lineáris, CÉL = plan_3 célgráf, VALÓS = őszinte jelenlegi: `🐍✅`/`🤖`/`😎`/`⏳` jelöléssel, 2 STOP-gate, revízió-hurok, overlay-ág) + §2.1.d Lefedettség-tábla (a VALÓS lefedi a CÉL-t; 09b/B-26 szándékosan későbbi). §2 IO-tábla alá kompakt „VALÓS-státusz" (tényleges script-lét). §0 horgony frissítve. |
+| 2026-06-13 | 3.1 | **Gazdagítási életciklus (B-26 megépült):** a VALÓS-gráf overlay-ága + a §2.1.d lefedettség frissítve — a register-aware újrakonverzió `⏳ B-26` → `🐍✅ _republish.py` (bump + archív + `--enrich`). |

@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 😎+🤖
 status: active
-version: 2.0
-updated: 2026-06-12
+version: 2.1
+updated: 2026-06-13
 description: A publikálható jegyzet/prezentáció kijelölt koncepcióihoz Youtube videókat/shortsokat rendel kontextuális horgonnyal + „Nézd és elemezd" feladattal (Mayer CTML + retrieval), és csatolmányként regisztrálja; használd a 08_quality_reviewer PUBLIKÁLHATÓ döntése után, opcionális gazdagító lépésként. Didaktikai metaprompt előtöltve; regiszter-mechanika backlog.
 ---
 
@@ -83,18 +83,28 @@ A gazdagítás **overlay-réteg**, nem a kész fájlok patch-elése (Q-04 megold
 ```markdown
 # Gazdagítási regiszter — {tárgy} {N}. hét
 
-| id | típus | horgony (wip hely) | koncepció | link | meta | állapot |
-|----|-------|--------------------|-----------|------|------|---------|
-| v1 | 📎▶ | §2.3 (💡 Összegzés után) | tömegáram-fluktuáció | https://youtu.be/… | Keresés: `…`; Krit: … | ✅ |
+| id | típus | horgony (wip hely) | koncepció | link | meta | verzió | dátum | állapot |
+|----|-------|--------------------|-----------|------|------|--------|-------|---------|
+| v1 | 📎▶ | §2.3 | tömegáram-fluktuáció | https://youtu.be/… | Keresés: `…`; Krit: … | 1.1 | 2026-09-15 | ✅ |
 ```
 
-- `id`: stabil (`v1`, `v2`, … videóhoz; `nb1`, … notebookhoz — 13). Soha nem változik.
-- `állapot`: ⚙️ keresés alatt · ✅ jóváhagyott link · ❌ elvetve.
-- A `meta` a §3.1 blokk forrásmezőit hordozza (keresés/kritérium/„Nézd és elemezd").
+- `id`: stabil (`v1`, `v2`, … videóhoz; `nb1`, … notebookhoz — 13). **Soha nem változik** (a horgony
+  emiatt stabil; egy link-csere csak a `link` cellát írja át, az `id`-t nem).
+- `verzió` / `dátum`: melyik termék-kiadásban (és mikor) került be — a `_republish.py` tölti automatikusan.
+- `állapot`: ⚙️ keresés alatt · ✅ jóváhagyott link · ❌ elvetve. A `meta` a §3.1 blokk forrásmezőit hordozza.
 
-**Az automatizált horgony-feloldás** (a konverzióba kötve) a `6_clean` reconversion része —
-amíg az meg nem épül, a 😎 a regiszterből kézzel illeszti a blokkot. (Backlog: register-aware
-konverzió a `10_pptx_gyarto.py` / `11-2_pandoc_export.py`-ban → [project_status.md](../project_status.md).)
+### 3.3. Életciklus — verziózott újra-export (a `6_clean` reconversion)
+
+A gazdagítás **időben bővül** (negyedéves körök). Egy kör mechanizált, a 😎 lépés-utasítása a
+[subject_working_method.md „Gazdagítási kör"](../../subject_working_method.md) szekcióban. A gépi rész:
+
+- **Horgony-feloldás:** a `_enrich_util.resolve_anchors` a `<!-- ENRICH: <id> -->`-t a látható blokká
+  oldja (csak `✅` sorok); a `11-2_pandoc_export.py --enrich` és `10_pptx_gyarto.py --enrich` ezt hívja.
+- **Verziózás + archív:** a `scripts/_republish.py --week-dir <hét>` egy körben: bump (MINOR),
+  regiszter-stamp (új `✅` sorok `verzió`+`dátum`), a meglévő `6_clean` termék **archiválása**
+  (`6_clean_outputs/archive/{N}_…_v{előző}.…`), majd újra-export `--enrich`-csel.
+- **Verziójegyzék:** a DOCX végére a regiszterből generált `## Verziójegyzék` kerül
+  (pl. `v1.1 (2026-09-15): +2 📎▶ (§2.3, §3.1), +1 📎🧪 (§4.2)`).
 
 ## 4. Kimenetek
 
@@ -148,3 +158,4 @@ konverzió a `10_pptx_gyarto.py` / `11-2_pandoc_export.py`-ban → [project_stat
 | YYYY-MM-DD | 1.0 | Létrehozva |
 | 2026-06-11 | 1.2 | role-notáció standardizálva (😎+🤖). |
 | 2026-06-12 | 2.0 | **Véglegesítés (P2.6, 9. döntés):** §3.2 overlay+regiszter modell (`5_asset_outputs/enrichment_register.md` + stabil `<!-- ENRICH: <id> -->` horgony; 6_clean újrakonvertál, nem patchel — Q-04 megoldása); §4/§5/§6 placeholderek kitöltve; `status: planned → active`. A register-aware konverzió (10/11) backlog. |
+| 2026-06-13 | 2.1 | **Életciklus megépítve (B-26):** regiszter-séma +`verzió`/`dátum`; §3.3 verziózott újra-export (`_republish.py`: bump + stamp + fizikai archív + `--enrich`); `## Verziójegyzék` a DOCX-be. A kézi backlog megszűnt. |

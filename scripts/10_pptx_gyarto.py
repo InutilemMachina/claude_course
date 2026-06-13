@@ -40,6 +40,7 @@ except ImportError:
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _nav_util as nav  # noqa: E402
 import _omml  # noqa: E402  — natív OMML egyenletek (inline + block)
+import _enrich_util as _eu  # noqa: E402  — 12/13 ENRICH-horgony feloldás
 
 # ── Sablonok variánsonként ─────────────────────────────────────────────────────
 
@@ -627,6 +628,9 @@ def main():
                         help="mindmap.md útvonal (alap: <week>/3_mindmap/mindmap.md)")
     parser.add_argument("--output", default=None,
                         help="Kimeneti .pptx alap (elhagyható ha --week-dir megadva)")
+    parser.add_argument("--enrich", action="store_true",
+                        help="A `<!-- ENRICH: id -->` horgonyokat feloldja a "
+                             "5_asset_outputs/enrichment_register.md-ből (12/13)")
     args = parser.parse_args()
 
     if args.week_dir:
@@ -649,10 +653,28 @@ def main():
     if not md_path.exists():
         sys.exit(f"Nem található: {md_path}")
 
+    # Gazdagítás-overlay feloldása (12/13) — opcionális, temp md-be (relatív útvonalak miatt a wip-mappában)
+    _enrich_tmp = None
+    if args.enrich and args.week_dir:
+        reg_path = week_dir / "5_asset_outputs" / "enrichment_register.md"
+        rows = _eu.parse_register(reg_path)
+        md_text = md_path.read_bytes().decode("utf-8-sig").replace("\r\n", "\n")
+        md_text, resolved, unresolved = _eu.resolve_anchors(md_text, rows)
+        if resolved:
+            print(f"  Enrich: {len(resolved)} horgony feloldva ({', '.join(resolved)})")
+        if unresolved:
+            print(f"  WARN  feloldatlan ENRICH horgony (nem ✅?): {', '.join(unresolved)}")
+        _enrich_tmp = md_path.parent / f"_tmp_enrich_{md_path.name}"
+        _enrich_tmp.write_text(md_text, encoding="utf-8")
+        md_path = _enrich_tmp
+
     template = Path(args.template) if args.template else None
     variants = ["default", "mindmap"] if args.variant == "both" else [args.variant]
     for v in variants:
         run_one(md_path, out_base, template, mindmap_path, v)
+
+    if _enrich_tmp is not None:
+        _enrich_tmp.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":

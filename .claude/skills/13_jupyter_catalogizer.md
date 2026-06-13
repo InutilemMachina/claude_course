@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 😎+🤖
 status: active
-version: 2.0
-updated: 2026-06-12
+version: 2.1
+updated: 2026-06-13
 description: A publikálható jegyzet/prezentáció kijelölt ábráihoz/koncepcióihoz kész, animált Jupyter notebookokat rendel Predict–Observe–Explain (POE) struktúrával (nem programozást tanít), és csatolmányként regisztrálja; használd a 08_quality_reviewer PUBLIKÁLHATÓ döntése után, opcionális gazdagító lépésként. Didaktikai metaprompt előtöltve; regiszter-mechanika backlog.
 ---
 
@@ -77,7 +77,10 @@ Ugyanaz az overlay+regiszter mechanizmus, mint a [12_youtube_finder §3.2](12_yo
 - **A `meta` mező** a POE-blokk forrásmezőit hordozza (Jóslat / Állítható / Magyarázd meg).
 - A notebook-fájl a `5_asset_outputs/`-ban él (vagy külső link); a regiszter-sor `link` mezője mutat rá.
 
-A register-aware automatizált horgony-feloldás (10/11 konverzió) közös backlog a 12-vel.
+**Életciklus (verziózott újra-export):** közös a 12-vel — a `scripts/_republish.py` kezeli a
+negyedéves kört (bump + regiszter-stamp + fizikai archív + `--enrich` újra-export); a 😎 lépés-utasítása
+a [subject_working_method.md „Gazdagítási kör"](../../subject_working_method.md)-ben. Részletek:
+[12_youtube_finder §3.3](12_youtube_finder.md).
 
 ## 4. Kimenetek
 
@@ -130,3 +133,4 @@ A register-aware automatizált horgony-feloldás (10/11 konverzió) közös back
 | 2026-06-06 | 1.1 | §1 + §3.1 didaktikai metaprompt előtöltve (POE 3-cella: Predict–Observe–Explain, magyarázat-visszatartás, rugalmas horgony) — a Socratic Coding helyett, mert a projekt nem tanít programozást; §3.2 regiszter-mechanika backlogba. `status: planned` marad. |
 | YYYY-MM-DD | 1.0 | Létrehozva |
 | 2026-06-12 | 2.0 | **Véglegesítés (P2.6, 9. döntés):** §3.2 közös overlay+regiszter modell a 12-vel (`5_asset_outputs/enrichment_register.md`, `📎🧪`/`nb<id>`, stabil `<!-- ENRICH: nb<id> -->` horgony; Q-04 megoldása); §4/§5/§6 placeholderek kitöltve; `status: planned → active`. |
+| 2026-06-13 | 2.1 | **Életciklus megépítve (B-26):** §3.2 verziózott újra-export pointer (`_republish.py`, közös a 12-vel); a kézi backlog megszűnt. |

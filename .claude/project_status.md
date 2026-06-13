@@ -2,7 +2,7 @@
 title: Project Status — claude_course
 type: project_status
 tags: [meta]
-updated: 2026-06-12
+updated: 2026-06-13
 ---
 
 # Project Status — claude_course
@@ -115,7 +115,8 @@ Kész: meta-réteg (CLAUDE/Instructions/pipeline) + `00_init` + `01_source_colle
   - `templates/due_presentation_template_default.potx` — Prezentáció default variáns (10_presentation_maker)
   - `templates/due_presentation_template_mindmap.potx` — Prezentáció mindmap variáns (10_presentation_maker)
   Az új template-ek bevezetésekor a `10_pptx_gyarto.py --variant` és `11-2_pandoc_export.py` `find_template()` keresési logikáját is frissíteni kell.
-- 🔲 B-26: **Register-aware konverzió (12/13 overlay-feloldás).** A `6_clean_outputs` előállításakor a `10_pptx_gyarto.py` / `11-2_pandoc_export.py` oldja fel a wip `<!-- ENRICH: <id> -->` horgonyait a `5_asset_outputs/enrichment_register.md`-ből a látható `📎▶`/`📎🧪` blokká (Q-04 megoldás mechanizált fele). Addig a 😎 kézzel illeszt a regiszterből. Spec: 12/13 §3.2.
+- ✅ B-26: **Register-aware konverzió + gazdagítási életciklus** — **megépítve** (2026-06-13). `scripts/_enrich_util.py` (parse/resolve/version-log/stamp/bump) + `scripts/_republish.py` (negyedéves kör: bump + regiszter-stamp + fizikai archív + `--enrich` újra-export) + `11-2`/`10` `--enrich` flag. Termék-verziózás (`product_version` MAJOR.MINOR) + fizikai archív (`6_clean_outputs/archive/…_v{előző}`) + `## Verziójegyzék` a DOCX-ben. Spec: 12 §3.3, Instructions §6.2, subject_working_method §4. Teszt: _enrich_util unit + _republish --dry-run. — **kész**
+  - **Maradék finomítás (opc.):** a PPTX címdiájára verzió-jelölés (`v1.1`) — ma a `--enrich` csak a horgonyokat oldja fel a PPTX-ben, a verziójegyzék a DOCX-ben él. Új tétel ha kell.
 - 🔲 B-27: **Clean-output fejléc/lábléc.** A `6_clean_outputs/` DOCX/PPTX termékekhez egységes fejléc + lábléc (intézményi arculat) megtervezése — a DUE template-ek (B-23) bevezetésekor. (Instructions §13-ból áthozva, P2.13.)
 
 ## Nyitott kérdések (❔)

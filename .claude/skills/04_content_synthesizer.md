@@ -5,7 +5,7 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.9
+version: 1.10
 updated: 2026-06-11
 description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, a komplex levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
 ---
@@ -64,7 +64,7 @@ L3   → #### (opcionális, csak ha nagyon indokolt)
 > - **Fogalom1** — nulla-előtudás szintű definíció.
 >
 > - **Fogalom2** — … (annyi fogalom, amennyi a fejezet megértéséhez nélkülözhetetlen; nem fixen 3, nem kötelező)
-
+```
 [Bevezető mondat: mi ez, miért fontos — 1-2 mondat.]
 
 ### N.1 Alfejezet neve
@@ -85,6 +85,7 @@ flowchart LR / TD / sequenceDiagram
     [Diagram a szakasz fő összefüggéseiről]
 ```
 
+```markdown
 > 💡 **Összegzés — N. Alfejezet neve**
 >
 > **Kulcsgondolat:** [1 mondat]
@@ -154,6 +155,7 @@ subject: {tantárgy}
 week: N
 source_mindmap: ../3_mindmap/mindmap.md
 created: YYYY-MM-DD
+product_version: 1.0   # termék-kiadás; a gazdagítási kör (_republish) emeli (Instructions §6.2)
 ---
 
 # {Témacím}
@@ -281,3 +283,4 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 | 2026-06-11 | 1.7 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva (sablon-konform). |
 | 2026-06-11 | 1.8 | MSc-kivezetés: `<!-- MSc -->` mechanika + §3.8 MSc-tartalomkezelés eltávolítva; a worked-example elv megmarad (szint-semleges); Szint-mező + checklist/hibasor törölve. |
 | 2026-06-12 | 1.9 | Heading-hierarchia (P2.13, B-14): a `💡`/`🗺️` szint-hivatkozások a valós hierarchiához igazítva (`💡` per `###` szakasz, `🗺️` per `##` fejezet); Instructions §7 link. |
+| 2026-06-13 | 1.10 | §3.7 wip frontmatter: `product_version: 1.0` (a gazdagítási kör / `_republish` verziózásához, Instructions §6.2). |

@@ -42,6 +42,13 @@ import _nav_util as nav  # noqa: E402
 import _omml  # noqa: E402  — natív OMML egyenletek (inline + block)
 import _enrich_util as _eu  # noqa: E402  — 12/13 ENRICH-horgony feloldás
 
+# ── P0 csendes-fallback őrök: a néma degradációk explicit jelzést kapnak ────────
+# Ezekbe gyűlik a futás alatti két „csendes" hiba: (1) hiányzó TARTALMI kép
+# (pl. elő nem renderelt Mermaid-PNG), (2) az OMML/math-lánc hiánya (nyers LaTeX).
+# A main() a futás végén összegzi és nem-nulla kóddal lép ki, ha bármelyik előfordult.
+_MISSING_CONTENT_IMAGES: list[str] = []
+_OMML_UNAVAILABLE: list[bool] = [False]
+
 # ── Sablonok variánsonként ─────────────────────────────────────────────────────
 
 POTX_BY_VARIANT = {
@@ -170,7 +177,9 @@ def insert_img_fit(slide, ph, img_path: str, md_dir: str | None):
     if not path.is_absolute() and md_dir:
         path = Path(md_dir) / path
     if not path.exists():
-        print(f"  ⚠️  Kép nem található: {path}")
+        # Tartalmi kép (a navigációs képeket a hívó már kiszűrte) — NEM néma degradáció.
+        print(f"  ⚠️  Kép nem található (tartalmi ábra kimarad): {path}")
+        _MISSING_CONTENT_IMAGES.append(str(path))
         return
     try:
         ph_l, ph_t, ph_w, ph_h = ph.left, ph.top, ph.width, ph.height
@@ -531,6 +540,12 @@ def build_presentation(slides_data, potx_path, md_dir=None, *,
             if mindmap_path and Path(mindmap_path).exists() else None)
     if root is None and variant == "mindmap":
         print("  ⚠️  Nincs mindmap.md — a mindmap variáns TOC nélkül készül.")
+    if not _omml.available():
+        _OMML_UNAVAILABLE[0] = True
+        print("  ⚠️  OMML/math-lánc NEM elérhető — a képletek NYERS LaTeX-ként maradnak "
+              "(nem natív egyenlet).")
+        print(f"       Ok: {_omml.why_unavailable()}")
+        print("       Telepítés: lxml + latex2mathml + MS Office (MML2OMML.XSL).")
     print(f"Template: {potx_path.name}  ({len(prs.slide_layouts)} layout)  variáns={variant}")
 
     for i, sd in enumerate(slides_data):
@@ -675,6 +690,26 @@ def main():
 
     if _enrich_tmp is not None:
         _enrich_tmp.unlink(missing_ok=True)
+
+    # ── P0 csendes-fallback őrök: explicit összegzés + nem-nulla kilépés ────────
+    problems = []
+    if _OMML_UNAVAILABLE[0]:
+        problems.append(
+            "OMML/math-lánc nem elérhető → a képletek nyers LaTeX-ként maradtak "
+            f"({_omml.why_unavailable()})"
+        )
+    if _MISSING_CONTENT_IMAGES:
+        uniq = sorted(set(_MISSING_CONTENT_IMAGES))
+        problems.append(
+            f"{len(uniq)} hiányzó tartalmi kép (pl. elő nem renderelt Mermaid-PNG): "
+            + ", ".join(uniq)
+        )
+    if problems:
+        print("\n⚠️  BEFEJEZVE FIGYELMEZTETÉSEKKEL (nem-nulla kilépés) — a PPTX elkészült, "
+              "de tartalmi hiányokkal:")
+        for p in problems:
+            print(f"   - {p}")
+        sys.exit(3)
 
 
 if __name__ == "__main__":

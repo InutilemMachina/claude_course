@@ -239,6 +239,29 @@ raja. A 😎-szerepek a [§0](#0-hogyan-működik-az-egész-amatőr-áttekintés
 Minden lépés végrehajtási protokollja a saját skill `§3 Eljárás` szekciójában él — a pipeline csak
 a sorrendet és a gate-eket rögzíti.
 
+## 8. Futtatási előfeltételek (KÖTELEZŐ minden script-hívás előtt)
+
+Minden `🐍` script-futtatás előtt **kötelező** ez a két ellenőrzés — a napló ismételten
+dokumentálta, hogy ezek elmaradása `FileNotFoundError`-t és néma env-hibát okoz:
+
+1. **`cwd == claude_course`** — a scriptek relatív útvonalakkal dolgoznak (`scripts/…`,
+   `test_outputs/…`, `templates/…`). Ha a terminál `C:\claude`-ban áll (nem
+   `C:\claude\claude_course`), a hívás `No such file or directory`-val hasal el.
+   Ellenőrzés: `cd C:\claude\claude_course` (vagy `Get-Location` egyeztetés).
+2. **A megfelelő conda env aktív** — nem elég a telepítés, aktiválni is kell:
+   - **forrás-feldolgozás** (02 MinerU, PDF-split, pymupdf, `mineru[all]`): a **kinyerő env**
+     (`conda activate mineru`; ajánlott jövőbeli név: `extractor_env`).
+   - **összeállítás/kimenet** (05, 07-2/07-3, 08, 10-1/10-2/10_pptx, 11-2 — python-pptx,
+     lxml, latex2mathml): az **összeállító env** (jelenleg a `mineru` env is elég, ajánlott
+     jövőbeli szétválasztás: `implementer_env`).
+   - **jupyter-notebook gyártás** (13, PDF-export COM): `play_env` (ad-hoc csomagokkal).
+
+> **Csendes-fallback tiltás (P0):** ha egy determinisztikus lépés láncszeme hiányzik
+> (pl. `10_pptx_gyarto.py` OMML-lánca vagy egy elő nem renderelt tartalmi Mermaid-PNG), a
+> script **explicit ⚠️ figyelmeztetést** ad és **nem-nulla kóddal lép ki** — nem hagy néma
+> nyers-LaTeX / üres ábrahely degradációt. A hívó (😎/🤖) ekkor pótolja a hiányzó env-láncot
+> és újrafuttat. Env-előfeltételek: [10_presentation_maker §3.1a](skills/10_presentation_maker.md).
+
 ## 8. Nyitott pontok
 
 → Backlog és nyitott kérdések kanonikus helye: [project_status.md](project_status.md).

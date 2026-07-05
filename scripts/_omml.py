@@ -69,6 +69,26 @@ def available() -> bool:
     return _READY
 
 
+def why_unavailable() -> str:
+    """Diagnosztika: MIÉRT nem elérhető az OMML-lánc.
+
+    Üres string, ha a lánc rendben; egyébként a hiányzó láncszemek felsorolása,
+    hogy a hívó explicit (nem néma) figyelmeztetést tudjon adni.
+    """
+    if available():
+        return ""
+    reasons = []
+    try:
+        import latex2mathml.converter  # noqa: F401
+    except Exception as e:
+        reasons.append(f"latex2mathml import hiba ({e})")
+    if _find_xslt_path() is None:
+        reasons.append(
+            "MML2OMML.XSL nem található (MS Office XSL; add meg a MML2OMML_XSL env-változót)"
+        )
+    return "; ".join(reasons) or "ismeretlen ok (lásd lxml/latex2mathml telepítés)"
+
+
 def _esc(t: str) -> str:
     return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 

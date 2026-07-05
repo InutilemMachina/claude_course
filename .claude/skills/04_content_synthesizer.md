@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.10
-updated: 2026-06-11
+version: 1.11
+updated: 2026-07-05
 description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, a komplex levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
 ---
 
@@ -105,13 +105,13 @@ A `💡 Összegzés` (minden `###` szakasz végén) és a `🗺️ Fejezet össz
   - Hierarchia/összefüggések → `flowchart LR`
   - Összehasonlítás → Markdown table (nem Mermaid)
   - Időbeli lefolyás → `sequenceDiagram`
-- Ha `figure_catalog.json` tartalmaz releváns ábrát: `<!-- FIGURE: {fig_id} -- {leírás} -->` placeholder beillesztése
+- Ha `figure_catalog.json` tartalmaz releváns ábrát: `<!-- FIGURE: {forrás}/{fig_id} — {leírás} -->` placeholder beszúrása (**em gondolatjel `—`, NEM két kötőjel `--`** — a 05 regex em gondolatjelet vár; lásd §3.11)
 - Ha nincs ábra: a placeholder elegendő — a 05_figure_integrator fogja kezelni
 
 **Felirat-konvenció (kanonikus: [Instructions §7.1](../../Instructions.md)):**
 
 - **Ábra (kép):** felirat a kép **alatt** — `*i. ábra. Önálló koherens feliratmondat. [forrás / saját szerk.]*`
-- **Mermaid-diagram / flowchart:** ez is számozott ábra (**saját szerk.**) — a diagram **alatt**: `*i. ábra. Mit mutat a diagram, egész mondatban. [saját szerk.]*`
+- **Mermaid-diagram / flowchart:** ez is számozott ábra — a diagram **alatt**: `*i. ábra. Mit mutat a diagram, egész mondatban. [{forrás} után szerk.]*`. **Alapértelmezett hivatkozás = `[{forrás_kulcs} után szerk.]`** (a diagram a forrásábra alapján készült, pl. `[1 után szerk.]`); **kizárólag** a valóban eredeti, forrásábrának meg nem feleltethető diagram kap `[saját szerk.]` jelölést (lásd §3.11).
 - **Táblázat:** felirat a tábla **fölött** — `*i. táblázat. Önálló koherens feliratmondat. [forrás / saját szerk.]*`
 - Számozás dokumentumon belül folytonos, ábra/táblázat **külön** sorozat, előfordulási sorrendben.
 - A felirat **önállóan koherens**: a vizuál + felirat a szövegből kiemelve is megálljon.
@@ -123,6 +123,8 @@ A `💡 Összegzés` (minden `###` szakasz végén) és a `🗺️ Fejezet össz
 **Táblák:** a MinerU Markdown-táblát ad. Másold át közvetlenül a megfelelő szekció alá. Ne rajzolj ASCII-táblát a helyén.
 
 **Ellenőrzés:** ha egy fejezet MinerU markdown-jában tábla vagy formula van, a szintézisben is szerepelnie kell — nem hagyható ki szövegre cserélve.
+
+**`\tag{N.M}` = forrás-ID, nem végleges sorszám:** ha egy képletet a MinerU forrás-sorszámával (`Eq. 2.20` → `\tag{2.20}`) veszel át, ez a jelölés a **forrás-hivatkozást** rögzíti (nyomonkövethetőség), **nem** a jegyzetbeli végleges sorszámot. Mivel a 04 a mindmap-struktúra szerint rendez (nem a forrás lineáris sorrendjében), az első megjelenő képlet `\tag`-je logikátlanul magas lehet — ez várt. A végleges, folytonos számozást a **07 tipográfiai lépés írja felül**; a `\tag{}` értéket a 07 előtt meg kell őrizni.
 
 ### 3.5. Hivatkozások
 
@@ -214,6 +216,41 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
   **Új forrás** kell: előbb a 01→02 fut le rá (a revízió `01`-gyel indul), és csak utána a 04.
 - A revízió után a lánc 05/06 (ha új ábra/összegző kell) → 07 → 08 újrafut.
 
+### 3.11. Kimenet-formátum — strukturális szabályok (KÖTELEZŐ)
+
+A `dft_test` triage a 04 kimenetében rendszerszintű formázási hibákat azonosított, amelyek
+mindhárom héten reprodukálódtak. A jegyzetet **eleve** az alábbi formátumban kell generálni —
+ne utólagos (encoding-kockázatos) szövegcserével javítsd:
+
+1. **YAML front matter — kompakt (nincs üres sor a mezők között).** A `---`…`---` blokkban
+   minden mező egymást követő sorban; TILOS a `title:` ⏎⏎ `type:` ⏎⏎ `tags:` üres-soros forma.
+   A YAML spec megengedi, de a megjelenítőkben vizuálisan zavaró.
+
+2. **Blockquote — inline sorelválasztó (nincs `>\n\n>\n\n`).** A blockquote-on belüli
+   elemeket egyszerű üres `>` sor (azaz `>`⏎`>`), **nem** üres sorokkal körülvett `>` (a
+   `{tartalom}`⏎⏎`>`⏎⏎`{következő}` minta) válassza el — utóbbi minden renderelőben vizuálisan
+   üres térként jelenik meg. (A számozott kérdések / §3.2 blokkok elválasztása:
+   [06 §3](06_summarize_box_injector.md).)
+
+3. **Mermaid node-címkék — `<br>`, NEM `\n`.** A csomópontcímkékben a sortörés `<br>` (a
+   Mermaid HTML-t renderel a node-on belül). A `\n` literális `\n` szövegként jelenik meg.
+
+4. **Mermaid attribúció — alap `[{forrás} után szerk.]`.** Lásd §3.3: a forrásábra alapján
+   készült diagram `[{forrás_kulcs} után szerk.]`; kizárólag a valóban eredeti ábra kap
+   `[saját szerk.]`-t.
+
+5. **FIGURE placeholder — em gondolatjel.** Formátum:
+   `<!-- FIGURE: {forrás}/{fig_id} — {leírás} -->` (em gondolatjel `—`, **nem** két kötőjel
+   `--`) — a [`05_figure_mapper.py`](../../scripts/05_figure_mapper.py) `_RE_PLACEHOLDER`
+   regexe em gondolatjelet tűr a megjegyzés-utótagban.
+
+6. **`\tag{}` = forrás-ID.** Lásd §3.4: a `\tag{N.M}` a forrás-hivatkozást rögzíti, nem a
+   végleges sorszámot; a 07 írja felül.
+
+> **Encoding-szabály:** a jegyzetet UTF-8-ként írd ki (`write_bytes(text.encode("utf-8"))`
+> vagy szerkesztő-eszköz); ne PowerShell `Get-Content`/`Set-Content` szövegcserével utólag —
+> az dupla-kódolást (`Ã`-karakterek) és CRLF-szaporítást okoz.
+
 ## 4. Kimenetek
 
 | Fájl | Tartalom |
@@ -241,6 +278,7 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 - [ ] `[1]`, `[2]` hivatkozások a szövegben?
 - [ ] `## Hivatkozásjegyzék` a fájl végén?
 - [ ] YAML frontmatter `source_mindmap` mezővel?
+- [ ] **Kimenet-formátum (§3.11):** YAML kompakt (nincs üres sor a mezők között)? Blockquote inline (nincs `>\n\n>\n\n`)? Mermaid node-címkék `<br>`-rel (nem `\n`)? Mermaid attribúció `[{forrás} után szerk.]`? FIGURE placeholder em gondolatjellel (`—`)? `\tag{}` mint forrás-ID megőrizve?
 
 ## 7. Hibakezelés
 
@@ -273,6 +311,7 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
+| 2026-07-05 | 1.11 | **Kimenet-formátum konszolidáció (dft_test triage, P2):** új §3.11 hat strukturális szabállyal (YAML kompakt, blockquote inline `>\n\n>\n\n` tilalom, Mermaid `<br>` node-címkékben, Mermaid attribúció `[{forrás} után szerk.]`, FIGURE placeholder em gondolatjel, `\tag{}` = forrás-ID); §3.3 FIGURE placeholder `--` → `—` és Mermaid attribúció-alap javítva; §3.4 `\tag{}` forrás-ID magyarázat; §5 checklist-sor. |
 | 2026-06-07 | 1.6 | §3.10 **célzott revízió / re-entry**: a 04 a 08-checkpointról (08 §3.5 csatorna) újra beléphet a meglévő jegyzeten — csak az érintett szekciót módosítja, stabil hivatkozás-kulcsokkal; meglévő forrás → 04 közvetlenül, új forrás → 01→02→04. |
 | 2026-06-06 | 1.5 | Új `🎯 Cél` blokk (Bloom-igés tanulási cél) minden `##` fejezet nyitásába, a `🔭` után — a Biggs constructive alignment (08) cél-oldala, a prezi szakasz-nyitó diája újrahasznosítja; §5 checklist. |
 | 2026-06-06 | 1.4 | Címke: `🔭 Epitome` → `🔭 A Nagykép`; §3.3 ábra-/táblázat-/Mermaid-felirat konvenció (számozott, önálló koherens, [Instructions §7.1](../../Instructions.md)); §5 felirat-checklist. |

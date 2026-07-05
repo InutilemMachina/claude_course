@@ -503,14 +503,25 @@ def add_section(prs, sd, desc_raw, variant, root, current_id, md_dir, formula_di
     return "SECTION"
 
 
-def add_toc_overview(prs, sd, variant, root):
-    """Default Áttekintés: a teljes hierarchikus TOC a body-ban (TOC layout)."""
+def add_toc_overview(prs, sd, variant, root, fallback_body=None,
+                     md_dir=None, formula_dir=None):
+    """Default Áttekintés: a teljes hierarchikus TOC a body-ban (TOC layout).
+
+    A TOC a mindmap-fából a TELJES hierarchiát rendereli (expansion="full").
+    Ha a fa hiányzik vagy üres TOC-ot adna, a dia törzse a forrás body-ra
+    (pl. a Nagykép-szöveg) esik vissza — így a Dia2 sosem marad üres.
+    """
     slide = prs.slides.add_slide(role_layout(prs, variant, "TOC"))
     d = slide_phs(slide)
     if 0 in d:
         set_title(d[0], sd["title"])
-    if 1 in d and root is not None:
-        set_tf(d[1], nav.render_toc(root, None))
+    toc_text = (nav.render_toc(root, None, expansion="full")
+                if root is not None else "")
+    if 1 in d:
+        if toc_text.strip():
+            set_tf(d[1], toc_text)
+        elif fallback_body:
+            render_content(slide, d, 1, fallback_body, md_dir, formula_dir)
     _fill_sidebar(d, variant, root, None)
     return "TOC"
 
@@ -550,7 +561,9 @@ def build_presentation(slides_data, potx_path, md_dir=None, *,
         elif "áttekintés" in low:
             left_raw = cols[0] if cols else body
             if variant == "default":
-                used = add_toc_overview(prs, sd, variant, root)
+                used = add_toc_overview(prs, sd, variant, root,
+                                        fallback_body=left_raw,
+                                        md_dir=md_dir, formula_dir=formula_dir)
             else:
                 used = add_body(prs, sd, left_raw, "TOC", variant, root, None, md_dir, formula_dir)
 

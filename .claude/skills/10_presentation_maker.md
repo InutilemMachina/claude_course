@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖+🐍
 status: active
-version: 1.11
-updated: 2026-06-12
+version: 1.12
+updated: 2026-06-13
 description: Approved mindmap és végleges jegyzet alapján MARP prezentáció és PPTX, KÉT variánsban (default fejléc-breadcrumb / mindmap oldalsáv-TOC) ugyanabból a navigációs modellből (_nav_util.py). Kötött dia-architektúra (Cím → Áttekintés → szakaszonként Nyitó/belső/Záró → Végső → Hivatkozásjegyzék); kötött `>` keret-blokk-rend (🧭/🔭/🎯/💡/🗺️) a jegyzet újrahasznosításával; belső diák tiszta tananyag; navigáció = SZÖVEG (TOC/breadcrumb), tartalmi diagramok = előrenderelt Mermaid-PNG (10-1); .potx idx-szerződés (idx0/idx1/idx5); kétoszlopos layout; beszédes diák; számozott feliratok.
 ---
 
@@ -190,6 +190,23 @@ irányadó esetek:
   a dia **az ábráról szól** — minimális body-szöveg, a vizuális elem és a felirat viszi az
   üzenetet (Mayer *multimédia + contiguity*: a magyarázat az ábrarész mellett).
 
+### 3.1d. Hivatkozásjegyzék-dia — teljes forrás→PPTX lánc
+
+- A záró **Hivatkozásjegyzék** dia a jegyzet **teljes** Hivatkozásjegyzékét viszi át
+  (mind az `[1]…[N]` tétel), IEEE-sorrendben. A generátor csak azt tudja megjeleníteni,
+  ami a forrásban (`N_Prezentacio.md` ← `N_Jegyzet.md`) szerepel — **nem talál ki** tételeket.
+- **Forrás→PPTX lánc:** ha a jegyzet irodalomjegyzéke hiányos (pl. csak `[1]` a `[2]/[3]`
+  helyett), a PPTX is hiányos lesz. A teljesség a **jegyzet** (04/06) és a MARP-forrás
+  felelőssége; a prezentáció-generátor hűen tükröz. Ellenőrizd, hogy a `N_Prezentacio.md`
+  Hivatkozásjegyzék-diája a jegyzet **összes** tételét tartalmazza a PPTX-futtatás előtt.
+
+### 3.1e. Navigációs kép ≠ ábra — felirat-tilalom
+
+- A navigációs jelölő képek (`navigator.png` / `secN.png`) **nem tananyag-ábrák**: a render
+  ezeket szöveggé (TOC/breadcrumb) cseréli, ezért **TILOS** hozzájuk **számozott ábrafeliratot**
+  (`*i. ábra. …*`) írni. Legfeljebb rövid, szám nélküli leíró felirat állhat (§3.1 felirat-konvenció).
+- A számozott ábrafeliratok **kizárólag** a belső tartalmi diák **valódi** ábráit illetik.
+
 ### 3.2. Renditionök és PPTX generálás
 
 ```powershell
@@ -202,8 +219,7 @@ python scripts/10_pptx_gyarto.py --week-dir <tárgy>/<N_het> --variant both
 ```
 
 - A `10_pptx_gyarto.py` a `.potx` layoutjait használja **python-pptx**-szel (nem MARP CLI):
-  a stílus a sablonból örökl, a script csak a placeholdereket (idx) tölti.
-- Sablonválasztás variáns szerint: `default` → `due_presentation_default_master.potx`;
+  a stílus a sablonból örökl, a script csak a placeholdereket (idx) tölti.- Sablonválasztás variáns szerint: `default` → `due_presentation_default_master.potx`;
   `mindmap` → `due_presentation_mindmap_master.potx`. (`--template` felülírja.)
 - Output: `6_clean_outputs/N_Prezentacio.pptx` (default) [+ `N_Prezentacio_mindmap.pptx`].
 - Ellenőrzés: slide count; mindmap variánsban az `idx5` TOC kitöltve a content/keret diákon
@@ -213,6 +229,16 @@ python scripts/10_pptx_gyarto.py --week-dir <tárgy>/<N_het> --variant both
 # a .potx mesterek módosítása után (font/bullet/sidebar):
 python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 ```
+
+**Környezet-előfeltételek (script-futtatás előtt, KÖTELEZŐ):**
+- `cwd == claude_course`, a megfelelő conda-env aktiválva (implementer_env / play_env).
+- **MinerU[all]** (02 kivonat) · **Node + `@mermaid-js/mermaid-cli`** (10-1 PNG-render) ·
+  **`lxml` + `latex2mathml`** (natív OMML-képlet; hiánya → nyers `$`-szöveg, lásd fenti NOTE) ·
+  **Pillow** (FIT-kép, §3.1a-ter).
+- Proxy mögött: `NO_PROXY=localhost,127.0.0.1` a headless Chromium- és a helyi eszköz-
+  eléréshez, különben a mermaid-render **némán** elhalhat.
+- **Csendes fallback tilos:** ha a lánc (OMML / mermaid / kép) nem elérhető, a script
+  látható figyelmeztetést ad és nem-nulla kóddal lép ki (P0-őr), nem degradál némán.
 
 > 💬 NOTE: A LaTeX képletek **natív PowerPoint-egyenletté** (OMML) alakulnak a
 > [`_omml.py`](../../scripts/_omml.py)-val: `$...$` **szövegközi** (a mondatban folyik),
@@ -254,6 +280,8 @@ python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 - [ ] **Tartalmi diagram = PNG:** a belső diák jegyzetből vett diagramjai előrenderelt PNG-k (beszédes névvel); **nincs nyers Mermaid-kód**
 - [ ] **mindmap variáns:** az `idx5` TOC minden content/keret dián kitöltve (ábra/tábla diák kivételével), az aktuális csomópont kiemelve
 - [ ] **default variáns:** a content diák címe (idx0) többsoros breadcrumb (szakasz-útvonal)
+- [ ] **default Áttekintés (Dia2):** a body a teljes hierarchikus TOC-ot (`expansion="full"`) mutatja, sosem üres (üres fa esetén a Nagykép-szövegre esik vissza)
+- [ ] **Hivatkozásjegyzék:** a záró dia a jegyzet **összes** `[1]…[N]` tételét viszi (forrás→PPTX teljesség, §3.1d); nav-képekhez **nincs** számozott felirat (§3.1e)
 - [ ] A `🔭/🎯/💡/🗺️` blokkok a jegyzetből újrahasznosítva (nem újraírva); a záró 💡 reflexió, nem ismétlés
 - [ ] Belső diák: szillogizmus-ív (premissza→konklúzió), Bloom-igék a body-ban, beszédes/felolvasható (§3.1c)
 - [ ] Feliratok a séma szerint (valódi ábra alatt / tábla fölött, számozott, önálló koherens)
@@ -269,6 +297,9 @@ python templates/build_due_potx.py ; python templates/build_mindmap_potx.py
 | Tünet | Ok | Megoldás |
 |:------|:---|:---------|
 | A mindmap variánsban üres az oldalsáv (nincs TOC) | Hiányzó/rossz `mindmap.md`, vagy nem a `mindmap` variáns fut | `--mindmap <path>` ellenőrzése; `--variant mindmap`/`both`; a `_nav_util.parse_mindmap` a `mindmap.md` első ```mermaid``` blokkját várja |
+| A TOC/oldalsáv sorai **üresek** (a fa parse-olódik, de nincs cím) | A Mermaid-címkék **idézőjel nélküliek** (`A[1. Cím]`), a régi regex csak idézőjeleset (`A["…"]`) fogadott | Megoldva: a `_nav_util._NODE_DECL` immár idézőjeles ÉS idézőjel nélküli címkét is parse-ol |
+| A **default Áttekintés (Dia2)** body üres | A `render_toc(root, None)` `current-section` bővítése üres TOC-ot ad, ha nincs aktuális csomópont | Megoldva: a `add_toc_overview` `expansion="full"`-t hív (teljes hierarchia) + body-fallback a `_prezi_assets` Nagykép-szövegre |
+| A Hivatkozásjegyzék-dia hiányos (`[2]/[3]` hiányzik) | **Forrás-oldali** hiány: a jegyzet/MARP-forrás irodalomjegyzéke hiányos | A jegyzet **teljes** Hivatkozásjegyzéke kell (§3.1d); a generátor nem talál ki tételeket |
 | A TOC/breadcrumb rossz csomópontot emel ki | A dia címének vezető száma nem oldható fel a fában, vagy a `secN` kép száma téves | A dia címe `N.` / `N.M.` számmal kezdődjön, vagy a NAV-kép `secN` száma egyezzen a szakasszal |
 | Navigációs PNG marad a kész deckben | A nav-kép neve nem `navigator`/`secN` mintájú | A navigációs képet `_prezi_assets/(navigator|secN).png` névvel jelöld; a tartalmi ábrák kapjanak más nevet |
 | Tartalmi Mermaid kódként jelenik meg | MARP nem rendereli natívan | `10-1_mermaid_render.py` futtatása, `![](_prezi_assets/…png)` beágyazás (§3.1a) |

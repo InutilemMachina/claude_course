@@ -45,7 +45,9 @@ class NavNode:
 # ─────────────────────────────────────────────────────────────────────────────
 
 _MERMAID_BLOCK = re.compile(r"```mermaid\s*\n(.*?)```", re.DOTALL)
-_NODE_DECL     = re.compile(r'(\w+)\s*\[\s*"(.+?)"\s*\]', re.DOTALL)
+# Node-deklaráció: `id["Címke"]` (idézőjeles) VAGY `id[Címke]` (idézőjel nélküli).
+# A `"?` opcionális idézőjelek mindkét formát kezelik; a `[^\]]+?` nem lép ki a `]`-en.
+_NODE_DECL     = re.compile(r'(\w+)\s*\[\s*"?([^\]]+?)"?\s*\]')
 _EDGE          = re.compile(r'(\w+)\s*-->\s*(\w+)')
 _MSC_TAG       = re.compile(r'\[MSc\]\s*')
 _NUM_PREFIX    = re.compile(r'^(\d+(?:\.\d+)*)\.\s+(.*)$', re.DOTALL)

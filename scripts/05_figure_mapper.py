@@ -7,7 +7,8 @@ feloldja őket a v4 `figure_catalog.json` alapján: kikeresi a kép útját, a c
 és az oldalszámot, és a placeholder helyére beírja a kép-blokkot:
 
     ![<alt>](../2_clean_inputs/<stem>/images/pNNN_figNNN.png)
-    *<n>. ábra. <katalógus-caption> [<cit>], <page>. o.*
+
+    *<n>. ábra. <katalógus-caption> [<cit>, p.<page>]*
 
 A katalógus-caption gyakran angol (MinerU); a magyar, önálló koherens feliratmondatot a
 Claude finomítja a 05 skill §3.3 kézi lépésében. A folytonos ábraszámozást a
@@ -42,7 +43,17 @@ except ImportError:
 _RE_PLACEHOLDER = re.compile(
     r'<!--\s*FIGURE:\s*(?:(?P<src>[^/\s>]+)\s*/\s*)?(?P<id>fig_\d+|\w+?)\s*(?:—[^>]*)?-->'
 )
-_RE_FIG_PREFIX = re.compile(r'^\s*(?:Figure|Fig\.?|Ábra|ábra)\s*\d+[.:]\s*', re.IGNORECASE)
+# Ábra-sorszám prefix levágása. Kezeli az angol (`Figure 3:`, `Fig. 3.`, `Fig 3`) és a
+# magyar könyv-formákat mindkét sorrendben: `2.2. ábra`, `3. ábra`, `ábra 3.` — a
+# sorszám lehet többtagú (`N.N`), a záró pont/kettőspont opcionális.
+_RE_FIG_PREFIX = re.compile(
+    r'^\s*(?:'
+    r'(?:Figure|Fig\.?|Ábra|ábra)\s*\d+(?:\.\d+)*[.:]?\s*'   # "Figure 3:", "Fig. 3.", "ábra 3"
+    r'|'
+    r'\d+(?:\.\d+)*\.?\s*(?:ábra)\.?\s*'                       # "2.2. ábra", "3. ábra"
+    r')',
+    re.IGNORECASE,
+)
 
 
 def load_md(path: Path) -> str:
@@ -96,24 +107,40 @@ def clean_caption(caption: str | None) -> str:
     return _RE_FIG_PREFIX.sub("", caption.strip()).strip()
 
 
-def make_block(entry: dict, n: int) -> str:
-    """Kép-blokk a placeholder helyére (futó `n` sorszámmal; 07-3 véglegesíti)."""
+def make_block(entry: dict, n: int, enrich: bool = False) -> str:
+    """Kép-blokk a placeholder helyére (futó `n` sorszámmal; 07-3 véglegesíti).
+
+    - kép és felirat közé kettős sortörés (`\n\n`) — önálló Markdown-blokkelem;
+    - null / puszta-ábrasorszám felirat → `visual_content` (majd `text_context`) fallback;
+    - oldalszám a citációba vonva: `[<cit>, p.<page>]`;
+    - `enrich=True` esetén a feliratot a `visual_content` vizuális leírással bővíti.
+    """
     cat_path = entry.get("path", "")
     # a katalógus-út week-dir-relatív (2_clean_inputs/...); a jegyzet 4_wip_outputs/-ban
     # van, ezért `../` prefix.
     rel_path = f"../{cat_path}" if cat_path else ""
     caption = clean_caption(entry.get("caption"))
+    visual = (entry.get("visual_content") or "").strip()
+    if not caption:
+        # null-caption vagy puszta ábrasorszám (levágva üresre) → fallback
+        caption = visual or (entry.get("text_context") or "").strip()
+    elif enrich and visual and visual.lower() not in caption.lower():
+        # opcionális pedagógiai gazdagítás: a vizuális leírás hozzáfűzése
+        sep = "" if caption.rstrip().endswith((".", "!", "?")) else "."
+        caption = f"{caption.rstrip()}{sep} {visual}"
     alt = caption[:60] if caption else entry.get("id", "ábra")
     cit = entry.get("citation_key")
     page = entry.get("page")
-    src_bits = []
-    if cit:
-        src_bits.append(f"[{cit}]")
-    if page is not None:
-        src_bits.append(f"{page}. o.")
-    src_str = (" " + ", ".join(src_bits)) if src_bits else ""
+    if cit and page is not None:
+        src_str = f" [{cit}, p.{page}]"
+    elif cit:
+        src_str = f" [{cit}]"
+    elif page is not None:
+        src_str = f" [p.{page}]"
+    else:
+        src_str = ""
     cap_line = f"*{n}. ábra. {caption}{src_str}*".replace("  ", " ")
-    return f"![{alt}]({rel_path})\n{cap_line}"
+    return f"![{alt}]({rel_path})\n\n{cap_line}"
 
 
 def main() -> None:
@@ -124,6 +151,9 @@ def main() -> None:
     parser.add_argument("--week", default=None, type=int)
     parser.add_argument("--dry-run", action="store_true",
                         help="Csak jelentés; a jegyzetet NEM írja át.")
+    parser.add_argument("--enrich-captions", action="store_true",
+                        help="A feliratot a katalógus `visual_content` vizuális leírásával "
+                             "bővíti (pedagógiai felirat).")
     args = parser.parse_args()
 
     week_dir = args.week_dir.resolve()
@@ -159,7 +189,7 @@ def main() -> None:
             return f"<!-- FIGURE: {src or ''}{'/' if src else ''}{fig_id} — MISSING: {entry.get('path')} -->"
         counter[0] += 1
         resolved.append(f"{src or '?'}/{fig_id}")
-        return make_block(entry, counter[0])
+        return make_block(entry, counter[0], enrich=args.enrich_captions)
 
     new_text = _RE_PLACEHOLDER.sub(_sub, md_text)
 

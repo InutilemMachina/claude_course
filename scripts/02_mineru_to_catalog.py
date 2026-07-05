@@ -4,7 +4,8 @@
 MinerU-t használja az összes PDF feldolgozásához, majd a _content_list.json-ból
 automatikusan kitölti a figure_catalog.json v4 séma mezőit:
   - id, page, path, needs_crop        ← script (determinisztikus)
-  - caption                            ← MinerU image_caption
+  - caption                            ← MinerU image_caption (puszta ábrasorszám → null)
+  - ocr_quality                        ← script: "low", ha a felirat gyanús (bare fig.-szám)
   - text_context                       ← MinerU ±3 szomszédos szöveg-entry
   - keywords (draft)                   ← caption + section heading + text top-words
   - visual_content                     ← null (02b_figure_enricher skill tölti)
@@ -38,6 +39,7 @@ import argparse
 import concurrent.futures
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -84,6 +86,7 @@ ENTRY_DEFAULTS = {
     "needs_crop":       False,
     "caption":          None,
     "caption_verified": False,
+    "ocr_quality":      None,
     "visual_content":   None,
     "text_context":     None,
     "keywords":         None,
@@ -96,6 +99,21 @@ CATALOG_GUIDE_TEMPLATE = """\
 
 **Részletes szabályok:** `.claude/skills/02b_figure_enricher.md`
 Forrás: `scripts/02_mineru_to_catalog.py` (MinerU-first pipeline)
+
+## Mezők jelentése (kiemelt)
+
+- **`caption`** — a MinerU által párosított ábrafelirat. Ha az OCR csak *puszta
+  ábrasorszámot* adott (pl. `"4.3. ábra"` leíró szöveg nélkül), a script `null`-ra
+  állítja és `ocr_quality:"low"`-val jelöli — ilyenkor a 02b a `visual_content` +
+  `text_context` alapján ír leírást.
+- **`caption_verified`** — **kizárólag a kép↔felirat PÁROSÍTÁS helyességét** jelzi,
+  **nem** a felirat szövegének OCR-minőségét. Csak a 😎 állítja `true`-ra.
+- **`ocr_quality`** — `null` (nem értékelt) | `"low"` (a felirat OCR-je gyanús: bare
+  ábrasorszám / torz szöveg — a downstream a `visual_content`-et részesítse előnyben) |
+  `"high"` (a felirat szövege megbízható). A 02b finomíthatja.
+- **`visual_content`** — a 02b tölti (`Read(image)` → 1-3 mondat).
+- **`_status`** — derivált (script számolja): `un-processed` → `draft` → `caption-ok`
+  → `complete`. Ne szerkeszd.
 """
 
 
@@ -218,6 +236,25 @@ def detect_lang(src_stem: str, override: dict[str, str]) -> str:
 
 
 # ── Keywords auto-derive ──────────────────────────────────────────────────────
+
+# OCR-defenzió: puszta ábrasorszám-felirat (leíró szöveg nélkül). Az ilyen felirat
+# jellemzően OCR-elcsúszás (a lapon lévő szomszédos ábra sorszáma) — megbízhatatlan.
+_BARE_FIG_RE = re.compile(
+    r'^\s*(?:'
+    r'(?:Figure|Fig\.?|\u00c1bra|\u00e1bra)\s*\d+(?:\.\d+)*[.:)]?'   # "Figure 4.3", "Fig. 5"
+    r'|'
+    r'\d+(?:\.\d+)*\.?\s*(?:\u00e1bra|\u00c1bra)\.?'                 # "4.3. ábra", "12 ábra"
+    r')\s*$',
+    re.IGNORECASE,
+)
+
+
+def _is_bare_figure_number(caption: str | None) -> bool:
+    """True, ha a felirat CSAK ábrasorszám (pl. '4.3. ábra', 'Fig. 5'), leíró szöveg nélkül."""
+    if not caption:
+        return False
+    return bool(_BARE_FIG_RE.match(caption.strip()))
+
 
 def _tokenize(text: str) -> list[str]:
     if not text:
@@ -417,6 +454,13 @@ def _process_content_list(
         # Szemantikus mezők
         captions_raw = entry.get("image_caption", [])
         caption      = captions_raw[0].strip() if captions_raw else None
+        # OCR-defenzió: puszta ábrasorszám-felirat (pl. "4.3. ábra") megbízhatatlan →
+        # null-ként kezeljük és ocr_quality:"low"-val jelöljük, hogy a 02b a
+        # visual_content/text_context alapján írjon leírást.
+        ocr_quality  = None
+        if caption and _is_bare_figure_number(caption):
+            ocr_quality = "low"
+            caption = None
         text_context = _get_context_around(content_list, idx, CONTEXT_WINDOW) or None
         heading      = _get_section_heading(content_list, idx)
         # Fallback caption: ha MinerU nem talált image_caption-t (pl. prezentáció-PDF
@@ -427,6 +471,7 @@ def _process_content_list(
 
         e = make_entry(next_fig_id(catalog), page_num, rel_path, needs_crop=False)
         if caption:      e["caption"]      = caption
+        if ocr_quality:  e["ocr_quality"]  = ocr_quality
         if text_context: e["text_context"] = text_context
         if keywords:     e["keywords"]     = keywords
 

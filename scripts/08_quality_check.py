@@ -8,7 +8,8 @@ exit kóddal jelzi a kritikus hibákat (CI-barát).
 Heading-hierarchia (Instructions §7): `#`=Cím, `##`=Fejezet, `###`=Szakasz.
 
 Mit ellenőriz:
-  - ### szakaszok száma (tartalmi gazdagság, cél: 5-12)
+  - ### szakaszok száma (tartalmi gazdagság, cél: 5-12 · a felső határ a
+    fejezetszámmal arányosan tágul, lásd --chapters)
   - Fejezetenkénti ### szakaszok (figyelmeztetés >15)
   - IEEE [N] citációk száma (a <sup>[N]</sup> régi jelölést is lefedi)
   - Inline forrásblokk maradék (cél: 0)
@@ -109,11 +110,15 @@ def evaluate(m: dict) -> list[str]:
     return issues
 
 
-def evaluate_warnings(m: dict) -> list[str]:
-    """Return a list of non-critical warning strings."""
+def evaluate_warnings(m: dict, sec_lo: int = 5, sec_hi: int = 12) -> list[str]:
+    """Return a list of non-critical warning strings.
+
+    A `### szakaszok` ajanlott tartomanya (`sec_lo`..`sec_hi`) a fejezetszammal
+    aranyosan skalazodik (lasd main(): `--chapters` / a `##` fejezetek szama).
+    """
     warns = []
-    if not (5 <= m["h3_subsections"] <= 12):
-        warns.append(f"### szakaszok: {m['h3_subsections']} (ajánlott: 5-12)")
+    if not (sec_lo <= m["h3_subsections"] <= sec_hi):
+        warns.append(f"### szakaszok: {m['h3_subsections']} (ajánlott: {sec_lo}-{sec_hi})")
     if m["max_chapter_subs"] > 15:
         warns.append(f"Túlterhelt fejezet: '{m['max_chapter_name']}' "
                      f"({m['max_chapter_subs']} ### szakasz, ajánlott: ≤15)")
@@ -126,6 +131,9 @@ def main():
     parser = argparse.ArgumentParser(description="Automatikus minőségi metrikák a Jegyzeten")
     parser.add_argument("--week-dir", required=True, type=Path)
     parser.add_argument("--json", action="store_true", help="JSON kimenet")
+    parser.add_argument("--chapters", type=int, default=None,
+                        help="Heti fejezetek (##) száma a ### szakasz-küszöb arányos "
+                             "skálázásához (alap: a dokumentum ## fejezeteiből számolva)")
     args = parser.parse_args()
 
     week_dir = args.week_dir.resolve()
@@ -136,7 +144,11 @@ def main():
     text = jegyzet.read_bytes().decode("utf-8-sig")
     m = compute_metrics(text)
     issues = evaluate(m)
-    warns = evaluate_warnings(m)
+    # A ### szakasz-küszöb a fejezetszámmal arányos: 1 fejezetnél a kompakt 5–12,
+    # több fejezetnél a felső határ ~4 szakasz/fejezet arányban tágul.
+    chapters = args.chapters if args.chapters else max(m["h2_sections"], 1)
+    sec_hi = max(12, chapters * 4)
+    warns = evaluate_warnings(m, 5, sec_hi)
 
     if args.json:
         print(json.dumps({"metrics": m, "issues": issues, "warnings": warns},

@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖+🐍
 status: active
-version: 1.11
-updated: 2026-06-12
+version: 1.12
+updated: 2026-06-13
 description: Approved mindmap és végleges jegyzet alapján MARP prezentáció és PPTX, KÉT variánsban (default fejléc-breadcrumb / mindmap oldalsáv-TOC) ugyanabból a navigációs modellből (_nav_util.py). Kötött dia-architektúra (Cím → Áttekintés → szakaszonként Nyitó/belső/Záró → Végső → Hivatkozásjegyzék); kötött `>` keret-blokk-rend (🧭/🔭/🎯/💡/🗺️) a jegyzet újrahasznosításával; belső diák tiszta tananyag; navigáció = SZÖVEG (TOC/breadcrumb), tartalmi diagramok = előrenderelt Mermaid-PNG (10-1); .potx idx-szerződés (idx0/idx1/idx5); kétoszlopos layout; beszédes diák; számozott feliratok.
 ---
 
@@ -59,6 +59,21 @@ A két `.potx` ezt már expozeálja; a generátor a layoutot **logikai szerep** 
 
 > 💬 NOTE: A `default` az alapértelmezett kimenet (visszafelé kompatibilis). A 🤖 **kérdezze meg
 > a 😎-t**, kell-e a `mindmap` variáns is — ha igen, `--variant both`.
+
+### 3.0a. A három fájl szerepköre és életciklusa (forrás vs. rendition)
+
+Három MARP-fájl van, **hierarchikus** szerepkörrel — egyik sem felesleges:
+
+| Fájl | Ki állítja elő | Nav-jelölők | Szerep |
+|:-----|:---------------|:------------|:-------|
+| `N_Prezentacio.md` (**forrás**) | 🤖 (kézzel írja) | `navigator.png` / `secN.png` **képhivatkozásként** | A kanonikus forrás; **ebből** készül a PPTX (`10_pptx_gyarto.py`), amely a nav-képeket belül **eldobja** és szöveggé alakítja. |
+| `N_Prezentacio_default.md` (**default rendition**) | `10-2_nav_inject.py` (gépi) | → **fejléc-breadcrumb** szöveggé cserélve | MARP CLI-val **előnézethető** HTML/PDF; a default variáns látható kimenete. |
+| `N_Prezentacio_mindmap.md` (**mindmap rendition**) | `10-2_nav_inject.py` (gépi) | → **oldalsáv-TOC** szöveggé cserélve | Ugyanaz mindmap-variánsban. |
+
+**Életciklus:** 🤖 megírja a **forrást** → `10-1` a tartalmi `.mmd`-ket PNG-vé rendeli →
+`10-2 --variant both` legenerálja a **két renditiont** (előnézethez) → `10_pptx_gyarto.py --variant both`
+a **forrásból** gyártja a két PPTX-et. A renditionöket **ne** szerkeszd kézzel — regenerálhatók a
+forrásból; a forrás az egyetlen „single source of truth".
 
 ### 3.1. MARP Markdown generálása
 

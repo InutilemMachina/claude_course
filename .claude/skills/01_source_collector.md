@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 😎+🤖
 status: active
-version: 1.6
-updated: 2026-06-07
+version: 1.7
+updated: 2026-06-13
 description: Heti források gyűjtése 1_raw_inputs/-ba egységes névvel, weblapok PDF-ként (képekkel!), eredeti→új név szótárral és citations.json-nal; használd a 00_init után, forrásgyűjtéskor — opcionális Deep Research-csel. Több jelölt + 😎-egyeztetés; 😎 saját fájlt is betehet; re-entry új forrásra (§3.8) stabil kulcsokkal.
 ---
 
@@ -178,6 +178,37 @@ A 01 **nem csak a pipeline elején** futhat: egy későbbi checkpointon (jellemz
   (integráció **csak az érintett szekcióba**).
 - A `_meta.week` változatlan; a forrás a meglévő heti mappába (`1_raw_inputs/`) kerül.
 
+### 3.9. Könyv-forrás — fejezet-szintű szétvágás 🤖
+
+Ha a forrás **teljes könyv** (nem cikk/fejezet), a heti `1_raw_inputs/`-ba **csak a vonatkozó
+fejezet(ek) oldalai** kerüljenek — nem az egész könyv háromszor. A [`_pdf_book_split.py`](../../scripts/_pdf_book_split.py)
+utility **automatikusan, 😎-kérdés nélkül** végzi:
+
+1. **Dupla-oldalas scan detektálás** — a lapszélesség/magasság arány `> 1.3` (tesztelt: 1.41)
+   jelzi, hogy egy PDF-oldal két könyv-oldalt tartalmaz. Ez befolyásolja a kalibrációt.
+2. **Kalibrációs pont (1 vizuális referencia)** — egyetlen ellenőrzött PDF-oldal ↔ könyv-oldal
+   párból számolt lineáris képlet (dupla-oldalas példa:
+   `pdf_oldal = (könyv_oldal − 11) / 2 + 4`). A képletet a script vezeti le, **nem** 😎 adja meg.
+3. **Fejezet-határok a TOC-ból** — a könyv tartalomjegyzék-oldalait (jellemzően a PDF eleje)
+   beolvasva a fejezet-tartományok könyv-oldalait PDF-oldalakká fordítja a kalibrációval.
+4. **Fájlnév-konvenció** — a kivágott rész **fejezetalapú** nevet kap:
+   `<szerző><év>_ch<N>[-<M>].pdf` (pl. `hesselmann1983_ch1-2.pdf`, `hesselmann1983_ch3.pdf`) —
+   a `ch`-suffixet a heti fejezetszámokból a script generálja.
+5. **TOC kimentése a tantárgy gyökerébe** — `toc.pdf` (a fejezet↔oldal leképezés archívuma).
+
+**`toc.md` utility (ajánlott):** a `toc.pdf`-et **markdown-ra is** érdemes konvertálni
+(`<tantárgy>/toc.md`) — így a fejezet→oldalszám leképezés **szövegesen kereshető**, Claude
+session elején beolvashatja, és a kalibrációs lépés belőle automatizálható. Szkennelt (kép-alapú)
+TOC esetén MinerU-OCR vagy PyMuPDF szöveges kinyerés; ha nincs OCR, a vizuálisan kiolvasott
+adatokból kézzel írható. A `toc.md` a `_pdf_book_split.py` bemenete/mellékterméke lehet.
+
+> ⚠️ **cwd-előfeltétel:** minden script-hívás (`_pdf_book_split.py`, `02_mineru_to_catalog.py`,
+> `toc.md` írás) **`claude_course` munkakönyvtárból** fusson — a rossz cwd (`C:\claude`)
+> `FileNotFoundError`-t okoz. A relatív útvonalak a `claude_course` gyökérhez oldódnak.
+>
+> ⛔ **NE** hozz létre PNG-előnézeti fájlokat a tantárgy gyökerében (`<tantárgy>/*.png`) — a
+> vizsgálati képeket memóriában nézd, vagy temp mappába írd; a szemét-PNG-ket törölni kell.
+
 ## 4. Kimenetek
 
 | Fájl | Tartalom |
@@ -220,6 +251,7 @@ Fixture-alapú teszt (verifikált mechanizmusokkal):
 - [pipeline.md](../pipeline.md)
 - upstream: [00_init.md](00_init.md) · downstream: [02_image_extraction.md](02_image_extraction.md)
 - [_ieee_renderer.py](../../scripts/_ieee_renderer.py) — a citations.json fogyasztója
+- [_pdf_book_split.py](../../scripts/_pdf_book_split.py) — könyv-forrás fejezet-szintű szétvágása (§3.9)
 
 ## 9. Visszajelzések
 
@@ -236,3 +268,4 @@ Fixture-alapú teszt (verifikált mechanizmusokkal):
 | 2026-06-03 | 1.4 | Provenance `citations.json`-ba (`original_filename` mező); `_source_map.md` kivezetett |
 | 2026-06-07 | 1.5 | §3.8 **re-entry**: a 01 a pipeline közepén is futhat (08 §3.5 revíziós csatorna „új forrás" ága); inkrementális `citations.json`-bővítés a következő szabad kulcson, meglévő kulcsok stabilak. |
 | 2026-06-07 | 1.6 | §3.3 **több jelölt + 😎-egyeztetés** (ne az első/sovány forrást ragadd meg; tisztázd, mire van szükség; 😎 saját fájlt is betehet); §3.4 **weblap→PDF képekkel** — a *general* megoldás a **headless Chromium `--print-to-pdf`** (csak böngésző-bináris kell: Edge/Chrome/chrome-headless-shell — nincs Python-csomag, nincs site-API); a site-specifikus render-endpoint (Wikipedia REST) és a sovány szöveg-PDF **explicit nem-általánosként** kizárva; kötelező kép-verifikáció. Edge-gel bizonyítva. (`quality_review_test` tanulság.) |
+| 2026-06-13 | 1.7 | §3.9 **könyv-forrás fejezet-szintű szétvágása** (`_pdf_book_split.py`): dupla-oldal detektálás (arány > 1.3), kalibrációs pont automatikus levezetése, TOC-alapú fejezet-határok, `ch<N>`-suffix fájlnév, `toc.pdf` + ajánlott `toc.md` utility (kereshető fejezet→oldal leképezés); cwd-előfeltétel + PNG-szemét tilalom rögzítve. (`dft_test` tanulság.) |

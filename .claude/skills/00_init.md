@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🐍
 status: active
-version: 1.3
-updated: 2026-06-12
+version: 1.4
+updated: 2026-06-13
 description: Új tantárgy mappastruktúrájának és subject_status.md-jének létrehozása; használd a pipeline legelején, amikor új tantárgyat (vagy annak heti bontását) indítasz.
 ---
 
@@ -19,7 +19,7 @@ description: Új tantárgy mappastruktúrájának és subject_status.md-jének l
 dolgozzanak, Claude pedig session elején beolvashassa a tantárgy állapotát.
 
 **Input:** Tantárgy mappanév, hetek száma (CLI argumentumok).
-**Output:** `<tantárgy>/subject_status.md` + `<tantárgy>/{N}_het/` mappák (5 almappa).
+**Output:** `<tantárgy>/subject_status.md` + `<tantárgy>/{N}_het/` mappák (6 almappa).
 
 ## 2. Bemenetek
 
@@ -81,13 +81,13 @@ A futás után **töltsd ki** a `subject_status.md` §1 (alapadatok), §4 (célo
 
 - **Fixture (bemenet):** nincs forrás-fixture (ez az első lépés); bemenet a CLI: `--subject smoke --weeks 2`.
 - **Akció:** `python scripts/00_init_course.py --subject smoke --weeks 2`
-- **Várt kimenet:** `test_outputs/smoke/subject_status.md` (frontmatter: `subject: smoke`, `weeks: 2`, `tags: [test]`) + `1_het/`…`2_het/` mind az 5 almappával; a script `Kész: 11 létrehozva` sorral zárul.
-- **Eval:** `--dry-run` ugyanezt jelzi módosítás nélkül; idempotens újrafuttatás → `0 létrehozva, 11 kihagyva`; a §2 státusz-tábla 2 hét-oszloppal generálódik.
+- **Várt kimenet:** `test_outputs/smoke/subject_status.md` (frontmatter: `subject: smoke`, `weeks: 2`, `tags: [test]`) + `1_het/`…`2_het/` mind a **6** almappával (`1_raw_inputs`, `2_clean_inputs`, `3_mindmap`, `4_wip_outputs`, `5_asset_outputs`, `6_clean_outputs`); a script `Kész: 13 létrehozva` sorral zárul (1 status + 2×6 mappa).
+- **Eval:** `--dry-run` ugyanezt jelzi módosítás nélkül; idempotens újrafuttatás → `0 létrehozva, 13 kihagyva`; a §2 státusz-tábla 2 hét-oszloppal generálódik.
 
 ## 6. Ellenőrzés
 
 - [ ] `subject_status.md` létrejött a tantárgy gyökerében
-- [ ] Minden hétre (`1` … `N`) létrejött mind az **5** almappa
+- [ ] Minden hétre (`1` … `N`) létrejött mind a **6** almappa
 - [ ] `3_mindmap/` jelen van minden hétnél
 - [ ] A script naplója `Kész: … létrehozva` sorral zárul, hiba nélkül
 
@@ -119,3 +119,4 @@ A futás után **töltsd ki** a `subject_status.md` §1 (alapadatok), §4 (célo
 | 2026-06-02 | 1.1 | Skill a script valóságához igazítva: `context.json` → `subject_status.md`, helyes argumentumok, 5 almappa, idempotencia |
 | 2026-06-03 | 1.2 | Sablonhoz igazítva: `role: 🐍`, triggerelő `description`, §5 Teszt (verifikált), upstream/downstream linkek; őszinte idempotencia-napló (a heti mappákat is számolja) |
 | 2026-06-12 | 1.3 | Mappa-migráció (P2.2): 6 almappa — `5_clean_outputs` → `5_asset_outputs` (12/13) + `6_clean_outputs` (camera-ready); §3.2 mappafa + §4 kimenetek frissítve; `PIPELINE_STEPS` `11 bsc_export` → `11 docx_export`. |
+| 2026-06-13 | 1.4 | §5/§6/§1 a 6 almappához igazítva (a §3.2 mappafával összhangban): a Teszt-szekció `5 almappa`/`11 létrehozva` → `6 almappa`/`13 létrehozva` (2 hétre: 1 + 2×6); az Output-fejléc `5 almappa` → `6 almappa`. |

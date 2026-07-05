@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 2.0
-updated: 2026-06-12
+version: 2.1
+updated: 2026-06-13
 description: A `02_mineru_to_catalog.py` után Claude CSAK a `visual_content`-et tölti (`Read(image)` + 1-3 mondatos leírás) és finomítja a keywords draft-ot. A caption + text_context gépileg előtöltve (MinerU). Használd a 02 után, a 03 előtt.
 ---
 
@@ -57,12 +57,27 @@ Minden `source_file`-ra (a `catalog["sources"]` kulcsain):
 
 | Mező | Tartalom | Forrás | Validáció |
 |------|----------|--------|-----------|
-| `caption` | A MinerU által előtöltött felirat. Csak akkor írd át, ha bizonyíthatóan jobb (paragrafus-szennyezés). | MinerU (előtöltve) | Pont nélkül NE végződjön egy paragrafus-folytatással. |
-| `caption_verified` | Soha NE állítsd `true`-ra — ez kizárólag a 😎 gesture. | — | 02b mindig hagyja `false`-on. |
+| `caption` | A MinerU által előtöltött felirat. Csak akkor írd át, ha bizonyíthatóan jobb (paragrafus-szennyezés). **Puszta ábrasorszám** (pl. `"4.3. ábra"` szöveg nélkül) → kezeld `null`-ként (§3.2.2). | MinerU (előtöltve) | Pont nélkül NE végződjön egy paragrafus-folytatással. |
+| `caption_verified` | Soha NE állítsd `true`-ra — ez kizárólag a 😎 gesture. **Csak a kép↔felirat PÁROSÍTÁS** helyességét jelzi, **nem** a felirat szövegének OCR-minőségét. | — | 02b mindig hagyja `false`-on. |
+| `ocr_quality` | `null` (nem értékelt) \| `"low"` (a felirat OCR-je gyanús: bare ábrasorszám / torz szöveg, pl. `"3.4. ábra J.T. avia"`) \| `"high"` (a felirat szövege megbízható). A script `"low"`-ra állítja a bare-szám eseteket; 02b finomíthatja, ha a képből látja. | script + `Read(image)` | Csak a három érték egyike. |
 | `visual_content` | 1-3 mondat magyarul: mit ábrázol vizuálisan. Diagram-típus, tengelyek/címkék, fő elemek, esetleg trend. **Nem** értelmezés, hanem leírás. | `Read(image)` | Ne tartalmazzon "az ábra…" sablont; legyen specifikus. |
 | `text_context` | A MinerU által előtöltött szövegkörnyezet (±3 szomszédos entry). Csak akkor finomítsd, ha üres vagy félrevezető. | MinerU (előtöltve) | Forráshoz hű, ne extrapoláljon. |
 | `keywords` | 3-8 kulcsszó. Logók/dekorációk: `["logo"]` vagy `["decoration"]`. | visual_content + text_context | Konkrét, kereshető tag-ek. |
 | `notes` | NE szerkeszd — ez a 😎 free space-e. | — | 02b sosem ír bele. |
+
+### 3.2.2. Puszta ábrasorszám-felirat → `null` (OCR-defenzió)
+
+Ha a `caption` értéke **kizárólag ábrasorszám** leíró szöveg nélkül (`"4.3. ábra"`, `"Fig. 5"`,
+`"12. ábra"`), az jellemzően **OCR-elcsúszott** — a lapon lévő *következő* ábra sorszáma
+állt be ehhez a képhez. Ilyenkor:
+
+- A `02_mineru_to_catalog.py` már **automatikusan** `null`-ra állítja a caption-t és
+  `ocr_quality:"low"`-val jelöli (bare-szám detektor).
+- A 02b a `visual_content` + `text_context` alapján **generáljon** érdemi leírást — **ne**
+  írd vissza a puszta sorszámot caption-ként.
+- Ha az OCR-felirat *van* szöveg, de nyilvánvalóan torz (`"3.4. ábra J.T. avia"`), a caption
+  maradhat, de állítsd `ocr_quality:"low"`-ra, hogy a downstream a vizuális tartalmat
+  részesítse előnyben.
 
 ### 3.2.0. Az `_status` mező (derivált, ne szerkeszd)
 
@@ -122,6 +137,7 @@ A skill csak akkor írja felül a mezőt, ha **null vagy üres** volt. `caption_
 - [ ] `keywords` ≥1 elem (logók: `["logo"]` is OK)
 - [ ] Logók `keywords: ["logo"]`-val jelölve (NEM kapnak részletes meta-t)
 - [ ] `caption_verified` 02b által NEM lett `true` (csak 😎-tól)
+- [ ] Puszta ábrasorszám-caption (`"4.3. ábra"`) `null`-ként kezelve; leírás a visual_content/text_context alapján (§3.2.2)
 - [ ] `_status` minden bejegyzésnél a 4 érték egyike
 - [ ] Idempotens újrafuttatás: a `caption_verified:true` bejegyzéseken 0 változás
 
@@ -152,3 +168,4 @@ A skill csak akkor írja felül a mezőt, ha **null vagy üres** volt. `caption_
 | 2026-06-05 | 1.1 | image_rag_OCR sprint. §3.1 backend-preferencia chain (MinerU > PyMuPDF4LLM > Tesseract > Claude Read). |
 | 2026-06-05 | 1.2 | MinerU-first pipeline. §1 kettéválasztva (standard vs fallback). Claude feladata redukálva. |
 | 2026-06-12 | 2.0 | **MinerU-only minimalizálás (P2.3, 12. döntés):** a fallback-ág + 4-rétegű OCR-chain (PyMuPDF4LLM / Tesseract / Claude Read / `text/pNNN.txt` cache) eltávolítva — a caption + text_context gépileg kész (MinerU); 02b csak `visual_content` + keyword-finomítás. §3.1 source-loop egyszerűsítve; §7 Tesseract/02c sorok törölve; pilot-script hivatkozás kivezetve. |
+| 2026-06-13 | 2.1 | **OCR-defenzió (`dft_test`):** §3.2.2 puszta ábrasorszám-caption → `null` (a `02_mineru_to_catalog.py` bare-szám detektora automatikusan nullozza + `ocr_quality:"low"`); új `ocr_quality` mező (`null`/`low`/`high`) a §3.2 táblában; `caption_verified` hatókör-tisztázás (párosítás helyessége ≠ OCR-minőség); §6 ellenőrző sor. |

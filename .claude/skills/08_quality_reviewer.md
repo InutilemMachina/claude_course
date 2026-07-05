@@ -5,8 +5,8 @@ type: skill
 tags: [meta, skill]
 role: 😎+🤖
 status: active
-version: 1.8
-updated: 2026-06-11
+version: 1.9
+updated: 2026-06-13
 description: Script-alapú lint + Claude Explore review (6 szempont, köztük Biggs constructive alignment); publikálhatóság ≥3/5 esetén 09-13 indul, különben vissza 04-hez. A 🚦-checkpointon a 😎 célzott revíziót kérhet a Review §6 csatornán (meglévő/új forrás routing).
 ---
 
@@ -35,7 +35,15 @@ publikálható-e, vagy vissza kell küldeni a content synthesizer lépéshez.
 
 ```powershell
 python scripts/08_quality_check.py --week-dir test_outputs/<tárgy>/N_het
+# több-fejezetes heti anyagnál a ### szakasz-küszöb felülírható:
+python scripts/08_quality_check.py --week-dir test_outputs/<tárgy>/N_het --chapters 6
 ```
+
+> ℹ️ A `### szakaszok` gazdagság-küszöbe (ajánlott 5–12) **egy kompakt, egyfejezetes**
+> dokumentumra van kalibrálva. Több-fejezetes heti anyagnál a magasabb szakaszszám
+> természetes: a script a felső határt a **`##` fejezetek számával arányosan** tágítja
+> (`max(12, fejezetek × 4)`). A `--chapters N` a várt fejezetszámot explicit felülírja
+> (pl. hiányzó/rendhagyó `##` tagolásnál).
 
 Ellenőrzési szempontok:
 - Fejezet-fedettség: minden mindmap L1 ág jelen van-e?
@@ -165,4 +173,4 @@ a `N_Review.md` `## 6. Felhasználói revíziós kérések (😎)` szekciója:
 | 2026-06-03 | 1.2 | §3.1 összegző-doboz check átírva a kétszintű sémára (`💡 Összegzés` per `##`, `🗺️ Fejezet összegfoglalása` per `#`) |
 | 2026-06-11 | 1.6 | §Teszt pótolva (atg/1_het); §5→§10 átszámozva; §3.2 „5→6 szempont” javítva; role 😎+🤖. |
 | 2026-06-11 | 1.7 | MSc-kivezetés: §3.2 Mélység-szempont szint-semlegesre; a BSc/MSc Bloom-alkérdés törölve. |
-| 2026-06-12 | 1.8 | Heading-hierarchia (P2.13, B-14): §3.1 összegző-check `💡` per `###` szakasz, `🗺️` per `##` fejezet; a `08_quality_check.py` metrika-címkék (Fejezetek/Szakaszok) + az „5-12" gazdagság-küszöb a `###` szakaszokra igazítva. |
+| 2026-06-12 | 1.8 | Heading-hierarchia (P2.13, B-14): §3.1 összegző-check `💡` per `###` szakasz, `🗺️` per `##` fejezet; a `08_quality_check.py` metrika-címkék (Fejezetek/Szakaszok) + az „5-12" gazdagság-küszöb a `###` szakaszokra igazítva. || 2026-06-13 | 1.9 | `dft_test`: a `### szakaszok` küszöb a `##` fejezetszámmal **arányosan** skálázódik (`max(12, fejezetek×4)`), + `--chapters N` flag a felülíráshoz — megszűnteti a több-fejezetes heti anyag hamis „17 > 12" figyelmeztetését. |

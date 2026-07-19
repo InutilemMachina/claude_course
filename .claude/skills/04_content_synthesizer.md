@@ -5,9 +5,9 @@ type: skill
 tags: [meta, skill]
 role: 🤖
 status: active
-version: 1.10
-updated: 2026-06-11
-description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, a komplex levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők.
+version: 1.11
+updated: 2026-06-13
+description: Claude a jóváhagyott mindmap alapján koherens, vizuálisan gazdag tananyag-jegyzetet ír. Minden mindmap-csomópont egy szekció. Minden fejezet 🔭 A Nagykép blokkal (analógiás Epitome) indul, a komplex levezetések worked example formában. A MinerU markdown az elsődleges szöveg- és formula/tábla-forrás — ezeket ne gépeld újra, a MinerU-ból vedd. Mermaid diagramok, LaTeX képletek, IEEE hivatkozások kötelezők. Két mód: --mode synthesis (alapértelmezett, didaktikai újraszervezés) és --mode transcribe (--verbatim, forráshű átültetés, csak a pedagógiai dobozok Claude-gondolat).
 ---
 
 # 04_CONTENT_SYNTHESIZER
@@ -32,6 +32,48 @@ koherens, vizuálisan gazdag wip-jegyzetet ír (`4_wip_outputs/N_Jegyzet.md`).
 **Előfeltétel:** `3_mindmap/mindmap.md` tartalmazza `status: approved`-t; `2_clean_inputs/<stem>/mineru/<stem>.md` elérhető (ha nem: raw PDF fallback, de minőségromlással).
 
 ## 3. Eljárás
+
+### 3.0. Mód-kapcsoló — `synthesis` vs. `transcribe`
+
+A 04 két **módban** hívható. A mód a jegyzet **tartalmi forrásához való viszonyt** szabályozza; a
+pipeline-vázat (00–13), a szakasz-sablonokat (§3.2), a felirat-/hivatkozás-kezelést (§3.3, §3.5) és
+a kimeneti fájlt (`4_wip_outputs/N_Jegyzet.md`) **egyik mód sem** változtatja meg.
+
+**Hívás-konvenció:**
+
+```
+--mode synthesis      # ALAPÉRTELMEZETT — mindmap-vezérelt didaktikai szintézis (a §3.1–3.10 alapviselkedés)
+--mode transcribe     # forráshű átültetés (alias: --verbatim)
+--expand-paragraphs   # OPCIONÁLIS, csak transcribe: tömör forrás-bekezdések olvashatóra bővítése
+```
+
+> ℹ️ A 04 **Claude-vezérelt skill**, nincs önálló script — a `--mode` egy **skill-invokációs kapcsoló**
+> (a 😎 a lépés indításakor adja meg). Alapértelmezés hiányában mindig `synthesis`.
+
+| Szempont | `synthesis` (default) | `transcribe` (`--verbatim`) |
+|:---------|:----------------------|:----------------------------|
+| **Cél** | Didaktikailag újraszervezett, koherens tananyag a mindmap logikája szerint | A forrás **lényegi tartalmának** hű átültetése (másolás/fordítás a MinerU markdownból) |
+| **Szövegtörzs** | Claude fogalmaz újra, szintetizál, összekapcsol | **Forráshű** — a `<stem>.md` bekezdéseit ülteti át (idegen nyelvnél fordítja), nem ír hozzá új állítást |
+| **Sorrend** | Mindmap-vezérelt (L1→`##`, L2→`###`) | Mindmap adja a **szakasz-vázat**, de a tartalom a forrás menetét követi |
+| **Formulák/táblák** | MinerU-ból (§3.4) | MinerU-ból (§3.4) — **azonos** |
+| **Ábrák/hivatkozások** | §3.3 / §3.5 | §3.3 / §3.5 — **azonos** |
+| **Pedagógiai dobozok** (🔭/🎯/💡/❔) | Claude saját gondolkodása | Claude saját gondolkodása — **ez az EGYETLEN elem**, ahol `transcribe`-ban is Claude-gondolat van; minden más forráshű |
+
+**`transcribe` alapelv:** a jegyzet törzse a forrás **tartalmának** hű tükre — Claude **nem** talál ki,
+**nem** von össze távoli gondolatokat, **nem** told be külső tudást a próza-szintre. Idegen nyelvű
+forrásnál a törzs **fordítás** (tartalom-megőrző), nem parafrázis. A worked example (§3.8) `transcribe`-ban
+is a forrás levezetését követi, nem újat gyárt. Az **egyetlen** hely, ahol Claude a saját didaktikai
+gondolkodására támaszkodik, a pedagógiai dobozok (🔭 A Nagykép / 🎯 Cél / 🧱 Előfeltételek / 💡 Összegzés /
+🗺️ Fejezet összegfoglalása / ❔ Ellenőrizd magad) — ezeket `transcribe`-ban is Claude írja, a §3.2 sablon szerint.
+
+**`--expand-paragraphs` (opcionális, csak `transcribe`):** ha a forrás nagyon tömör (pl. vázlatpontos
+vagy távirati stílusú), Claude az egyes bekezdéseket **olvashatóbb, folyó szöveggé bővítheti** — de
+**forráshűen**: csak a forrásban benne lévő gondolatot fejti ki, **nem** ad hozzá új tényt, példát vagy
+állítást. Kapcsoló nélkül a törzs a forrás tömörségét megtartja.
+
+**Mikor melyik?** `synthesis`: heterogén/több forrás, erős didaktikai újrastrukturálás igénye. `transcribe`:
+egyetlen, már jól strukturált forrás (pl. tankönyvfejezet), ahol a cél a **forráshű** jegyzet a
+pedagógiai keretek hozzáadásával, nem az újraértelmezés.
 
 ### 3.1. A mindmap mint tartalomjegyzék
 
@@ -229,6 +271,7 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 
 ## 6. Ellenőrzés
 
+- [ ] A mód tudatos: `synthesis` (default) vagy `transcribe` (`--verbatim`)? `transcribe`-ban a törzs forráshű (másolás/fordítás), csak a pedagógiai dobozok Claude-gondolat?
 - [ ] Minden L1 mindmap-ág `##` fejezetként szerepel?
 - [ ] `🔭 A Nagykép` blokk minden `##` fejezet nyitásánál (analógia, zsargon nélkül)?
 - [ ] `🎯 Cél` blokk (Bloom-igés) minden `##` fejezet nyitásánál, a `🔭` után?
@@ -251,6 +294,8 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 | Üres hivatkozásjegyzék | citations.json nem olvasva | Kézzel kitölteni, majd _ieee_renderer.py |
 | MinerU markdown hiányzik | `02_mineru_to_catalog` nem futott | Fallback: raw PDF, de formulák/táblák elvesznek — jelezd a szövegben |
 | Formula kézzel begépelve, eltér a forrástól | MinerU markdown figyelmen kívül hagyva | A `<stem>.md` LaTeX-ét másold pontosan, ne szintetizáld |
+| `transcribe` módban a törzs eltér a forrástól (új állítás, külső tudás) | A mód félreértve — `transcribe` = forráshű átültetés | Csak a MinerU `<stem>.md` tartalmát ültesd át (fordítsd); új gondolat kizárólag a pedagógiai dobozokban (🔭/🎯/💡/❔) |
+| `--expand-paragraphs` új tényt csempész be | A bővítés parafrázis helyett hozzáadás | Csak a forrásban benne lévő gondolat kifejtése, új állítás/példa nélkül |
 | `💡 Összegzés` / `🗺️ Fejezet összegfoglalása` hiányzik | Kimaradt a sablonból | Pótlás 06_summarize_box_injector-ben (kanonikus formátum: ott §3.1–3.2) |
 
 ## 8. Hivatkozások
@@ -273,7 +318,7 @@ A 04 **nem egyszer lefutó** lépés: a 08-checkpointon a 😎 célzott tartalmi
 
 | Dátum | Verzió | Leírás |
 |-------|--------|--------|
-| 2026-06-07 | 1.6 | §3.10 **célzott revízió / re-entry**: a 04 a 08-checkpointról (08 §3.5 csatorna) újra beléphet a meglévő jegyzeten — csak az érintett szekciót módosítja, stabil hivatkozás-kulcsokkal; meglévő forrás → 04 közvetlenül, új forrás → 01→02→04. |
+| 2026-06-13 | 1.11 | **Mód-kapcsoló** (§3.0): `--mode synthesis` (default) és `--mode transcribe` (alias `--verbatim`). A `transcribe` a forrás lényegi tartalmát ülteti át (másolás/fordítás a MinerU markdownból), a pipeline-vázat (00–13) érintetlenül hagyva; az egyetlen Claude-gondolat a pedagógiai dobozok (🔭/🎯/💡/❔). Opcionális `--expand-paragraphs` (csak transcribe, forráshű bővítés). §6 checklist + §7 három hibasor. |
 | 2026-06-06 | 1.5 | Új `🎯 Cél` blokk (Bloom-igés tanulási cél) minden `##` fejezet nyitásába, a `🔭` után — a Biggs constructive alignment (08) cél-oldala, a prezi szakasz-nyitó diája újrahasznosítja; §5 checklist. |
 | 2026-06-06 | 1.4 | Címke: `🔭 Epitome` → `🔭 A Nagykép`; §3.3 ábra-/táblázat-/Mermaid-felirat konvenció (számozott, önálló koherens, [Instructions §7.1](../../Instructions.md)); §5 felirat-checklist. |
 | 2026-06-06 | 1.3 | **Didaktikai metaprompt**: §3.2 `🔭 Epitome` (analógiás nagykép, zsargon nélkül) + opcionális `🧱 Előfeltételek` minden `##` fejezet nyitásába (Reigeluth elaboráció, fejezet-szintű explicit Zoom-out); §3.8 worked-example szabály az MSc-levezetésekhez; §5 három új checklist-sor. |
